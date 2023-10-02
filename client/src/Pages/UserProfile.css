@@ -1,0 +1,14 @@
+.Profile-main-container {
+    margin: auto;
+    padding: 0px 0px 40px 0px;
+}
+
+.prev-asked-questions-title {
+    margin-top: 80px;
+}
+
+.prev-asked-questions-card-con {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
