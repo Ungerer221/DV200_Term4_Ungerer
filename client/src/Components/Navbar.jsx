@@ -13,8 +13,8 @@ const Navbar = () => {
                 <div className="navbar-page-links">
                     <Nav.Link className="navbar-page-links-options" href='/'>Home</Nav.Link>
                     <Nav.Link className="navbar-page-links-options" href='/Profile'>Profile</Nav.Link>
-                    <Nav.Link className="navbar-page-links-options" href='/#'>Adim</Nav.Link>
-                    <Nav.Link className="navbar-page-links-options" href='/#'>Signout</Nav.Link>
+                    <Nav.Link className="navbar-page-links-options" href='/#'>Admin</Nav.Link>
+                    <Nav.Link className="navbar-page-links-options" href='/#'>Sign Out</Nav.Link>
                 </div>
                 <button>hello</button>
             </div>
