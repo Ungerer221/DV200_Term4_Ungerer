@@ -9,6 +9,7 @@ import Footer from './Components/Footer'
 import Profile from './Pages/UserProfile'
 import HomePage from './Pages/HomePage';
 import QuestionPage from './Pages/QuestionPage';
+import QuestionEditor from './Pages/QuestionEditor';
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
         <Route path='/' element={<HomePage />} />
         <Route path='/Profile' element={<Profile />} />
         <Route path='/Question' element={<QuestionPage/>} />
+        <Route path='/ask' element={<QuestionEditor/>} />
       </Routes>
 
       <Footer></Footer>
