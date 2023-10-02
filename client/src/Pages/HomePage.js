@@ -8,6 +8,7 @@ import Col from 'react-bootstrap/Col';
 // MUI 
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
+import Button from '@mui/material/Button';
 
 // css
 import './HomePage.css'
@@ -23,15 +24,16 @@ function HomePage() {
 
                 {/* Section 1 (Landing view) */}
                 <Box sx={{ flexGrow: 1, width: '100%', height: '964px' }}>
-                    <Grid container spacing={0}>
+                    <Grid container spacing={0} sx={{  height: '800px' }}>
                         {/* text content */}
                         <Grid xs={6} sx={{ margin: 'auto',}}>
-                            <h1>Welcome to Open Dev Q&A site.</h1>
-                            <p>
-                                Description:
+                            <h1 style={{fontWeight:'400', fontSize:'64px'}}>Welcome to Open Dev Q&A site.</h1>
+                            <p style={{}}>
+                                <b>Description: </b>
                                 Yorem ipsum dolor sit amet, consectetur adipiscing elit.
                                 Nunc vulputate libero et velit interdum, ac aliquet odio mattis.
                             </p>
+                            <Button variant="contained">Take a Tour</Button>
                         </Grid>
                         {/* Image coloumn  */}
                         <Grid xs={6} sx={{ margin: 'auto',}}>
