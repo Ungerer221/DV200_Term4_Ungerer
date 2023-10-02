@@ -1,3 +1,4 @@
+// https://mongoosejs.com/docs/schematypes.html
 const mongoose = require('mongoose');
 
 const QuestionSchema = mongoose.Schema({
@@ -19,7 +20,7 @@ const QuestionSchema = mongoose.Schema({
         required: true
     },
     comments: {
-        type: String,
+        type: Array,
         required: true
     }
 
