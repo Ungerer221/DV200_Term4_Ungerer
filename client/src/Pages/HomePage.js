@@ -12,6 +12,9 @@ import Grid from '@mui/material/Grid';
 // css
 import './HomePage.css'
 
+// components
+import HomeQuestionCard from "../Components/HomeQuestionCard";
+
 
 function HomePage() {
     return (
@@ -19,10 +22,10 @@ function HomePage() {
             <div className="home-page-main-con">
 
                 {/* Section 1 (Landing view) */}
-                <Box sx={{ flexGrow: 1, }}>
+                <Box sx={{ flexGrow: 1, width: '100%', height: '964px' }}>
                     <Grid container spacing={0}>
                         {/* text content */}
-                        <Grid xs={6}>
+                        <Grid xs={6} sx={{ margin: 'auto',}}>
                             <h1>Welcome to Open Dev Q&A site.</h1>
                             <p>
                                 Description:
@@ -31,8 +34,25 @@ function HomePage() {
                             </p>
                         </Grid>
                         {/* Image coloumn  */}
-                        <Grid xs={6}>
+                        <Grid xs={6} sx={{ margin: 'auto',}}>
                             <div className="image-placeholder"></div>
+                        </Grid>
+                    </Grid>
+                </Box>
+
+                {/* Section 2  */}
+                <Box sx={{ flexGrow: 1, marginTop: '40px' }}>
+                    {/* row 1 */}
+                    <Grid container spacing={0}>
+                        <Grid xs={12} sx={{ marginTop: '20px' }}>
+                            <input type="text" placeholder="Ask a Question" className="home-ask-question-input"></input>
+                        </Grid>
+                        <Grid xs={12} sx={{ marginTop: '20px' }}>
+                            <input type="text" placeholder="Search for a question" className="home-search-question-input"></input>
+                        </Grid>
+                        {/* question tile  */}
+                        <Grid xs={12} sx={{ marginTop: '20px' }}>
+                            <HomeQuestionCard />
                         </Grid>
                     </Grid>
                 </Box>
