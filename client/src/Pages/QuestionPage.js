@@ -3,6 +3,8 @@ import React from "react";
 // MUI 
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
+import Avatar from '@mui/material/Avatar';
+import Chip from '@mui/material/Chip';
 
 // css
 import './QuestionPage.css'
@@ -66,6 +68,42 @@ function QuestionPage() {
                     </Grid>
 
                 </Box>
+            </div>
+
+            {/* trying something  */}
+            <div className="question-page-con">
+                {/* top row  */}
+                <Grid container spacing={0}>
+                    {/* Column 1 the user avatar */}
+                    <Grid xs={2}>
+                        <Grid xs={12}>
+                            <Avatar sx={{width:'110px', height:'110px', margin:'auto'}}>H</Avatar>
+                        </Grid>
+                        <Grid xs={12}>
+                            <p>Username</p>
+                        </Grid>
+                    </Grid>
+                    {/* Column 2  */}
+                    <Grid xs={10}>
+                        <Grid>
+                            <Grid>
+                                <h1>Question Title</h1>
+                            </Grid>
+                            <Grid>
+                                <p>
+                                    Question Snippet Lorem Ipsum Dolor Sit Amet Lorem Ipsum Dolor
+                                    Sit Amet Lorem Ipsum Dolor Sit Amet Lorem Ipsum Dolor Sit
+                                    Amet Lorem Ipsum Dolor Sit Amet Lorem Ipsum
+                                </p>
+                            </Grid>
+                            <Grid>
+                                <Chip label="Tags" variant="outlined" />
+                                <Chip label="Tags" variant="outlined" />
+                                <Chip label="Tags" variant="outlined" />
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                </Grid>
             </div>
         </>
     )
