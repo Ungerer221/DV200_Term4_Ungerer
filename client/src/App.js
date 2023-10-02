@@ -6,6 +6,7 @@ import Navbar from './Components/Navbar'
 // pages 
 import Profile from './Pages/UserProfile'
 import HomePage from './Pages/HomePage';
+import QuestionPage from './Pages/QuestionPage';
 
 function App() {
   return (
@@ -31,6 +32,7 @@ function App() {
         {/* <Route path='/' element={<Home/>}/> */}
         <Route path='/' element={<HomePage />} />
         <Route path='/Profile' element={<Profile />} />
+        <Route path='/Question' element={<QuestionPage/>} />
       </Routes>
 
     </div>
