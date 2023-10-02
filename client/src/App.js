@@ -1,10 +1,16 @@
 import logo from './logo.svg';
 import './App.css';
+import { Route, Routes, Navigate } from 'react-router-dom';
+
+import Navbar from './Components/Navbar'
+// pages 
+import Profile from './Pages/UserProfile'
+import HomePage from './Pages/HomePage';
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
+      {/* <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
           Edit <code>src/App.js</code> and save to reload.
@@ -17,7 +23,16 @@ function App() {
         >
           Learn React
         </a>
-      </header>
+      </header> */}
+
+      <Navbar />
+
+      <Routes>
+        {/* <Route path='/' element={<Home/>}/> */}
+        <Route path='/' element={<HomePage />} />
+        <Route path='/Profile' element={<Profile />} />
+      </Routes>
+
     </div>
   );
 }
