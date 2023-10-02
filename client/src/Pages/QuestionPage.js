@@ -18,20 +18,22 @@ function QuestionPage() {
                 <Box sx={{ flexGrow: 1 }}>
 
                     {/* Grid containing Everything */}
-                    <Grid container spacing={0} justifyContent={'Center'}>
+                    <Grid spacing={0} >
 
                         {/* Div that holds the question and displays the box */}
                         <div id="question_box">
 
-                            {/* Question title */}
-                            <h1>Question Title</h1>
+                            {/* Grid (Row) that holds the Title */}
+                            <Grid xs={12}>
+                                {/* Question title */}
+                                <h1>Question Title</h1>
+                            </Grid>
 
-                            {/* Box that holds Username and Icon, as well as question content and tags */}
-                            <Box sx={{ flexGrow: 1 }}>
-
+                            {/* Grid (Row) that holds Username and Icon, as well as question content and tags */}
+                            <Grid xs={12}>
                                 {/* Grid for Username and Icon */}
                                 <Grid xs={3}>
-                                    <img src={Image} className="question_img"></img>
+                                    <img src={Image} className="user_img"></img>
                                     <p>Username</p>
                                 </Grid>
 
@@ -44,8 +46,6 @@ function QuestionPage() {
                                         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis.
                                     </p>
 
-                                    <br></br>
-
                                     <ul className="questions_ul">
                                         <li className="questions_li">Tag</li>
                                         <li className="questions_li">Tag</li>
@@ -53,10 +53,16 @@ function QuestionPage() {
                                         <li className="questions_li">Tag</li>
                                     </ul>
                                 </Grid>
+                            </Grid>
 
-                            </Box>
                         </div>
 
+                    </Grid>
+
+                    <Grid spacing={0}>
+                        <div>
+                            <image src={Image} className="question_img"></image>
+                        </div>
                     </Grid>
 
                 </Box>
