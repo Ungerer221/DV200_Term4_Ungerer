@@ -10,7 +10,7 @@ import Profile from './Pages/UserProfile'
 import HomePage from './Pages/HomePage'
 import SignIn from './Pages/Signin'
 import SignUp from './Pages/Signup';
-import HomePage from './Pages/HomePage';
+// import HomePage from './Pages/HomePage';
 import QuestionPage from './Pages/QuestionPage';
 import QuestionEditor from './Pages/QuestionEditor';
 
