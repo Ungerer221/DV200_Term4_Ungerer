@@ -3,11 +3,16 @@ import './App.css';
 import { Route, Routes, Navigate } from 'react-router-dom';
 
 import Navbar from './Components/Navbar'
+import Footer from './Components/Footer'
+
 // pages 
 import Profile from './Pages/UserProfile'
 import HomePage from './Pages/HomePage'
 import SignIn from './Pages/Signin'
 import SignUp from './Pages/Signup';
+import HomePage from './Pages/HomePage';
+import QuestionPage from './Pages/QuestionPage';
+import QuestionEditor from './Pages/QuestionEditor';
 
 function App() {
   return (
@@ -35,7 +40,11 @@ function App() {
         <Route path='/Profile' element={<Profile />} />
         <Route path='/Signin' element={<SignIn />} />
         <Route path='/Signup' element={<SignUp />} />
+        <Route path='/Question' element={<QuestionPage/>} />
+        <Route path='/ask' element={<QuestionEditor/>} />
       </Routes>
+
+      <Footer></Footer>
 
     </div>
   );
