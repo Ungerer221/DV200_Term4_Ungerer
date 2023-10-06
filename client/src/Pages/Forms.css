@@ -1,9 +1,11 @@
+/* this messes with the whole home page and other site structuring so avoid using the body tag  */
+/* body is already used in Index.css  */
 body {
-  display: flex;
+  /* display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
-  margin: 0;
+  margin: 0; */
 }
 
 h2 {
@@ -15,11 +17,14 @@ h2 {
 .form-container {
   text-align: center;
   width: 540px;
-  height: 520px;
+  /* height: 520px; */
   border: 1px solid rgb(41, 41, 41);
   padding: 20px;
-  margin: 20px;
+  /* margin: 20px; */
+  margin: auto;
   border-radius: 35px;
+  
+  margin-top: 80px;
 }
 
 .form {

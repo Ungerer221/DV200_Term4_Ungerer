@@ -23,7 +23,7 @@ function HomePage() {
             <div className="home-page-main-con">
 
                 {/* Section 1 (Landing view) */}
-                <Box sx={{ flexGrow: 1, width: '100%', height: '964px' }}>
+                <Box sx={{ flexGrow: 1, width: '100%', height: '964px' , marginTop:'40px' }}>
                     <Grid container spacing={0} sx={{  height: '800px' }}>
                         {/* text content */}
                         <Grid xs={6} sx={{ margin: 'auto',}}>

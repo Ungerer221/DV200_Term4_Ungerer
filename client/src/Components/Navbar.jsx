@@ -43,11 +43,12 @@ const Navbar = () => {
             <div className="navbar-con">
                 <div className="navbar-logo">Logo</div>
                 <div className="navbar-page-links">
-                    <Nav.Link className="navbar-page-links-options" href='/Home'>Home</Nav.Link>
-                    <Nav.Link className="navbar-page-links-options" href='/Profile'>Profile</Nav.Link>
-                    <Nav.Link className="navbar-page-links-options" href='/#'>Adim</Nav.Link>
-                    <Nav.Link className="navbar-page-links-options" href='/SignIn'>Signout</Nav.Link>
-                    <Nav.Link className="navbar-page-links-options" href='/Signup'>Sign Up</Nav.Link>
+                    {/* <Nav.Link className="navbar-page-links-options" href='/Home'>Home</Nav.Link> */}
+                    {/* <Nav.Link className="navbar-page-links-options" href='/Profile'>Profile</Nav.Link> */}
+                    {/* <Nav.Link className="navbar-page-links-options" href='/#'>Adim</Nav.Link> */}
+                    {/* <Nav.Link className="navbar-page-links-options" href='/SignIn'>Signout</Nav.Link> */}
+                    {/* <Nav.Link className="navbar-page-links-options" href='/Signup'>Sign Up</Nav.Link> */}
+
                     <Stack
                         direction="row"
                         divider={<Divider orientation="vertical" flexItem />}
@@ -55,8 +56,8 @@ const Navbar = () => {
                     >
                         <Nav.Link className="navbar-page-links-options" href='/'>Home</Nav.Link>
                         <Nav.Link className="navbar-page-links-options" href='/Profile'>Profile</Nav.Link>
-                        <Nav.Link className="navbar-page-links-options" href='/#'>Admin</Nav.Link>
-                        <Nav.Link className="navbar-page-links-options" href='/#'>Sign Out</Nav.Link>
+                        <Nav.Link className="navbar-page-links-options" href='/SignIn'>Admin</Nav.Link>
+                        <Nav.Link className="navbar-page-links-options" href='/Signup'>Sign Out</Nav.Link>
                     </Stack>
                 </div>
 
