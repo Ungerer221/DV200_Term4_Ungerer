@@ -59,7 +59,7 @@ function QuestionEditor() {
                 borderBottomColor: '#FF3F00',
                 borderRadius: 4
             }}>
-                <Box justifyContent={'center'}>
+                <Box justifyContent={'center'} sx={{margin:"auto"}}>
                     <Button component="label" variant="contained">
                         Upload Image
                         <VisuallyHiddenInput type="file" />
