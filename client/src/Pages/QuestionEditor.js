@@ -33,7 +33,7 @@ function QuestionEditor() {
                 </Stack>
             </Box> */}
             <Grid container spacing={4} sx={{
-                maxWidth: 500, marginTop: "70px", marginLeft: "70px", '--Grid-borderWidth': '2px',
+                maxWidth: 500, marginTop: 10, marginLeft: 60, '--Grid-borderWidth': '2px',
                 borderTop: 'var(--Grid-borderWidth) solid',
                 borderLeft: 'var(--Grid-borderWidth) solid',
                 borderRight: 'var(--Grid-borderWidth) solid',
@@ -43,7 +43,7 @@ function QuestionEditor() {
             }}>
                 <Grid xs={12} >
                     <TextField fullWidth required id="title" label="Add a title" variant="standard" />
-                    <TextField fullWidth required id="content" label="Add Content" multiline rows={7} variant="standard" />
+                    <TextField fullWidth required id="content" label="Add Content" multiline rows={12} variant="standard" />
                 </Grid>
             </Grid>
 
