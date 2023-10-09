@@ -33,7 +33,7 @@ function QuestionEditor() {
                 </Stack>
             </Box> */}
             <Grid container spacing={4} sx={{
-                maxWidth: 500, marginTop: 10, marginLeft: 60, '--Grid-borderWidth': '2px',
+                maxWidth: 500, marginTop: 10, marginLeft: "auto", marginRight: "auto", '--Grid-borderWidth': '2px',
                 borderTop: 'var(--Grid-borderWidth) solid',
                 borderLeft: 'var(--Grid-borderWidth) solid',
                 borderRight: 'var(--Grid-borderWidth) solid',
@@ -48,7 +48,7 @@ function QuestionEditor() {
             </Grid>
 
             <Grid container sx={{
-                maxWidth: 200, marginTop: '14px', marginLeft: "200px", padding: '10px', '--Grid-borderWidth': '2px',
+                maxWidth: 200, marginTop: '14px', marginLeft: "auto", marginRight: "auto", padding: '10px', '--Grid-borderWidth': '2px',
                 borderTop: 'var(--Grid-borderWidth) solid',
                 borderTopColor: '#FFFF',
                 borderLeft: 'var(--Grid-borderWidth) solid',
@@ -57,10 +57,10 @@ function QuestionEditor() {
                 borderLeftColor: '#FF3F00',
                 borderRightColor: '#FF3F00',
                 borderBottomColor: '#FF3F00',
-                borderRadius: 4
+                borderRadius: 1
             }}>
                 <Box justifyContent={'center'} sx={{margin:"auto"}}>
-                    <Button component="label" variant="contained">
+                    <Button component="label" variant="outlined">
                         Upload Image
                         <VisuallyHiddenInput type="file" />
                     </Button>
