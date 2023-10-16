@@ -6,6 +6,8 @@ import {BiXCircle, BiLike, BiDislike} from 'react-icons/bi'
 // MUI 
 import Grid from '@mui/material/Grid';
 import Chip from '@mui/material/Chip';
+import Button from '@mui/material/Button';
+
 
 // CSS 
 import './AskedQuestionsCard.css'
@@ -29,8 +31,8 @@ const AskedQuestionsCard = () => {
                 {/* like and dislike buttons con  */}
                 <div className="askedQuestionCard-like-dislike-btn-con">
                     <button><BiLike/> Like</button>
-                    <button><BiDislike/> Dislike</button>
-                    <button><BiXCircle/> Delete</button>
+                    <button className="askedQuestionCard-dislike-btn"><BiDislike/> Dislike</button>
+                    {/* <button><BiXCircle/> Delete</button> */}
                 </div>
             </div>
 

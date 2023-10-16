@@ -7,6 +7,10 @@ import Axios from "axios";
 import Grid from '@mui/material/Grid';
 import Avatar from '@mui/material/Avatar';
 import Chip from '@mui/material/Chip';
+import Button from '@mui/material/Button';
+
+
+import {BiXCircle, BiLike, BiDislike} from 'react-icons/bi'
 
 // css
 import './QuestionPage.css'
@@ -65,7 +69,7 @@ function QuestionPage() {
                         </Grid>
                     </Grid>
                     {/* Column 2  */}
-                    <Grid xs={10}>
+                    <Grid xs={8}>
                         <Grid>
                             <Grid>
                                 <h1>{question.title}</h1>
@@ -82,6 +86,11 @@ function QuestionPage() {
                             </Grid>
                         </Grid>
                     </Grid>
+                    {/* coloumn 3  */}
+                    <Grid xs={2}>
+                        {/* question delete button  */}
+                        <Button variant="contained" sx={{margin:"auto"}}><BiXCircle/>Delete</Button>
+                    </Grid>
                 </Grid>
             </div>
 
@@ -90,7 +99,7 @@ function QuestionPage() {
                 {/* Column 1 */}
                 <Grid xs={12}>
                     <Grid xs={12}>
-                        <img src={Image} className="question_img" style={{ display: 'none' }}></img>
+                        <img src={Image} className="question_img" style={{ display: 'none' }} alt=""></img>
                     </Grid>
                 </Grid>
             </Grid>
@@ -118,7 +127,7 @@ function QuestionPage() {
                         </Grid>
                     </Grid>
                     {/* Column 2  */}
-                    <Grid xs={10}>
+                    <Grid xs={8}>
                         <Grid>
                             <Grid>
                                 <h1>Answer Title</h1>
@@ -136,6 +145,11 @@ function QuestionPage() {
                                 <Chip label="Tags" variant="outlined" />
                             </Grid>
                         </Grid>
+                    </Grid>
+                    {/* coloumn 3  */}
+                    <Grid xs={2}>
+                        {/* answer Delete Button  */}
+                        <Button variant="contained" sx={{margin:"auto"}}><BiXCircle/>Delete</Button>
                     </Grid>
                 </Grid>
 
@@ -150,7 +164,7 @@ function QuestionPage() {
                         </Grid>
                     </Grid>
                     {/* Column 2  */}
-                    <Grid xs={10}>
+                    <Grid xs={8}>
                         <Grid>
                             <Grid>
                                 <h1>Answer Title</h1>
@@ -168,6 +182,11 @@ function QuestionPage() {
                                 <Chip label="Tags" variant="outlined" />
                             </Grid>
                         </Grid>
+                    </Grid>
+                    {/* coloumn 3  */}
+                    <Grid xs={2}>
+                        {/* answer Delete Button  */}
+                        <Button variant="contained" sx={{margin:"auto"}}><BiXCircle/>Delete</Button>
                     </Grid>
                 </Grid>
             </div>

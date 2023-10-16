@@ -57,6 +57,10 @@
     transition: all ease-in-out .1s;
 }
 
+.askedQuestionCard-dislike-btn button:hover {
+    background-color: red;
+}
+
 .askedQuestionCard-divider{
     margin: auto;
     background-color: rgba(0, 0, 0, 0.308);
