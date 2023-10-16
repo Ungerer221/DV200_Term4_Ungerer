@@ -1,6 +1,8 @@
 import React from "react";
 import { Nav } from 'react-bootstrap'
 
+import {BiXCircle, BiLike, BiDislike} from 'react-icons/bi'
+
 // MUI 
 import Grid from '@mui/material/Grid';
 import Chip from '@mui/material/Chip';
@@ -26,8 +28,9 @@ const AskedQuestionsCard = () => {
 
                 {/* like and dislike buttons con  */}
                 <div className="askedQuestionCard-like-dislike-btn-con">
-                    <button>like</button>
-                    <button>dislike</button>
+                    <button><BiLike/> Like</button>
+                    <button><BiDislike/> Dislike</button>
+                    <button><BiXCircle/> Delete</button>
                 </div>
             </div>
 
