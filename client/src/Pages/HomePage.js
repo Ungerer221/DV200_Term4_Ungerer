@@ -1,7 +1,6 @@
 import React from "react";
 import { Link } from 'react-router-dom';
 
-// Axios import
 import Axios from "axios";
 
 // Bootstrap 
