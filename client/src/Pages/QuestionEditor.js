@@ -1,14 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
-import Stack from '@mui/material/Stack';
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
+// import Stack from '@mui/material/Stack';
+// import Card from '@mui/material/Card';
+// import CardActions from '@mui/material/CardActions';
+// import CardContent from '@mui/material/CardContent';
 import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Unstable_Grid2';
-import { Typography } from "@mui/material";
+import { Typography, unstable_toUnitless } from "@mui/material";
+// import { useRouteId } from "react-router/dist/lib/hooks";
+// import { TabContent } from "react-bootstrap";
+import Axios from 'axios';
 
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
@@ -23,6 +26,46 @@ const VisuallyHiddenInput = styled('input')({
 });
 
 function QuestionEditor() {
+
+    const [Image, setImage] = useState();
+    const [title, setTitle] = useState();
+    const [content, setContent] = useState();
+
+    const getImage = (e) => {
+        let imageFile = e.target.files[0];
+        console.log(imageFile);
+        setImage(imageFile);
+
+        let reader = new FileReader();
+        reader.onload = () => {
+            let output = document.getElementById('preview');
+            output.src = reader.result;
+        };
+        reader.readAsDataURL(e.target.files[0]);
+    };
+    
+
+    const addQuestion = (e) => {
+        const payload = new FormData()
+
+        let data = {
+        id: userID,
+        title: title,
+        text: content,
+        date: date(),
+        comments: '',
+        }
+
+        payload.append('data', JSON.stringify(data));
+        payload.append('image', Image);
+
+        Axios.post('http://localhost:5000/api/addquestion', payload);
+
+    }
+
+
+
+
     return (
         <>
             {/* <Box sx={{width: 200}} alignItems="center">
@@ -44,8 +87,8 @@ function QuestionEditor() {
             }}>
                 <Grid xs={12} >
                     <Typography variant="h4" sx={{color: '#FF3F00'}} > Ask a Question </Typography>
-                    <TextField fullWidth required id="title" label="Add a title" variant="standard" />
-                    <TextField fullWidth required id="content" label="Add Content" multiline rows={12} variant="standard" />
+                    <TextField fullWidth required id="title" label="Add a title" variant="standard" onChange={(e) => setTitle(e.target.value)} />
+                    <TextField fullWidth required id="content" label="Add Content" multiline rows={12} variant="standard" onChange={(e) => setContent(e.target.value)} />
                 </Grid>
             </Grid>
 
@@ -64,8 +107,9 @@ function QuestionEditor() {
                 <Box justifyContent={'center'} sx={{margin:"auto"}}>
                     <Button component="label" variant="outlined" sx={{color: '#FF3F00', borderColor: '#FF3F00'}} >
                         Upload Image
-                        <VisuallyHiddenInput type="file" />
+                        <VisuallyHiddenInput type="file" onChange={getImage} />
                     </Button>
+                    <img id="preview" style={{width: 100, height: 100}} alt="preview" />
                 </Box>
             </Grid>
             <Button variant="contained" sx={{marginTop: '15px'}} > Done </Button>
