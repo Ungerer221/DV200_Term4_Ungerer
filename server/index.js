@@ -3,6 +3,9 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const { path } = require('path');
 
+// Route Uses
+const questionRoute = require('./routes/question');
+
 require('dotenv/config')
 
 const app = express()
@@ -12,6 +15,12 @@ app.use(cors({
 }));
 
 //middleware
+// makes the json data work
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+
+// Must be below the express
+app.use(questionRoute);
 
 mongoose.connect(process.env.DB_CONNECTION, {
     useNewUrlParser: true,
@@ -22,6 +31,6 @@ mongoose.connect(process.env.DB_CONNECTION, {
         console.log("No Connection. Reason: " + err);
     });
 
-const PORT = process.env.PORT || 5002;
+const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {console.log(`Server has started at port: ${PORT}`)});
