@@ -44,6 +44,12 @@ router.get('/api/getUsers', async (req, res) => {
     res.json(AllUser);
 });
 
+// Get Single User
+router.get('/api/getUser/:id', async (req, res) => {
+    const findSpecUser = await User.findById(req.params.id)
+    res.json(findSpecUser)
+});
+
 // Create
 router.post('/api/addUser/', async (req, res) => {
     const user = new User({
