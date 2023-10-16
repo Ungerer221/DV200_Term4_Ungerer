@@ -18,8 +18,8 @@ router.get('/api/question_get_all/', async (req, res) => {
 
 // Get Single
 router.get('/api/question_get_single/:id', async (req, res) => {
-    const findQuestion = await QuestionSchema.findById(req.params.id)
-    res.json(findQuestion)
+    const findQuestionSingle = await QuestionSchema.findById(req.params.id)
+    res.json(findQuestionSingle)
 });
 
 // Update

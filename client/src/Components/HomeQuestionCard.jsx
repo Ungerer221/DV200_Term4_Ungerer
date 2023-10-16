@@ -1,7 +1,7 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react";
 
 // CSS 
-import './HomeQuestionCard.css'
+import './HomeQuestionCard.css';
 
 // MUI
 import Box from '@mui/material/Box';
@@ -12,44 +12,48 @@ import Button from '@mui/material/Button';
 // Axios import
 import Axios from "axios";
 
-const HomeQuestionCard = (props) => {
-
-    // TODO 
-    // Automatic tag population
-    // Read more button that sends data to the individual question page
-
-    const [username, setUsername] = useState();
+const HomeQuestionCard = ({ user, title, date, text, id }) => {
+    const [username, setUsername] = useState("");
 
     // Get specific user
-    Axios.get('http://localhost:5000/api/getUser/' + props.user)
-        .then(res => { setUsername(res.data.username) })
-        .catch(err => console.log(err))
+    useEffect(() => {
+        Axios.get('http://localhost:5000/api/getUser/' + user)
+            .then((res) => {
+                setUsername(res.data.username);
+            })
+            .catch((err) => {
+                console.error(`Error fetching user data: ${err.message}`);
+            });
+    }, [user]); // Fetch data when props.user changes
 
     return (
-        <div className="homeQuestionCard-con">
-            <Box sx={{ flexGrow: 1 }}>
-                <Grid xs={12}>
-                    <h2>{props.title}</h2>
-                </Grid>
-                <Grid xs={12}>
-                    <p>{username}</p>
-                </Grid>
-                <Grid xs={12}>
-                    <p>{props.date}</p>
-                </Grid>
-                <Grid xs={12} sx={{ width: '900px', margin: 'auto' }}>
-                    <p>
-                        {props.text}
-                    </p>
-                </Grid>
-                {/* tags  */}
-                <Grid xs={12}>
-                    <Chip label="Tags" variant="outlined" />
-                </Grid>
-                <Grid xs={12} sx={{ marginTop: '20px' }}>
-                    <Button variant="contained" id={"btnReadMore_" + props.id} onClick={() => { sessionStorage.setItem("QuestionClick", props.id) }} href="/Question">Read More</Button>
-                </Grid>
-            </Box>
+        <div>
+            <div className="homeQuestionCard-con">
+                <Box sx={{ flexGrow: 1 }}>
+                    <Grid xs={12}>
+                        <h2>{title}</h2>
+                    </Grid>
+                    <Grid xs={12}>
+                        <p>{username}</p>
+                    </Grid>
+                    <Grid xs={12}>
+                        <p>{date}</p>
+                    </Grid>
+                    <Grid xs={12} sx={{ width: '900px', margin: 'auto' }}>
+                        <p>
+                            {text}
+                        </p>
+                    </Grid>
+                    {/* tags  */}
+                    <Grid xs={12}>
+                        <Chip label="Tags" variant="outlined" />
+                    </Grid>
+                    <Grid xs={12} sx={{ marginTop: '20px' }}>
+                        <Button variant="contained" id={"btnReadMore_" + id} onClick={() => { sessionStorage.setItem("QuestionClick", id) }} href="/Question">Read More</Button>
+                    </Grid>
+                </Box>
+            </div>
+            <br></br>
         </div>
     )
 }

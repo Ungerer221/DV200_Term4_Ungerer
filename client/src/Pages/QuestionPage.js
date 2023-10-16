@@ -1,196 +1,118 @@
 import React, { useEffect, useState } from "react";
-
-// Axios
 import Axios from "axios";
-
-// MUI 
 import Grid from '@mui/material/Grid';
 import Avatar from '@mui/material/Avatar';
 import Chip from '@mui/material/Chip';
 import Button from '@mui/material/Button';
+import { BiXCircle } from 'react-icons/bi';
 
-
-import {BiXCircle, BiLike, BiDislike} from 'react-icons/bi'
-
-// css
-import './QuestionPage.css'
-
-// Images
-import Image from '../Assets/Images/Item.png'
+import './QuestionPage.css';
+import AnswerCards from "../Components/AnswerCards";
 
 function QuestionPage() {
-
     const questionID = sessionStorage.getItem("QuestionClick");
-    console.log(questionID);
+    const [question, setQuestion] = useState({});
+    const [username, setUsername] = useState("");
 
-    const [question, setQuestion] = useState([]);
-    const [username, setUsername] = useState();
+    // Initialize as null in case there are no comments
+    const [answers, setAnswers] = useState(null);
+    const [renderAnswers, setRenderAnswers] = useState(null);
 
-    // Use effect for read question
     useEffect(() => {
-        Axios.get('http://localhost:5000/api/question_get_single/' + questionID)
-            .then(result => {
-                console.log('before');
+        // Fetch the question
+        console.log(`http://localhost:5000/api/question_get_single/${questionID}`);
+        Axios.get(`http://localhost:5000/api/question_get_single/${questionID}`)
+            .then((result) => {
                 setQuestion(result.data);
-                console.log('after');
-            })
-            .catch(err => {
-                console.log(err);
-                if (err.response) {
-                    console.log(err.response.status);
-                    console.log(err.response.data);
+
+                if (result.data.tags === undefined) {
+                    result.data.tags = ["No Tags"];
                 }
+
+                // Fetch the user
+                Axios.get(`http://localhost:5000/api/getUser/${result.data.user}`)
+                    .then((userResult) => {
+                        setUsername(userResult.data.username);
+                    })
+                    .catch((err) => {
+                        console.error("Error fetching user:", err);
+                    });
+
+                // If the comments array is not empty, do the following:
+                if (result.data.comments && Array.isArray(result.data.comments)) {
+                    setRenderAnswers(
+                        result.data.comments.map((item) => (
+                            <AnswerCards key={item._id} id={item._id} user={item.user} title={item.title} text={item.text} />
+                        ))
+                    );
+                }
+            })
+            .catch((err) => {
+                console.error("Error fetching question:", err);
             });
-
-        // Get specific user
-        Axios.get('http://localhost:5000/api/getUser/' + question.user)
-            .then(result => { setUsername(result.data.username); })
-            .catch(err => console.log(err))
-
-    }, [])
-
-    console.log(question);
+    }, [questionID]); // Include questionID as a dependency to re-fetch when it changes
 
     return (
-        <>
-            <div className="question-page-con">
-                {/* top row  */}
-                <Grid container spacing={0}>
-                    {/* Column 1 the user avatar */}
-                    <Grid xs={2}>
-                        <Grid xs={12}>
-                            <Avatar sx={{ width: '110px', height: '110px', margin: 'auto' }}>H</Avatar>
-                        </Grid>
-                        <Grid xs={12}>
-                            <p>{username}</p>
-                        </Grid>
-                        <Grid xs={12}>
-                            <p>{question.date}</p>
-                        </Grid>
+        <div className="question-page-con">
+            <Grid container spacing={0}>
+                {/* Render user information */}
+                <Grid item xs={2}>
+                    <Grid item xs={12}>
+                        <Avatar sx={{ width: '110px', height: '110px', margin: 'auto' }}>H</Avatar>
                     </Grid>
-                    {/* Column 2  */}
-                    <Grid xs={8}>
-                        <Grid>
-                            <Grid>
-                                <h1>{question.title}</h1>
-                            </Grid>
-                            <Grid>
-                                <p>
-                                    {question.text}
-                                </p>
-                            </Grid>
-                            <Grid>
-                                <Chip label="Tags" variant="outlined" />
-                                <Chip label="Tags" variant="outlined" />
-                                <Chip label="Tags" variant="outlined" />
-                            </Grid>
-                        </Grid>
+                    <Grid item xs={12}>
+                        <p>{username}</p>
                     </Grid>
-                    {/* coloumn 3  */}
-                    <Grid xs={2}>
-                        {/* question delete button  */}
-                        <Button variant="contained" sx={{margin:"auto"}}><BiXCircle/>Delete</Button>
+                    <Grid item xs={12}>
+                        <p>{question.date}</p>
                     </Grid>
                 </Grid>
-            </div>
-
-            {/* Image row  */}
-            <Grid container spacing={0}>
-                {/* Column 1 */}
-                <Grid xs={12}>
-                    <Grid xs={12}>
-                        <img src={Image} className="question_img" style={{ display: 'none' }} alt=""></img>
-                    </Grid>
+                {/* Render question information */}
+                <Grid item xs={8}>
+                    <h1>{question.title}</h1>
+                    <p>{question.text}</p>
+                    <div>
+                        {Array.isArray(question.tags) ? (
+                            question.tags.map((tag, index) => (
+                                <Chip key={index} label={tag} variant="outlined" />
+                            ))
+                        ) : (
+                            <Chip label={"No Tags"} variant="outlined" />
+                        )}
+                    </div>
+                </Grid>
+                {/* Render delete button */}
+                <Grid item xs={2}>
+                    <Button variant="contained" sx={{ margin: "auto" }}><BiXCircle />Delete</Button>
                 </Grid>
             </Grid>
 
-            {/* Answers row  */}
+            {/* Image row */}
+            <Grid container spacing={0}>
+                <Grid item xs={12}>
+                    <img src={""} className="question_img" alt="" />
+                </Grid>
+            </Grid>
+
+            {/* Answers section */}
             <div className="answers_bg">
                 <Grid container spacing={0}>
-                    {/* Title */}
-                    <Grid xs={12}>
-                        <Grid xs={2}>
-                            <p id="answers_text">Answers:</p>
+                    <Grid item xs={12}>
+                        <Grid container>
+                            <Grid item xs={2}>
+                                <p id="answers_text">Answers:</p>
+                            </Grid>
+                            <Grid item xs={10}></Grid>
                         </Grid>
-                        <Grid xs={10}></Grid>
                     </Grid>
                 </Grid>
+                {/* Render answers here */}
+                {/* If there are no answers, do the following: */}
+                {renderAnswers ? renderAnswers : <p>No answers available yet.</p>}
 
-                <Grid container spacing={0}>
-                    {/* Column 1 the user avatar */}
-                    <Grid xs={2}>
-                        <Grid xs={12}>
-                            <Avatar sx={{ width: '110px', height: '110px', margin: 'auto' }}>H</Avatar>
-                        </Grid>
-                        <Grid xs={12}>
-                            <p>Username</p>
-                        </Grid>
-                    </Grid>
-                    {/* Column 2  */}
-                    <Grid xs={8}>
-                        <Grid>
-                            <Grid>
-                                <h1>Answer Title</h1>
-                            </Grid>
-                            <Grid>
-                                <p>
-                                    Question Snippet Lorem Ipsum Dolor Sit Amet Lorem Ipsum Dolor
-                                    Sit Amet Lorem Ipsum Dolor Sit Amet Lorem Ipsum Dolor Sit
-                                    Amet Lorem Ipsum Dolor Sit Amet Lorem Ipsum
-                                </p>
-                            </Grid>
-                            <Grid>
-                                <Chip label="Tags" variant="outlined" />
-                                <Chip label="Tags" variant="outlined" />
-                                <Chip label="Tags" variant="outlined" />
-                            </Grid>
-                        </Grid>
-                    </Grid>
-                    {/* coloumn 3  */}
-                    <Grid xs={2}>
-                        {/* answer Delete Button  */}
-                        <Button variant="contained" sx={{margin:"auto"}}><BiXCircle/>Delete</Button>
-                    </Grid>
-                </Grid>
-
-                <Grid container spacing={0}>
-                    {/* Column 1 the user avatar */}
-                    <Grid xs={2}>
-                        <Grid xs={12}>
-                            <Avatar sx={{ width: '110px', height: '110px', margin: 'auto' }}>H</Avatar>
-                        </Grid>
-                        <Grid xs={12}>
-                            <p>Username</p>
-                        </Grid>
-                    </Grid>
-                    {/* Column 2  */}
-                    <Grid xs={8}>
-                        <Grid>
-                            <Grid>
-                                <h1>Answer Title</h1>
-                            </Grid>
-                            <Grid>
-                                <p>
-                                    Question Snippet Lorem Ipsum Dolor Sit Amet Lorem Ipsum Dolor
-                                    Sit Amet Lorem Ipsum Dolor Sit Amet Lorem Ipsum Dolor Sit
-                                    Amet Lorem Ipsum Dolor Sit Amet Lorem Ipsum
-                                </p>
-                            </Grid>
-                            <Grid>
-                                <Chip label="Tags" variant="outlined" />
-                                <Chip label="Tags" variant="outlined" />
-                                <Chip label="Tags" variant="outlined" />
-                            </Grid>
-                        </Grid>
-                    </Grid>
-                    {/* coloumn 3  */}
-                    <Grid xs={2}>
-                        {/* answer Delete Button  */}
-                        <Button variant="contained" sx={{margin:"auto"}}><BiXCircle/>Delete</Button>
-                    </Grid>
-                </Grid>
             </div>
-        </>
-    )
+        </div>
+    );
 }
+
 export default QuestionPage;

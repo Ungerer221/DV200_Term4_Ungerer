@@ -13,7 +13,6 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 
-
 // css
 import './HomePage.css'
 
@@ -27,18 +26,21 @@ function HomePage() {
 
     const [questions, setQuestions] = useState();
 
-    // Read all questions
-    Axios.get('http://localhost:5000/api/question_get_all/')
-        .then(res => {
-            let questionData = res.data;
+    useEffect(() => {
+        // Read all questions
+        Axios.get('http://localhost:5000/api/question_get_all/')
+            .then(res => {
+                let questionData = res.data;
 
-            let renderQuestions = questionData.map((item) =>
-                <HomeQuestionCard key={item._id} id={item._id} user={item.user} title={item.title} text={item.text} date={item.date} comments={item.comments} image={item.image}
-                />)
+                let renderQuestions = questionData.map((item) =>
+                    <HomeQuestionCard key={item._id} id={item._id} user={item.user} title={item.title} text={item.text} date={item.date} comments={item.comments} image={item.image}
+                    />)
 
-            setQuestions(renderQuestions);
-        })
-        .catch(err => console.log(err))
+                setQuestions(renderQuestions);
+            })
+            .catch(err => console.log(err))
+
+    }, [questions]); // Fetch data when props.user changes
 
     return (
         <>
@@ -69,9 +71,9 @@ function HomePage() {
                     {/* row 1 */}
                     <Grid container spacing={0}>
                         <Grid xs={12} sx={{ marginTop: '20px' }}>
-                        <Link to="/ask" className="home-ask-question-input">
-                            Ask A Question
-                        </Link>
+                            <Link to="/ask" className="home-ask-question-input">
+                                Ask A Question
+                            </Link>
                         </Grid>
                         <Grid xs={12} sx={{ marginTop: '20px' }}>
                             <input type="text" placeholder="Search for a question" className="home-search-question-input"></input>
