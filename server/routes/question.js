@@ -7,7 +7,7 @@ const QuestionSchema = require('../models/question.js');
 // Initialize the router
 const router = express();
 
-// Get all
+// Get all - WORKS
 router.get('/api/question_get_all/', async (req, res) => {
     const findQuestion = await QuestionSchema.find();
     res.json(findQuestion);
@@ -27,13 +27,16 @@ router.put('/api/question_update/:id', async (req, res) => {
         .catch(error => res.status(500).json(error))
 });
 
-// Create
+// Create - WORKS
 router.post('/api/question_add/', async (req, res) => {
     const Question = new QuestionSchema({
 
-        client: req.body.client,
-        orders: req.body.orders,
-        totalprice: req.body.totalprice
+        user: req.body.user,
+        title: req.body.title,
+        text: req.body.text,
+        date: req.body.date,
+        comments: req.body.comments,
+        image: req.body.image
 
     });
     await Question.save()
