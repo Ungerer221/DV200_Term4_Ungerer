@@ -59,7 +59,8 @@ function QuestionEditor() {
         payload.append('data', JSON.stringify(data));
         payload.append('image', Image);
 
-        Axios.post('http://localhost:5000/api/addquestion', payload);
+        // Axios.post('http://localhost:5000/api/addquestion', payload);
+        console.log(payload)
 
     }
 
@@ -112,7 +113,7 @@ function QuestionEditor() {
                     <img id="preview" style={{width: 100, height: 100}} alt="preview" />
                 </Box>
             </Grid>
-            <Button variant="contained" sx={{marginTop: '15px'}} > Done </Button>
+            <Button variant="contained" sx={{marginTop: '15px'}} onClick={addQuestion} > Done </Button>
         </>
     )
 }
