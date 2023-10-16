@@ -8,6 +8,7 @@ import CardContent from '@mui/material/CardContent';
 import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Unstable_Grid2';
+import { Typography } from "@mui/material";
 
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
@@ -42,6 +43,7 @@ function QuestionEditor() {
                 borderColor: '#FF3F00'
             }}>
                 <Grid xs={12} >
+                    <Typography variant="h4" sx={{color: '#FF3F00'}} > Ask a Question </Typography>
                     <TextField fullWidth required id="title" label="Add a title" variant="standard" />
                     <TextField fullWidth required id="content" label="Add Content" multiline rows={12} variant="standard" />
                 </Grid>
@@ -60,13 +62,13 @@ function QuestionEditor() {
                 borderRadius: 1
             }}>
                 <Box justifyContent={'center'} sx={{margin:"auto"}}>
-                    <Button component="label" variant="outlined">
+                    <Button component="label" variant="outlined" sx={{color: '#FF3F00', borderColor: '#FF3F00'}} >
                         Upload Image
                         <VisuallyHiddenInput type="file" />
                     </Button>
                 </Box>
-
             </Grid>
+            <Button variant="contained" sx={{marginTop: '15px'}} > Done </Button>
         </>
     )
 }
