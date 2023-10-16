@@ -22,7 +22,11 @@ const QuestionSchema = mongoose.Schema({
     comments: {
         type: Array,
         required: true
+    },
+    image: {
+        type: String
     }
+    // Comments will be an array of objects
 
 });
 

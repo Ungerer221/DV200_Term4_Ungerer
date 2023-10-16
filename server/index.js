@@ -17,7 +17,7 @@ mongoose.connect(process.env.DB_CONNECTION, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     dbName: '', //Collection Name
-}).then(() => console.log("Connected to "))
+}).then(() => console.log("Connected to Database"))
     .catch((err) => {
         console.log("No Connection. Reason: " + err);
     });
