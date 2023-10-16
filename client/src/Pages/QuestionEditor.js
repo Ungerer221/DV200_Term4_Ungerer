@@ -61,7 +61,15 @@ function QuestionEditor() {
         payload.append('data', JSON.stringify(data));
         payload.append('image', Image);
 
-        Axios.post('http://localhost:5000/api/addquestion', payload);
+        Axios.post('http://localhost:5002/api/addquestion', payload)
+        .then(
+            (response) => {
+                console.log(response);
+            },
+            (error) => {
+                console.log(error);
+            }
+        )
         console.log(payload)
 
     }

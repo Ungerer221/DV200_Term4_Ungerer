@@ -45,7 +45,7 @@ const upload = multer({
 
 // Create
 router.post('/api/addquestion', upload.single('image'), async (req, res) => {
-
+    console.log('add question')
     let data = JSON.parse(req.body.data)
     const question = new QuestionSchema({
         user: data.id,
