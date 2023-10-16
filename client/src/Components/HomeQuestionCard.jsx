@@ -15,7 +15,6 @@ import Axios from "axios";
 const HomeQuestionCard = (props) => {
 
     // TODO 
-    // Get username from the ID entered
     // Automatic tag population
     // Read more button that sends data to the individual question page
 
@@ -23,9 +22,7 @@ const HomeQuestionCard = (props) => {
 
     // Get specific user
     Axios.get('http://localhost:5000/api/getUser/' + props.user)
-        .then(res => {
-            setUsername(res.data);
-        })
+        .then(res => { setUsername(res.data.username) })
         .catch(err => console.log(err))
 
     return (
@@ -50,7 +47,7 @@ const HomeQuestionCard = (props) => {
                     <Chip label="Tags" variant="outlined" />
                 </Grid>
                 <Grid xs={12} sx={{ marginTop: '20px' }}>
-                    <Button variant="contained" id={"btnReadMore_" + props.id}>Read More</Button>
+                    <Button variant="contained" id={"btnReadMore_" + props.id} onClick={() => { sessionStorage.setItem("QuestionClick", props.id) }} href="/Question">Read More</Button>
                 </Grid>
             </Box>
         </div>

@@ -74,9 +74,6 @@ function QuestionEditor() {
 
     }
 
-
-
-
     return (
         <>
             {/* <Box sx={{width: 200}} alignItems="center">
