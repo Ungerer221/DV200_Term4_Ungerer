@@ -49,7 +49,7 @@ function QuestionEditor() {
         const payload = new FormData()
 
         let data = {
-        id: userID,
+        id: '111',
         title: title,
         text: content,
         date: date(),

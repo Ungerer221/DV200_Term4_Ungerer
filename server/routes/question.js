@@ -7,6 +7,9 @@ const QuestionSchema = require('../models/question.js');
 // Initialize the router
 const router = express();
 
+const path = require('path');
+const multer = require('multer');
+
 // Get all - WORKS
 router.get('/api/question_get_all/', async (req, res) => {
     const findQuestion = await QuestionSchema.find();
