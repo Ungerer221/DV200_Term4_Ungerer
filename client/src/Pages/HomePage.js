@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from 'react-router-dom';
 
 // Axios import
 import Axios from "axios";
@@ -12,6 +13,7 @@ import Col from 'react-bootstrap/Col';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
+
 
 // css
 import './HomePage.css'
@@ -68,7 +70,9 @@ function HomePage() {
                     {/* row 1 */}
                     <Grid container spacing={0}>
                         <Grid xs={12} sx={{ marginTop: '20px' }}>
-                            <button type="text" placeholder="Ask a Question" className="home-ask-question-input">Ask A Question</button>
+                        <Link to="/ask" className="home-ask-question-input">
+                            Ask A Question
+                        </Link>
                         </Grid>
                         <Grid xs={12} sx={{ marginTop: '20px' }}>
                             <input type="text" placeholder="Search for a question" className="home-search-question-input"></input>
