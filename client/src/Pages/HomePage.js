@@ -1,5 +1,8 @@
 import React from "react";
 
+// Import Axios
+import Axios from "axios";
+
 // Bootstrap 
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -16,18 +19,36 @@ import './HomePage.css'
 // components
 import HomeQuestionCard from "../Components/HomeQuestionCard";
 
+// Import UseState and Effect
+import { useState, useEffect } from 'react';
 
 function HomePage() {
+
+    const [questions, setQuestions] = useState();
+
+    // Read all questions
+    Axios.get('http://localhost:5000/api/question_get_all/')
+        .then(res => {
+            let questionData = res.data;
+
+            let renderQuestions = questionData.map((item) =>
+                <HomeQuestionCard key={item._id} id={item._id} user={item.user} title={item.title} text={item.text} date={item.date} comments={item.comments} image={item.image}
+                />)
+
+            setQuestions(renderQuestions);
+        })
+        .catch(err => console.log(err))
+
     return (
         <>
             <div className="home-page-main-con">
 
                 {/* Section 1 (Landing view) */}
-                <Box sx={{ flexGrow: 1, width: '100%', height: '964px' , marginTop:'40px' }}>
-                    <Grid container spacing={0} sx={{  height: '800px' }}>
+                <Box sx={{ flexGrow: 1, width: '100%', height: '964px', marginTop: '40px' }}>
+                    <Grid container spacing={0} sx={{ height: '800px' }}>
                         {/* text content */}
-                        <Grid xs={6} sx={{ margin: 'auto',}}>
-                            <h1 style={{fontWeight:'400', fontSize:'64px'}}>Welcome to Open Dev Q&A site.</h1>
+                        <Grid xs={6} sx={{ margin: 'auto', }}>
+                            <h1 style={{ fontWeight: '400', fontSize: '64px' }}>Welcome to Open Dev Q&A site.</h1>
                             <p style={{}}>
                                 <b>Description: </b>
                                 Yorem ipsum dolor sit amet, consectetur adipiscing elit.
@@ -36,7 +57,7 @@ function HomePage() {
                             <Button variant="contained">Take a Tour</Button>
                         </Grid>
                         {/* Image coloumn  */}
-                        <Grid xs={6} sx={{ margin: 'auto',}}>
+                        <Grid xs={6} sx={{ margin: 'auto', }}>
                             <div className="image-placeholder"></div>
                         </Grid>
                     </Grid>
@@ -54,7 +75,7 @@ function HomePage() {
                         </Grid>
                         {/* question tile  */}
                         <Grid xs={12} sx={{ marginTop: '20px' }}>
-                            <HomeQuestionCard />
+                            {questions}
                         </Grid>
                     </Grid>
                 </Box>
