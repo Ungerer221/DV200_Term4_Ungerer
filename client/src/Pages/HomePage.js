@@ -47,7 +47,7 @@ function HomePage() {
                     {/* row 1 */}
                     <Grid container spacing={0}>
                         <Grid xs={12} sx={{ marginTop: '20px' }}>
-                            <input type="text" placeholder="Ask a Question" className="home-ask-question-input"></input>
+                            <button type="text" placeholder="Ask a Question" className="home-ask-question-input">Ask A Question</button>
                         </Grid>
                         <Grid xs={12} sx={{ marginTop: '20px' }}>
                             <input type="text" placeholder="Search for a question" className="home-search-question-input"></input>
