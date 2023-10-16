@@ -1,9 +1,5 @@
 import React, { useState } from "react"
 
-// used to link between pages 
-import { Nav } from 'react-bootstrap'
-
-
 // CSS 
 import './HomeQuestionCard.css'
 
@@ -39,7 +35,7 @@ const HomeQuestionCard = (props) => {
                     <h2>{props.title}</h2>
                 </Grid>
                 <Grid xs={12}>
-                    <p>{props.user}</p>
+                    <p>{username}</p>
                 </Grid>
                 <Grid xs={12}>
                     <p>{props.date}</p>
@@ -54,12 +50,7 @@ const HomeQuestionCard = (props) => {
                     <Chip label="Tags" variant="outlined" />
                 </Grid>
                 <Grid xs={12} sx={{ marginTop: '20px' }}>
-                    {/* <Button variant="contained" id={"btnReadMore_" + props.id}>Read More</Button> */}
-
-                    <Nav.Link href="/QuestionPage.js">
-                        {/* <Button variant="contained">Read More</Button> */}
-                        <Button variant="contained" id={"btnReadMore_" + props.id}>Read More</Button>
-                    </Nav.Link>
+                    <Button variant="contained" id={"btnReadMore_" + props.id}>Read More</Button>
                 </Grid>
             </Box>
         </div>

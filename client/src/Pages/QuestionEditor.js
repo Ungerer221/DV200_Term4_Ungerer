@@ -52,7 +52,7 @@ function QuestionEditor() {
         id: '111',
         title: title,
         text: content,
-        date: date(),
+        date: Date(),
         comments: '',
         }
 
