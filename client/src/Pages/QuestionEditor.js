@@ -26,7 +26,9 @@ const VisuallyHiddenInput = styled('input')({
 });
 
 function QuestionEditor() {
-
+    
+    const today = new Date();
+    const formatDate = today.getDate() + '/' + (today.getMonth()+1) + '/' + today.getFullYear();
     const [Image, setImage] = useState();
     const [title, setTitle] = useState();
     const [content, setContent] = useState();
@@ -52,14 +54,14 @@ function QuestionEditor() {
         id: '111',
         title: title,
         text: content,
-        date: Date(),
+        date: formatDate,
         comments: '',
         }
 
         payload.append('data', JSON.stringify(data));
         payload.append('image', Image);
 
-        // Axios.post('http://localhost:5000/api/addquestion', payload);
+        Axios.post('http://localhost:5000/api/addquestion', payload);
         console.log(payload)
 
     }
