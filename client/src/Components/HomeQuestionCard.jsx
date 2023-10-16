@@ -13,7 +13,8 @@ import Grid from '@mui/material/Grid';
 import Chip from '@mui/material/Chip';
 import Button from '@mui/material/Button';
 
-import Axios from "Axios";
+// Axios import
+import Axios from "axios";
 
 const HomeQuestionCard = (props) => {
 

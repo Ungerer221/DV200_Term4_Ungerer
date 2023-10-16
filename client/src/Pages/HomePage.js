@@ -1,6 +1,6 @@
 import React from "react";
 
-// Import Axios
+// Axios import
 import Axios from "axios";
 
 // Bootstrap 

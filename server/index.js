@@ -5,6 +5,7 @@ const { path } = require('path');
 
 // Route Uses
 const questionRoute = require('./routes/question');
+const userRoute = require('./routes/users');
 
 require('dotenv/config')
 
@@ -21,6 +22,7 @@ app.use(express.urlencoded({ extended: false }));
 
 // Must be below the express
 app.use(questionRoute);
+app.use(userRoute);
 
 mongoose.connect(process.env.DB_CONNECTION, {
     useNewUrlParser: true,
