@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useLocation } from 'react-router-dom';
 import Axios from "axios";
 import Grid from '@mui/material/Grid';
 import Avatar from '@mui/material/Avatar';
@@ -14,14 +15,20 @@ function QuestionPage() {
     const [question, setQuestion] = useState({});
     const [username, setUsername] = useState("");
 
+    const location = useLocation();
+    const searchParams = new URLSearchParams(location.search);
+    const id = searchParams.get('id');
+
+
     // Initialize as null in case there are no comments
-    const [answers, setAnswers] = useState(null);
+    const [answers, setAnswers] = useState(0);
     const [renderAnswers, setRenderAnswers] = useState(null);
 
     useEffect(() => {
         // Fetch the question
-        console.log(`http://localhost:5000/api/question_get_single/${questionID}`);
-        Axios.get(`http://localhost:5000/api/question_get_single/${questionID}`)
+        console.log(`http://localhost:5002/api/question_get_single/${questionID}`);
+        console.log('id' + id );
+        Axios.get(`http://localhost:5002/api/question_get_single/${questionID}`)
             .then((result) => {
                 setQuestion(result.data);
 
@@ -45,6 +52,7 @@ function QuestionPage() {
                             <AnswerCards key={item._id} id={item._id} user={item.user} title={item.title} text={item.text} />
                         ))
                     );
+                    setAnswers(true)
                 }
             })
             .catch((err) => {
@@ -108,7 +116,7 @@ function QuestionPage() {
                 </Grid>
                 {/* Render answers here */}
                 {/* If there are no answers, do the following: */}
-                {renderAnswers ? renderAnswers : <p>No answers available yet.</p>}
+                {answers ? renderAnswers : <p>No answers available yet.</p>}
 
             </div>
         </div>
