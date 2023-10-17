@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from 'react-router-dom';
 
 // CSS 
 import './HomeQuestionCard.css';
@@ -15,9 +16,11 @@ import Axios from "axios";
 const HomeQuestionCard = ({ user, title, date, text, id }) => {
     const [username, setUsername] = useState("");
 
+    const navigate = useNavigate();
+
     // Get specific user
     useEffect(() => {
-        Axios.get('http://localhost:5000/api/getUser/' + user)
+        Axios.get('http://localhost:5002/api/getUser/' + user)
             .then((res) => {
                 setUsername(res.data.username);
             })
@@ -25,6 +28,13 @@ const HomeQuestionCard = ({ user, title, date, text, id }) => {
                 console.error(`Error fetching user data: ${err.message}`);
             });
     }, [user]); // Fetch data when props.user changes
+
+    const redirect = () => {
+        const queryParams = new URLSearchParams();
+        queryParams.append('id', id);
+        sessionStorage.setItem("QuestionClick", id);
+        navigate(`/question?${queryParams.toString()}`);
+    }
 
     return (
         <div>
@@ -49,7 +59,7 @@ const HomeQuestionCard = ({ user, title, date, text, id }) => {
                         <Chip label="Tags" variant="outlined" />
                     </Grid>
                     <Grid xs={12} sx={{ marginTop: '20px' }}>
-                        <Button variant="contained" id={"btnReadMore_" + id} onClick={() => { sessionStorage.setItem("QuestionClick", id) }} href="/Question">Read More</Button>
+                        <Button variant="contained" id={"btnReadMore_" + id} onClick={redirect()} > Read More </Button>
                     </Grid>
                 </Box>
             </div>

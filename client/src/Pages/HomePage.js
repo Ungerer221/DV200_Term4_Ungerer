@@ -28,7 +28,7 @@ function HomePage() {
 
     useEffect(() => {
         // Read all questions
-        Axios.get('http://localhost:5000/api/question_get_all/')
+        Axios.get('http://localhost:5002/api/question_get_all/')
             .then(res => {
                 let questionData = res.data;
 
@@ -40,7 +40,7 @@ function HomePage() {
             })
             .catch(err => console.log(err))
 
-    }, [questions]); // Fetch data when props.user changes
+    }, []); // Fetch data when props.user changes
 
     return (
         <>
