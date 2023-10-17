@@ -40,6 +40,6 @@ mongoose.connect(process.env.DB_CONNECTION, {
         console.log("No Connection. Reason: " + err);
     });
 
-const PORT = process.env.PORT || 5002;
+const PORT = process.env.PORT || 5003;
 
 app.listen(PORT, () => {console.log(`Server has started at port: ${PORT}`)});

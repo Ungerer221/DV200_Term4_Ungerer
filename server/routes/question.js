@@ -22,14 +22,6 @@ router.get('/api/question_get_single/:id', async (req, res) => {
     res.json(findQuestionSingle)
 });
 
-// Update
-router.put('/api/question_update/:id', async (req, res) => {
-    const { id } = req.params.id;
-    await QuestionSchema.updateOne({ id }, req.body)
-        .then(response => res.json(response))
-        .catch(error => res.status(500).json(error))
-});
-
 //Middleware
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -43,21 +35,64 @@ const upload = multer({
     storage: storage
 })
 
+// Update
+router.put('/api/question/:id', upload.single('image'), async (req, res) => {
+    let data = JSON.parse(req.body.data)
+    if (req.file) {
+        const question = ({
+            user: data.id,
+            title: data.title,
+            text: data.text,
+            date: data.date,
+            comments: data.comments,
+            image: req.file.filename
+        })
+        await QuestionSchema.findByIdAndUpdate(req.params.id, question)
+            .then(response => res.json(response))
+            .catch(error => res.status(500).json(error))
+    } else {
+        const question = ({
+            user: data.id,
+            title: data.title,
+            text: data.text,
+            date: data.date,
+            comments: data.comments
+        })
+        await QuestionSchema.findByIdAndUpdate(req.params.id, question)
+            .then(response => res.json(response))
+            .catch(error => res.status(500).json(error))
+    }
+});
+
 // Create
 router.post('/api/addquestion', upload.single('image'), async (req, res) => {
-    console.log('add question')
     let data = JSON.parse(req.body.data)
-    const question = new QuestionSchema({
-        user: data.id,
-        title: data.title,
-        text: data.text,
-        date: data.date,
-        comments: data.comments,
-        image: req.file.filename
-    })
-    await question.save()
-        .then(response => res.json(response))
-        .catch(error => res.status(500).json(error)) // status 500 is an internal service error
+    if (req.file) {
+        const question = new QuestionSchema({
+            user: data.id,
+            title: data.title,
+            text: data.text,
+            date: data.date,
+            comments: data.comments,
+            image: req.file.filename
+        })
+        await question.save()
+            .then(response => res.json(response))
+            .catch(error => res.status(500).json(error)) // status 500 is an internal service error
+    } else {
+        const question = new QuestionSchema({
+            user: data.id,
+            title: data.title,
+            text: data.text,
+            date: data.date,
+            comments: data.comments,
+            image: ""
+        })
+        await question.save()
+            .then(response => res.json(response))
+            .catch(error => res.status(500).json(error))
+    }
+
 });
 
 //Delete

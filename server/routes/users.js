@@ -1,6 +1,5 @@
-const express = require('express');
-const router = express();
-const User = require('../models/users');
+const router = require('express').Router();
+const {User, validate} = require('../models/users');
 const bcrypt = require("bcrypt");
 const Joi = require("joi");
 
@@ -51,17 +50,27 @@ router.get('/api/getUser/:id', async (req, res) => {
 });
 
 // Create
-router.post('/api/addUser/', async (req, res) => {
-    const user = new User({
 
-        username: req.body.username,
-        email: req.body.email,
-        password: req.body.password
+router.post('/', async (req, res) => {
+    try {
+        console.log(req.body)
+        const {error} = validate(req.body);
+        if (error) {
+            return res.status(400).send({message: error.details[0].message});
+        };
+        const user = await User.findOne({email: req.body.email});
 
-    });
-    await user.save()
-        .then(response => res.json(response))
-        .catch(error => res.status(500).json(error))
+        if (user) {
+            return res.status(409).send({message: "An account with that email already exists"});
+        }
+        const salt = await bcrypt.genSalt(Number(process.env.SALT));
+        const hashPassword = await bcrypt.hash(req.body.password, salt);
+
+        await new User({...req.body, password: hashPassword}).save();
+        res.status(201).send({message: "User created successfully!! Log In"});
+    } catch (error) {
+        res.status(500).send({message: "Internal Servor Error"});
+    }
 });
 
 // add delete user
