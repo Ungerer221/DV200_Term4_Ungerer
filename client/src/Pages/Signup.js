@@ -1,16 +1,16 @@
 import React from 'react';
 import './Forms.css';
 
-import HomePage from './HomePage'
+// import HomePage from './HomePage'
 
 const SignUp = () => {
 
-  let content;
-  if (isLogged) {
-    content = <HomePage />;
-  } else {
-    content = <SignUp />;
-  }
+  // let content;
+  // if (isLogged) {
+  //   content = <HomePage />;
+  // } else {
+  //   content = <SignUp />;
+  // }
 
   return (
     <div className="form-container">
