@@ -34,7 +34,7 @@ const HomeQuestionCard = ({ user, title, date, text, id }) => {
         queryParams.append('id', id);
         sessionStorage.setItem("QuestionClick", id);
         navigate(`/question?${queryParams.toString()}`);
-    }
+    };
 
     return (
         <div>
@@ -59,7 +59,7 @@ const HomeQuestionCard = ({ user, title, date, text, id }) => {
                         <Chip label="Tags" variant="outlined" />
                     </Grid>
                     <Grid xs={12} sx={{ marginTop: '20px' }}>
-                        <Button variant="contained" id={"btnReadMore_" + id} onClick={redirect()} > Read More </Button>
+                        <Button variant="contained" id={"btnReadMore_" + id} onClick={redirect} > Read More </Button>
                     </Grid>
                 </Box>
             </div>

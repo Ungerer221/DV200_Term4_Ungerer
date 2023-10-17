@@ -17,7 +17,7 @@ function QuestionPage() {
 
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
-    const id = searchParams.get('id');
+    let id = searchParams.get('id');
 
 
     // Initialize as null in case there are no comments
@@ -26,9 +26,9 @@ function QuestionPage() {
 
     useEffect(() => {
         // Fetch the question
-        console.log(`http://localhost:5002/api/question_get_single/${questionID}`);
-        console.log('id' + id );
-        Axios.get(`http://localhost:5002/api/question_get_single/${questionID}`)
+        // console.log(`http://localhost:5002/api/question_get_single/${questionID}`);
+        console.log('id ' + id );
+        Axios.get(`http://localhost:5002/api/question_get_single/${id}`)
             .then((result) => {
                 setQuestion(result.data);
 
@@ -37,7 +37,7 @@ function QuestionPage() {
                 }
 
                 // Fetch the user
-                Axios.get(`http://localhost:5000/api/getUser/${result.data.user}`)
+                Axios.get(`http://localhost:5002/api/getUser/${result.data.user}`)
                     .then((userResult) => {
                         setUsername(userResult.data.username);
                     })
@@ -46,7 +46,7 @@ function QuestionPage() {
                     });
 
                 // If the comments array is not empty, do the following:
-                if (result.data.comments && Array.isArray(result.data.comments)) {
+                if (result.data.comments.length > 1 ) {
                     setRenderAnswers(
                         result.data.comments.map((item) => (
                             <AnswerCards key={item._id} id={item._id} user={item.user} title={item.title} text={item.text} />
@@ -58,7 +58,7 @@ function QuestionPage() {
             .catch((err) => {
                 console.error("Error fetching question:", err);
             });
-    }, [questionID]); // Include questionID as a dependency to re-fetch when it changes
+    }, []); // Include questionID as a dependency to re-fetch when it changes
 
     return (
         <div className="question-page-con">

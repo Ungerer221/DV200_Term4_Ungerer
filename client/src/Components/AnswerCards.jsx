@@ -17,9 +17,10 @@ import Axios from "axios";
 const AnswerCards = (props) => {
 
     const [username, setUsername] = useState();
+    let isAdmin = false;
 
     // Get specific user
-    Axios.get('http://localhost:5000/api/getUser/' + props.user)
+    Axios.get('http://localhost:5002/api/getUser/' + props.user)
         .then(res => { setUsername(res.data.username) })
         .catch(err => console.log(err))
 
@@ -53,7 +54,7 @@ const AnswerCards = (props) => {
                     {/* colomn 3  */}
                     <Grid xs={2}>
                         {/* answer Delete Button  */}
-                        <Button variant="contained" sx={{ margin: "auto" }}><BiXCircle />Delete</Button>
+                        {isAdmin && <Button variant="contained" sx={{ margin: "auto" }}> <BiXCircle/> Delete </Button>}
                     </Grid>
                 </Grid>
             </Box>

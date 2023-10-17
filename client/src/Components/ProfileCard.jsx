@@ -18,7 +18,7 @@ const ProfileCard = () => {
             <div className="profilecard-container">
                 <Grid container spacing={0}>
                     <Grid item xs={2} md={2}>
-                        <h3>profile image</h3>
+                        <image />
                     </Grid>
                     <Grid item xs={6} md={6}>
                         <div className="profilecard-userInfo-con">

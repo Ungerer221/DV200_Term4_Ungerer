@@ -6,6 +6,7 @@ import Button from '@mui/material/Button';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Typography, unstable_toUnitless } from "@mui/material";
 import Axios from 'axios';
+import Alert from '@mui/material/Alert';
 
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
@@ -20,12 +21,15 @@ const VisuallyHiddenInput = styled('input')({
 });
 
 function QuestionEditor() {
-    
+
     const today = new Date();
-    const formatDate = today.getDate() + '/' + (today.getMonth()+1) + '/' + today.getFullYear();
+    const formatDate = today.getDate() + '/' + (today.getMonth() + 1) + '/' + today.getFullYear();
     const [Image, setImage] = useState();
     const [title, setTitle] = useState();
     const [content, setContent] = useState();
+    const [titleAlert, setTitleAlert] = useState(false);
+    const [contentAlert, setContentAlert] = useState(false);
+
 
     const getImage = (e) => {
         let imageFile = e.target.files[0];
@@ -39,33 +43,43 @@ function QuestionEditor() {
         };
         reader.readAsDataURL(e.target.files[0]);
     };
-    
+
 
     const addQuestion = (e) => {
-        const payload = new FormData()
 
-        let data = {
-        id: '111',
-        title: title,
-        text: content,
-        date: formatDate,
-        comments: '',
-        }
+        if (title === '' && content === '') {
+            setTitleAlert(true);
+            setContentAlert(true);
+        } else if (content === '') {
+            setContentAlert(true);
+        } else if (title === '') {
+            setTitleAlert(true);
+        } else if (title && content) {
+            setTitleAlert(false);
+            setContentAlert(false);
 
-        payload.append('data', JSON.stringify(data));
-        payload.append('image', Image);
-
-        Axios.post('http://localhost:5002/api/addquestion', payload)
-        .then(
-            (response) => {
-                console.log(response);
-            },
-            (error) => {
-                console.log(error);
+            const payload = new FormData()
+            let data = {
+                id: '652d15bff515d55a85c47a7d', // replace with actual ID input (from session/localstorage?)
+                title: title,
+                text: content,
+                date: formatDate,
+                comments: '',
             }
-        )
-        console.log(payload)
+            payload.append('data', JSON.stringify(data));
+            payload.append('image', Image);
 
+            Axios.post('http://localhost:5002/api/addquestion', payload)
+                .then(
+                    (response) => {
+                        console.log(response.statusText);
+                    },
+                    (error) => {
+                        console.log(error);
+                    }
+                )
+            console.log(payload)
+        }
     }
 
     return (
@@ -88,9 +102,11 @@ function QuestionEditor() {
                 borderColor: '#FF3F00'
             }}>
                 <Grid xs={12} >
-                    <Typography variant="h4" sx={{color: '#FF3F00'}} > Ask a Question </Typography>
+                    <Typography variant="h4" sx={{ color: '#FF3F00' }} > Ask a Question </Typography>
                     <TextField fullWidth required id="title" label="Add a title" variant="standard" onChange={(e) => setTitle(e.target.value)} />
+                    {titleAlert && <Alert severity="error"> Add a Title </Alert>}
                     <TextField fullWidth required id="content" label="Add Content" multiline rows={12} variant="standard" onChange={(e) => setContent(e.target.value)} />
+                    {contentAlert && <Alert severity="error"> Add Content </Alert>}
                 </Grid>
             </Grid>
 
@@ -106,15 +122,15 @@ function QuestionEditor() {
                 borderBottomColor: '#FF3F00',
                 borderRadius: 1
             }}>
-                <Box justifyContent={'center'} sx={{margin:"auto"}}>
-                    <Button component="label" variant="outlined" sx={{color: '#FF3F00', borderColor: '#FF3F00'}} >
+                <Box justifyContent={'center'} sx={{ margin: "auto" }}>
+                    <Button component="label" variant="outlined" sx={{ color: '#FF3F00', borderColor: '#FF3F00' }} >
                         Upload Image
                         <VisuallyHiddenInput type="file" onChange={getImage} />
                     </Button>
-                    <img id="preview" style={{width: 100, height: 100}} alt="preview" />
+                    <img id="preview" style={{ width: 100, height: 100, marginTop: 20 }} alt=" " />
                 </Box>
             </Grid>
-            <Button variant="contained" sx={{marginTop: '15px'}} onClick={addQuestion} > Done </Button>
+            <Button variant="contained" sx={{ marginTop: '15px' }} onClick={addQuestion} > Done </Button>
         </>
     )
 }

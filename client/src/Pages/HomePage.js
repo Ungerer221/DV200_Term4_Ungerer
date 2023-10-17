@@ -33,9 +33,7 @@ function HomePage() {
                 let questionData = res.data;
 
                 let renderQuestions = questionData.map((item) =>
-                    <HomeQuestionCard key={item._id} id={item._id} user={item.user} title={item.title} text={item.text} date={item.date} comments={item.comments} image={item.image}
-                    />)
-
+                    <HomeQuestionCard key={item._id} id={item._id} user={item.user} title={item.title} text={item.text} date={item.date} comments={item.comments} image={item.image} />);
                 setQuestions(renderQuestions);
             })
             .catch(err => console.log(err))
