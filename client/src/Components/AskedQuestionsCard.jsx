@@ -1,7 +1,8 @@
 import React from "react";
 import { Nav } from 'react-bootstrap'
+import { useState } from 'react';
 
-import {BiXCircle, BiLike, BiDislike} from 'react-icons/bi'
+import { BiXCircle, BiLike, BiDislike } from 'react-icons/bi'
 
 // MUI 
 import Grid from '@mui/material/Grid';
@@ -13,6 +14,23 @@ import Button from '@mui/material/Button';
 import './AskedQuestionsCard.css'
 
 const AskedQuestionsCard = () => {
+
+    // likes & dislike counter function 
+    // likes 
+    const [like, setLike] = useState(0); // here we can fetch the number from the database
+
+    function addLike() {
+        setLike(like + 1);
+    };
+
+    // dislikes 
+    const [dislike, setDislike] = useState(0);
+
+    function addDislike() {
+        setDislike(dislike + 1);
+    };
+    // function end
+
     return (
         <div className="askedQuestionCard-Container">
             {/* row 1  */}
@@ -30,8 +48,8 @@ const AskedQuestionsCard = () => {
 
                 {/* like and dislike buttons con  */}
                 <div className="askedQuestionCard-like-dislike-btn-con">
-                    <button><BiLike/> Like</button>
-                    <button className="askedQuestionCard-dislike-btn"><BiDislike/> Dislike</button>
+                    <button onClick={addLike}><BiLike /> Like {like}</button>
+                    <button className="askedQuestionCard-dislike-btn" onClick={addDislike}><BiDislike /> Dislike {dislike}</button>
                     {/* <button><BiXCircle/> Delete</button> */}
                 </div>
             </div>
@@ -80,11 +98,11 @@ const AskedQuestionsCard = () => {
             <p style={{ color: '#37C5F1', fontWeight: 'bold', cursor: 'pointer' }}>See More</p>
 
             <div className="askedQuestionCard-medals">
-                <Chip sx={{height:"20px"}} label="JavaScript" />
-                <Chip sx={{height:"20px"}} label="CSS" />
-                <Chip sx={{height:"20px"}} label="HTML" />
-                <Chip sx={{height:"20px"}} label="React" />
-                <Chip sx={{height:"20px"}} label="Python" />
+                <Chip sx={{ height: "20px" }} label="JavaScript" />
+                <Chip sx={{ height: "20px" }} label="CSS" />
+                <Chip sx={{ height: "20px" }} label="HTML" />
+                <Chip sx={{ height: "20px" }} label="React" />
+                <Chip sx={{ height: "20px" }} label="Python" />
             </div>
 
         </div>

@@ -25,13 +25,13 @@ function App() {
     setIsLogged = true
   }
 
-  let content;
-  // so if isLogged = true the it must allow the user to ask question 
-  if (IsLogged) {
-    content = document.getElementById("");
-  } else {
-    content = <SignUp />;
-  }
+  // let content;
+  // // so if isLogged = true the it must allow the user to ask question 
+  // if (IsLogged) {
+  //   content = document.getElementById("");
+  // } else {
+  //   content = <SignUp />;
+  // }
 
   return (
     <div className="App">
