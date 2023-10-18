@@ -1,6 +1,8 @@
 import React from 'react';
 import './Forms.css';
 
+import {Nav} from 'react-bootstrap'
+
 const SignIn = () => {
   return (
     <div className="form-container">
@@ -19,7 +21,7 @@ const SignIn = () => {
         <br></br>
 
         <div className="form-footer">
-          <p>Don't Have An Account? <br></br><span>Sign Up</span></p>
+          <p>Don't Have An Account? <br></br><Nav.Link href='SignUp' style={{textDecoration:'none', color:'#fc525e',fontWeight:'700'}}>Sign Up</Nav.Link></p>
         </div>
       </form>
       <br></br>

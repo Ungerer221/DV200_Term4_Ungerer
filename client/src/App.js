@@ -1,4 +1,4 @@
-import logo from './logo.svg';
+// import logo from './logo.svg';
 import './App.css';
 import { Route, Routes, Navigate, Switch } from 'react-router-dom';
 
@@ -12,14 +12,13 @@ import SignIn from './Pages/Signin'
 import SignUp from './Pages/Signup';
 import QuestionPage from './Pages/QuestionPage';
 import QuestionEditor from './Pages/QuestionEditor';
+import { useState } from 'react';
 
 function App() {
 
   // !!! please check this !!!
-  let isLogged = localStorage.getItem("token");
-
+  const isLogged = localStorage.getItem("token");
   let content;
-
   // if the user is logged the it shows the home page and if not logged in the it will take them to the signup page. 
   // it doesnt work but is this the right way to do it ?
   if (isLogged) {
@@ -27,6 +26,8 @@ function App() {
   } else {
     content = <SignUp />;
   }
+
+  // useState
 
   return (
     <div className="App">
@@ -52,10 +53,11 @@ function App() {
 
         {/* //!!! Please check this !!!  */}
         {isLogged && <Route path="/" element={<HomePage />} />}
+        {/* this is making so that the used to be home path is now the signup until user is logged in  */}
         <Route path="/" element={<Navigate replace to="/SignUp" />} />
 
 
-        <Route path='/' element={<HomePage />} />
+        {/* <Route path='/Home' element={<HomePage />} /> */}
         <Route path='/Profile' element={<Profile />} />
         <Route path='/Signin' element={<SignIn />} />
         <Route path='/Signup' element={<SignUp />} />
