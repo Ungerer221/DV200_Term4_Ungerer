@@ -25,8 +25,8 @@ function QuestionEditor() {
     const today = new Date();
     const formatDate = today.getDate() + '/' + (today.getMonth() + 1) + '/' + today.getFullYear();
     const [Image, setImage] = useState();
-    const [title, setTitle] = useState();
-    const [content, setContent] = useState();
+    const [title, setTitle] = useState('');
+    const [content, setContent] = useState('');
     const [titleAlert, setTitleAlert] = useState(false);
     const [contentAlert, setContentAlert] = useState(false);
 
@@ -52,8 +52,10 @@ function QuestionEditor() {
             setContentAlert(true);
         } else if (content === '') {
             setContentAlert(true);
+            setTitleAlert(false);
         } else if (title === '') {
             setTitleAlert(true);
+            setContentAlert(false);
         } else if (title && content) {
             setTitleAlert(false);
             setContentAlert(false);
@@ -76,6 +78,7 @@ function QuestionEditor() {
                     },
                     (error) => {
                         console.log(error);
+
                     }
                 )
             console.log(payload)
