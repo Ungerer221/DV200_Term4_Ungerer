@@ -16,18 +16,22 @@ import { useState } from 'react';
 
 function App() {
 
-  // !!! please check this !!!
-  const isLogged = localStorage.getItem("token");
+  // the initial state is false = so the user isnt logged in 
+  const [IsLogged, setIsLogged] = useState(false);
+  
+  const user = localStorage.getItem("token");
+
+  if (user){
+    setIsLogged = true
+  }
+
   let content;
-  // if the user is logged the it shows the home page and if not logged in the it will take them to the signup page. 
-  // it doesnt work but is this the right way to do it ?
-  if (isLogged) {
-    content = <HomePage />;
+  // so if isLogged = true the it must allow the user to ask question 
+  if (IsLogged) {
+    content = document.getElementById("");
   } else {
     content = <SignUp />;
   }
-
-  // useState
 
   return (
     <div className="App">
@@ -49,15 +53,16 @@ function App() {
       <Navbar />
 
       <Routes>
-        {/* <Route path='/' element={<Home/>}/> */}
+        {/* <Route path='/' element={<HomePage/>}/> */}
 
-        {/* //!!! Please check this !!!  */}
-        {isLogged && <Route path="/" element={<HomePage />} />}
+        {/* {IsLogged && <Route path="/" element={<HomePage />} />} */}
+        {IsLogged ? <Route path="/" element={<HomePage/>}/> : <Route path='/SignUp' element={<SignUp/>}/>}
+        
         {/* this is making so that the used to be home path is now the signup until user is logged in  */}
         <Route path="/" element={<Navigate replace to="/SignUp" />} />
+        {/* the other home link for after the user has logged  */}
+        <Route path='/Home' element={<HomePage />} />
 
-
-        {/* <Route path='/Home' element={<HomePage />} /> */}
         <Route path='/Profile' element={<Profile />} />
         <Route path='/Signin' element={<SignIn />} />
         <Route path='/Signup' element={<SignUp />} />
