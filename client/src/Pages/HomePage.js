@@ -3,11 +3,6 @@ import { Link } from 'react-router-dom';
 
 import Axios from "axios";
 
-// Bootstrap 
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-
 // MUI 
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';

@@ -19,7 +19,6 @@ function QuestionPage() {
     const searchParams = new URLSearchParams(location.search);
     let id = searchParams.get('id');
 
-
     // Initialize as null in case there are no comments
     const [answers, setAnswers] = useState(0);
     const [renderAnswers, setRenderAnswers] = useState(null);
@@ -27,7 +26,7 @@ function QuestionPage() {
     useEffect(() => {
         // Fetch the question
         // console.log(`http://localhost:5002/api/question_get_single/${questionID}`);
-        console.log('id ' + id );
+        console.log('id ' + id);
         Axios.get(`http://localhost:5002/api/question_get_single/${id}`)
             .then((result) => {
                 setQuestion(result.data);
@@ -46,7 +45,7 @@ function QuestionPage() {
                     });
 
                 // If the comments array is not empty, do the following:
-                if (result.data.comments.length > 1 ) {
+                if (result.data.comments.length > 1) {
                     setRenderAnswers(
                         result.data.comments.map((item) => (
                             <AnswerCards key={item._id} id={item._id} user={item.user} title={item.title} text={item.text} />
@@ -58,7 +57,11 @@ function QuestionPage() {
             .catch((err) => {
                 console.error("Error fetching question:", err);
             });
-    }, []); // Include questionID as a dependency to re-fetch when it changes
+    }, []);
+
+    // TODO image displaying
+    const serverURL = 'http://localhost:5000';
+    const imageURL = `${serverURL}/${question.image}`;
 
     return (
         <div className="question-page-con">
@@ -98,7 +101,7 @@ function QuestionPage() {
             {/* Image row */}
             <Grid container spacing={0}>
                 <Grid item xs={12}>
-                    <img src={""} className="question_img" alt="" />
+                    <img src={imageURL} alt={question.title} className="question_img"></img>
                 </Grid>
             </Grid>
 
