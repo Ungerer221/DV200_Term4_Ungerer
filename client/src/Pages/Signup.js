@@ -1,5 +1,6 @@
 import React from 'react';
 import './Forms.css';
+import { Link } from 'react-router-dom';
 
 // import HomePage from './HomePage'
 
@@ -31,7 +32,8 @@ const SignUp = () => {
       </form>
       <br></br>
       <br></br>
-      <button className='subbut'>Done</button>
+      
+      <Link to='/' className='subbut'>Done</Link>
     </div>
   );
 };

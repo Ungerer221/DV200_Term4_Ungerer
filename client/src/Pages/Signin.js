@@ -1,5 +1,6 @@
 import React from 'react';
 import './Forms.css';
+import { Link } from 'react-router-dom';
 
 const SignIn = () => {
   return (
@@ -24,7 +25,7 @@ const SignIn = () => {
       </form>
       <br></br>
       <br></br>
-      <button className='subbut'>Done</button>
+      <Link to='/' className='subbut'>Done</Link>
     </div>
   );
 };
