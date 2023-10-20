@@ -17,13 +17,14 @@ const SignUp = () => {
   // const [errorr, setErrorr] = useState("");
 
   const handleChange = ({ currentTarget: input }) => {
-    setData({ ...data, [input.name]: input.value })
+    setData({ ...data, [input.name]: input.value });
+    console.log(input.name);
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const url = 'http://localhost:5002/api/users';
+      const url = 'http://localhost:5002/api/createUser';
       const { data: res } = await Axios.post(url, data);
       // setErrorr(res.message);
     } catch (error) {
@@ -31,7 +32,7 @@ const SignUp = () => {
         error.response.status >= 400 &&
         error.response.status <= 500
       ) {
-        // setErrorr(error.response.data.message)
+        console.log("Error on user create Axios Post")
       }
     }
   }
@@ -43,11 +44,11 @@ const SignUp = () => {
       <h2>Sign Up</h2>
       <form className="form">
         <label>Username:</label>
-        <input className='uname' id='username' onChange={handleChange} type="text" placeholder="Enter your username" required />
+        <input className='uname' id='username' onChange={handleChange} name="username" type="text" placeholder="Enter your username" required />
         <label >Email:</label>
-        <input className='email' id='email' onChange={handleChange} type="email" placeholder="Enter your email" required />
+        <input className='email' id='email' onChange={handleChange} name="email" type="email" placeholder="Enter your email" required />
         <label >Password:</label>
-        <input className='password' id='password' onChange={handleChange} type="password" placeholder="Enter your password" required />
+        <input className='password' id='password' onChange={handleChange} name="password" type="password" placeholder="Enter your password" required />
         <br></br>
         <div className="form-footer">
           <p> Already Have An Account? <Nav.Link href='/SignIn' style={{ textDecoration: 'none', color: '#fc525e', fontWeight: '700' }}>Login</Nav.Link></p>

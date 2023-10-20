@@ -19,10 +19,10 @@ function App() {
   // the initial state is false = so the user isnt logged in 
   const [IsLogged, setIsLogged] = useState(false);
   
-  const user = localStorage.getItem("token");
+  const user = sessionStorage.getItem("token");
 
   if (user){
-    setIsLogged = true
+    setIsLogged(true)
   }
 
   // let content;

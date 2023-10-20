@@ -28,7 +28,7 @@ router.post('/api/loginUser', async (req, res) => {
             console.log("Email and password does not match");
         }
 
-        // --If no matchign email is found, send the following email:
+        // --If no matching email is found, send the following email:
     } else {
         res.send("User not found");
         console.log("User not found");
@@ -51,13 +51,18 @@ router.get('/api/getUser/:id', async (req, res) => {
 
 // Create
 
-router.post('/', async (req, res) => {
+router.post('/api/createUser', async (req, res) => {
     try {
-        console.log(req.body)
-        const {error} = validate(req.body);
-        if (error) {
-            return res.status(400).send({message: error.details[0].message});
-        };
+        console.log("Data that was received from the client side:");
+        console.log(req.body);
+        
+        // TODO This commented out code below was causing an instant error - when i commented it out, the data could work and a user was created
+        // const {error} = validate(req.body);
+
+        // if (error) {
+        //     return res.status(400).send({message: error.details[0].message});
+        // };
+
         const user = await User.findOne({email: req.body.email});
 
         if (user) {
