@@ -21,23 +21,6 @@ const AskedQuestionsCard = () => {
     // likes 
     const [like, setLike] = useState(0); // here we can fetch the number from the database
 
-    // get all with a for loop that finds this question's id within the likes model
-    // each time it finds the id it increases likes or dislikes by 1
-
-    Axios.get('http://localhost:5002/api/like_get_all/')
-        .then((res) => {
-            let questions = res.data;
-
-            for (let k = 0; k < questions.length; k++) {
-                // if (questions.questionID === ) {
-                    
-                // }
-            }
-        })
-        .catch((err) => {
-            console.error(`Error fetching user data: ${err.message}`);
-        });
-
     function addLike() {
         setLike(like + 1);
     };

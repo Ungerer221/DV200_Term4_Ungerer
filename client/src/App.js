@@ -25,14 +25,14 @@ function App() {
   //   setIsLogged(true)
   // }
 
-  function checkUser() {
-      // how to make it check ???
-      // if user if found the set state to true \ else if no user if found then remain false 
-      // if (user) {
-          // setIsLogged(true);
-      // }
-      // if state = true then give permissions 
-  }
+  // function checkUser() {
+  //     // how to make it check ???
+  //     // if user if found the set state to true \ else if no user if found then remain false 
+  //     if (user) {
+  //         setIsLogged(true);
+  //     }
+  //     // if state = true then give permissions 
+  // }
 
   return (
     <div className="App">

@@ -51,13 +51,18 @@ router.get('/api/getUser/:id', async (req, res) => {
 
 // Create
 
-router.post('/', async (req, res) => {
+router.post('/api/createUser', async (req, res) => {
     try {
-        console.log(req.body)
-        const {error} = validate(req.body);
-        if (error) {
-            return res.status(400).send({message: error.details[0].message});
-        };
+        console.log("Data that was received from the client side:");
+        console.log(req.body);
+        
+        // TODO This commented out code below was causing an instant error - when i commented it out, the data could work and a user was created
+        // const {error} = validate(req.body);
+
+        // if (error) {
+        //     return res.status(400).send({message: error.details[0].message});
+        // };
+
         const user = await User.findOne({email: req.body.email});
 
         if (user) {
@@ -73,38 +78,6 @@ router.post('/', async (req, res) => {
     }
 });
 
-//Update a user
-router.put('/api/upUser/:id', async (req, res) => {
-    const upSpecUser = await User.findByIdAndUpdate(req.params.id)
-    res.json(upSpecUser)
-});
-
-
-//Delete a clothing item
-router.delete('/api/delUser/:id', async (req, res) => {
-    const delSpecUser = await User.findByIdAndDelete(req.params.id)
-    res.json(delSpecUser)
-});
+// add delete user
 
 module.exports = router;
-
-// {
-// 	"username": "Lyca",
-// 	"email": "lyca@email.com",
-// 	"password": "password2"
-// },
-// {
-// 	"username": "James",
-// 	"email": "james@email.com",
-// 	"password": "password3"
-// },
-// {
-// 	"username": "Mark",
-// 	"email": "mark@email.com",
-// 	"password": "password4"
-// },
-// {
-// 	"username": "Green",
-// 	"email": "green@email.com",
-// 	"password": "password5"
-// }

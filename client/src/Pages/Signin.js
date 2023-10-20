@@ -4,12 +4,10 @@ import axios from 'axios'
 
 import { Nav } from 'react-bootstrap'
 
-// TODO Can't Login
 // Data: 
 // username: Nico
 // email: Nico@gmail.com
 // password: Nico
-// Error: too many rerenders on sign in click
 
 const SignIn = () => {
 
@@ -32,6 +30,7 @@ const SignIn = () => {
       const url = 'http://localhost:5002/api/auth'
       const { data: res } = await axios.post(url, data);
       sessionStorage.setItem("token", res.data);
+      sessionStorage.setItem("user", data.email);
 
       window.location = '/Home';
 

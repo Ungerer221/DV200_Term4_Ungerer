@@ -23,6 +23,21 @@ function QuestionPage() {
     const [answers, setAnswers] = useState(0);
     const [renderAnswers, setRenderAnswers] = useState(null);
 
+    // likes & dislike counter function 
+    // likes 
+    const [like, setLike] = useState(1); // here we can fetch the number from the database
+
+    function addLike() {
+        setLike(like + 1);
+    };
+
+    // dislikes 
+    const [dislike, setDislike] = useState(0);
+
+    function addDislike() {
+        setDislike(dislike + 1);
+    };
+
     useEffect(() => {
         // Fetch the question
         // console.log(`http://localhost:5002/api/question_get_single/${questionID}`);
@@ -53,6 +68,47 @@ function QuestionPage() {
                     );
                     setAnswers(true)
                 }
+
+                Axios.get('http://localhost:5002/api/like_get_all/')
+                    .then((res) => {
+                        let questions = res.data;
+
+                        console.log(questions);
+
+                        for (let k = 0; k < questions.length; k++) {
+                            if (questions[k].questionID === id) {
+                                switch (questions[k].type) {
+                                    case "like":
+                                        addLike();
+                                        console.log('Found like')
+                                        break;
+
+                                    case "dislike":
+                                        addDislike();
+                                        break;
+
+                                    case "none":
+                                        break;
+                                }
+                            }
+                        }
+
+                    })
+                    .catch((err) => {
+                        console.error(`Error fetching user data: ${err.message}`);
+                    });
+
+                Axios.get('http://localhost:5002/api/getUsers')
+                    .then((res) => {
+                        let users = res.data;
+
+                        for (let k = 0; k < users.length; k++) {
+                            if (condition) {
+                                const element = array[k];
+                                
+                            }
+                        }
+                    })
             })
             .catch((err) => {
                 console.error("Error fetching question:", err);
@@ -95,6 +151,12 @@ function QuestionPage() {
                 {/* Render delete button */}
                 <Grid item xs={2}>
                     <Button variant="contained" sx={{ margin: "auto" }}><BiXCircle />Delete</Button>
+                    <br></br>
+                    <p>Likes: {like}</p>
+
+                    <Button>Like</Button>
+                    <br></br>
+                    <Button>Dislike</Button>
                 </Grid>
             </Grid>
 
