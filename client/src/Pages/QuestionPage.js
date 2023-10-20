@@ -38,6 +38,62 @@ function QuestionPage() {
         setDislike(dislike + 1);
     };
 
+    const handleClick = async (e) => {
+
+        Axios.get('http://localhost:5002/api/getUsers')
+            .then((res) => {
+
+                let users = res.data;
+                let email = sessionStorage.getItem('email');
+                console.log(users);
+                console.log(email);
+
+                for (let k = 0; k < users.length; k++) {
+                    if (users[k].email === email) {
+                        console.log(users[k]._id);
+                        sessionStorage.setItem('userID', users[k]._id);
+                    }
+                }
+            })
+
+        Axios.get('http://localhost:5002/api/like_get_all/')
+            .then((res) => {
+                let questions = res.data;
+
+                let USER = sessionStorage.getItem('userID');
+
+                let bFound = false;
+
+                for (let k = 0; k < questions.length; k++) {
+                    if (USER === questions[k].userID) {
+                        bFound = true;
+                    }
+                }
+
+                if (bFound === false) {
+                    addLike();
+
+                    let url = "http://localhost:5002/api/like_add/";
+                    let data = {
+                        userID: USER,
+                        questionID: questionID,
+                        type: "like"
+                    }
+
+                    Axios.post(url, data)
+
+                } else {
+                    document.getElementById("btnLike").style.color = 'gray';
+                }
+
+            })
+            .catch((err) => {
+                console.error(`Error fetching user data: ${err.message}`);
+            });
+
+
+    }
+
     useEffect(() => {
         // Fetch the question
         // console.log(`http://localhost:5002/api/question_get_single/${questionID}`);
@@ -73,14 +129,11 @@ function QuestionPage() {
                     .then((res) => {
                         let questions = res.data;
 
-                        console.log(questions);
-
                         for (let k = 0; k < questions.length; k++) {
                             if (questions[k].questionID === id) {
                                 switch (questions[k].type) {
                                     case "like":
                                         addLike();
-                                        console.log('Found like')
                                         break;
 
                                     case "dislike":
@@ -97,18 +150,6 @@ function QuestionPage() {
                     .catch((err) => {
                         console.error(`Error fetching user data: ${err.message}`);
                     });
-
-                // Axios.get('http://localhost:5002/api/getUsers')
-                //     .then((res) => {
-                //         let users = res.data;
-
-                //         for (let k = 0; k < users.length; k++) {
-                //             if (condition) {
-                //                 const element = array[k];
-                                
-                //             }
-                //         }
-                //     })
             })
             .catch((err) => {
                 console.error("Error fetching question:", err);
@@ -155,7 +196,7 @@ function QuestionPage() {
                     <br></br>
                     <p>Likes: {like}</p>
 
-                    <Button>Like</Button>
+                    <Button onClick={handleClick} id="btnLike">Like</Button>
                     <br></br>
                     <Button>Dislike</Button>
                 </Grid>

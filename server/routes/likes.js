@@ -31,9 +31,9 @@ router.put('/api/like_update/:id', async (req, res) => {
 router.post('/api/like_add/', async (req, res) => {
     const car = new LikeSchema({
 
-        client: req.body.client,
-        orders: req.body.orders,
-        totalprice: req.body.totalprice
+        userID: req.body.userID,
+        questionID: req.body.questionID,
+        type: req.body.type
 
     });
     await car.save()

@@ -30,7 +30,7 @@ const SignIn = () => {
       const url = 'http://localhost:5002/api/auth'
       const { data: res } = await axios.post(url, data);
       sessionStorage.setItem("token", res.data);
-      sessionStorage.setItem("user", data.email);
+      sessionStorage.setItem('email', data.email);
 
       window.location = '/Home';
 
