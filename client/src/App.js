@@ -28,9 +28,9 @@ function App() {
   function checkUser() {
       // how to make it check ???
       // if user if found the set state to true \ else if no user if found then remain false 
-      if (user) {
-          setIsLogged(true);
-      }
+      // if (user) {
+          // setIsLogged(true);
+      // }
       // if state = true then give permissions 
   }
 

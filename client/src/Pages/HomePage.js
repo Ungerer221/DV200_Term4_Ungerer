@@ -10,6 +10,7 @@ import Button from '@mui/material/Button';
 
 // css
 import './HomePage.css'
+import LandingImage from '../Assets/Images/10.svg'
 
 // components
 import HomeQuestionCard from "../Components/HomeQuestionCard";
@@ -68,7 +69,9 @@ function HomePage() {
                         </Grid>
                         {/* Image coloumn  */}
                         <Grid xs={6} sx={{ margin: 'auto', }}>
-                            <div className="image-placeholder"></div>
+                            <div className="image-placeholder">
+                                <img src={LandingImage} alt=''></img>
+                            </div>
                         </Grid>
                     </Grid>
                 </Box>
