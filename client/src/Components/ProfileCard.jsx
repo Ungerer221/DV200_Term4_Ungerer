@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState } from "react"
 import "./ProfileCard.css"
 
 //bootstrap
@@ -13,9 +13,17 @@ import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 
 const ProfileCard = () => {
+
+    const [updateProfile, setUpdateProfile] = useState();
+
+    const update = (e) => {
+        document.getElementById("default").style.display = 'none'
+        document.getElementById("update-user-profile").style.display = 'block'
+    }
+
     return (
         <>
-            <div className="profilecard-container">
+            <div className="profilecard-container" style={{ display: 'block' }} id='default'>
                 <Grid container spacing={0}>
                     <Grid item xs={2} md={2}>
                         <image />
@@ -23,7 +31,7 @@ const ProfileCard = () => {
                     <Grid item xs={6} md={6}>
                         <div className="profilecard-userInfo-con">
                             <div>
-                                <h1 style={{marginTop:0}}>User Name & Surname</h1>
+                                <h1 style={{ marginTop: 0 }}>User Name & Surname</h1>
                                 <h3>ID Number: 000 000 0000</h3>
                                 <p className="interests-text">Interests:</p>
                                 <div className="userInfo-tags">
@@ -53,7 +61,7 @@ const ProfileCard = () => {
                         </div>
                     </Grid>
                     <Grid item xs={4} md={4}>
-                        <Button className="profilecard-Logout-btn" variant="outlined" sx={{color:'orange', border:"solid 1px orange"}}>Outlined</Button>
+                        <Button onClick={update} className="profilecard-Logout-btn" variant="outlined" sx={{ color: 'orange', border: "solid 1px orange" }}>Update</Button>
                     </Grid>
                 </Grid>
             </div>
