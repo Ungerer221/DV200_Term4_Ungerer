@@ -1,4 +1,4 @@
-import logo from './logo.svg';
+// import logo from './logo.svg';
 import './App.css';
 import { Route, Routes, Navigate, Switch } from 'react-router-dom';
 
@@ -12,20 +12,26 @@ import SignIn from './Pages/Signin'
 import SignUp from './Pages/Signup';
 import QuestionPage from './Pages/QuestionPage';
 import QuestionEditor from './Pages/QuestionEditor';
+import { useState } from 'react';
 
 function App() {
 
-  // !!! please check this !!!
-  let isLogged = localStorage.getItem("token");
+  // the initial state is false = so the user isnt logged in 
+  // const [IsLogged, setIsLogged] = useState(false);
 
-  let content;
+  // const user = sessionStorage.getItem("token");
 
-  // if the user is logged the it shows the home page and if not logged in the it will take them to the signup page. 
-  // it doesnt work but is this the right way to do it ?
-  if (isLogged) {
-    content = <HomePage />;
-  } else {
-    content = <SignUp />;
+  // if (user) {
+  //   setIsLogged(true)
+  // }
+
+  function checkUser() {
+      // how to make it check ???
+      // if user if found the set state to true \ else if no user if found then remain false 
+      if (user) {
+          setIsLogged(true);
+      }
+      // if state = true then give permissions 
   }
 
   return (
@@ -48,19 +54,22 @@ function App() {
       <Navbar />
 
       <Routes>
-        {/* <Route path='/' element={<Home/>}/> */}
+        <Route path='/' element={<HomePage/>}/>
 
-        {/* //!!! Please check this !!!  */}
-        {isLogged && <Route path="/" element={<HomePage />} />}
+        {/* {IsLogged && <Route path="/" element={<HomePage />} />} */}
+        {/* {IsLogged ? <Route path="/ask" element={<QuestionEditor />} /> : <Route path='/SignUp' element={<SignUp />} />} */}
+
+        {/* this is making so that the used to be home path is now the signup until user is logged in  */}
         <Route path="/" element={<Navigate replace to="/SignUp" />} />
+        {/* the other home link for after the user has logged  */}
+        <Route path='/Home' element={<HomePage />} />
 
-
-        <Route path='/' element={<HomePage />} />
         <Route path='/Profile' element={<Profile />} />
         <Route path='/Signin' element={<SignIn />} />
         <Route path='/Signup' element={<SignUp />} />
         <Route path='/Question' element={<QuestionPage />} />
         <Route path='/ask' element={<QuestionEditor />} />
+
       </Routes>
 
       <Footer></Footer>

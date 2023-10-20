@@ -14,6 +14,7 @@ import Button from '@mui/material/Button';
 import Axios from "axios";
 
 const HomeQuestionCard = ({ user, title, date, text, id }) => {
+
     const [username, setUsername] = useState("");
 
     const navigate = useNavigate();

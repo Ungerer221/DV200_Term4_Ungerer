@@ -54,7 +54,7 @@ const AnswerCards = (props) => {
                     {/* colomn 3  */}
                     <Grid xs={2}>
                         {/* answer Delete Button  */}
-                        {isAdmin && <Button variant="contained" sx={{ margin: "auto" }}> <BiXCircle/> Delete </Button>}
+                        {isAdmin && <Button variant="contained" sx={{ margin: "auto" }}> <BiXCircle /> Delete </Button>}
                     </Grid>
                 </Grid>
             </Box>

@@ -6,6 +6,8 @@ const { path } = require('path');
 // Route Uses
 const questionRoute = require('./routes/question');
 const userRoute = require('./routes/users');
+const likeRoute = require('./routes/likes');
+const authRoute = require('./routes/auth');
 
 require('dotenv/config')
 
@@ -16,11 +18,14 @@ app.use((req, res, next) => {
     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
     res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
     next();
-  });
+});
 
 app.use(cors({
     origin: 'http://localhost:3000'
 }));
+
+// TODO Allows you to access images in the public folder
+//app.use(express.static(path.join(__dirname, 'images')));
 
 //middleware
 // makes the json data work
@@ -30,6 +35,8 @@ app.use(express.urlencoded({ extended: false }));
 // Must be below the express
 app.use(questionRoute);
 app.use(userRoute);
+app.use(likeRoute);
+app.use(authRoute);
 
 mongoose.connect(process.env.DB_CONNECTION, {
     useNewUrlParser: true,
@@ -42,4 +49,4 @@ mongoose.connect(process.env.DB_CONNECTION, {
 
 const PORT = process.env.PORT || 5003;
 
-app.listen(PORT, () => {console.log(`Server has started at port: ${PORT}`)});
+app.listen(PORT, () => { console.log(`Server has started at port: ${PORT}`) });
