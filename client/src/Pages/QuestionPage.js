@@ -98,17 +98,17 @@ function QuestionPage() {
                         console.error(`Error fetching user data: ${err.message}`);
                     });
 
-                Axios.get('http://localhost:5002/api/getUsers')
-                    .then((res) => {
-                        let users = res.data;
+                // Axios.get('http://localhost:5002/api/getUsers')
+                //     .then((res) => {
+                //         let users = res.data;
 
-                        for (let k = 0; k < users.length; k++) {
-                            if (condition) {
-                                const element = array[k];
+                //         for (let k = 0; k < users.length; k++) {
+                //             if (condition) {
+                //                 const element = array[k];
                                 
-                            }
-                        }
-                    })
+                //             }
+                //         }
+                //     })
             })
             .catch((err) => {
                 console.error("Error fetching question:", err);
@@ -116,8 +116,9 @@ function QuestionPage() {
     }, []);
 
     // TODO image displaying
-    const serverURL = 'http://localhost:5000';
+    const serverURL = 'http://localhost:5002/images';
     const imageURL = `${serverURL}/${question.image}`;
+    console.log(imageURL);
 
     return (
         <div className="question-page-con">

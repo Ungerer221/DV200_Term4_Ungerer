@@ -27,8 +27,9 @@ app.use(cors({
 // TODO Allows you to access images in the public folder
 //app.use(express.static(path.join(__dirname, 'images')));
 
-//middleware
-// makes the json data work
+//Middleware
+app.use(express.static('images'));
+app.use('/images', express.static('images'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
