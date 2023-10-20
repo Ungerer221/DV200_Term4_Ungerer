@@ -25,13 +25,14 @@ function App() {
   //   setIsLogged(true)
   // }
 
-  // let content;
-  // // so if isLogged = true the it must allow the user to ask question 
-  // if (IsLogged) {
-  //   content = document.getElementById("");
-  // } else {
-  //   content = <SignUp />;
-  // }
+  function checkUser() {
+      // how to make it check ???
+      // if user if found the set state to true \ else if no user if found then remain false 
+      if (user) {
+          setIsLogged(true);
+      }
+      // if state = true then give permissions 
+  }
 
   return (
     <div className="App">
@@ -53,7 +54,7 @@ function App() {
       <Navbar />
 
       <Routes>
-        {/* <Route path='/' element={<HomePage/>}/> */}
+        <Route path='/' element={<HomePage/>}/>
 
         {/* {IsLogged && <Route path="/" element={<HomePage />} />} */}
         {/* {IsLogged ? <Route path="/ask" element={<QuestionEditor />} /> : <Route path='/SignUp' element={<SignUp />} />} */}
