@@ -25,54 +25,83 @@ function QuestionPage() {
 
     // likes & dislike counter function 
     // likes 
-    const [like, setLike] = useState(1); // here we can fetch the number from the database
+    const [like, setLike] = useState(0); // here we can fetch the number from the database
 
-    function addLike() {
-        setLike(like + 1);
+    function addLike(Amount) {
+        setLike(like + Amount);
     };
 
     // dislikes 
     const [dislike, setDislike] = useState(0);
 
-    function addDislike() {
-        setDislike(dislike + 1);
+    function addDislike(Amount) {
+        setDislike(dislike + Amount);
     };
 
-    const handleClick = async (e) => {
+    // Handles the like clicking
+    const handleLike = async () => {
 
+        // Get all users to find who is currently logged in 
         Axios.get('http://localhost:5002/api/getUsers')
             .then((res) => {
 
+                // The response is an array of all the users
                 let users = res.data;
-                let email = sessionStorage.getItem('email');
-                console.log(users);
-                console.log(email);
 
+                // get who is currently signed in
+                let email = sessionStorage.getItem('email');
+
+                // Both are correct
+                // console.log(users);
+                // console.log(email);
+
+                // Gather the user ID of who is currently logged in based on which email matches the one in the DB
                 for (let k = 0; k < users.length; k++) {
                     if (users[k].email === email) {
-                        console.log(users[k]._id);
+                        // Correct user ID is logged
+                        // console.log(users[k]._id);
                         sessionStorage.setItem('userID', users[k]._id);
                     }
                 }
             })
 
+        // Get all likes
         Axios.get('http://localhost:5002/api/like_get_all/')
             .then((res) => {
+                // --Set the likes to a variable to see which questions this user has liked. 
+                // --This prevents the same person from liking the same post more than once.
                 let questions = res.data;
 
+                // --Call session storage once to ensure it is never lagging behind.
+                // --Set a variable to the ID of the logged in user.
                 let USER = sessionStorage.getItem('userID');
 
+                // --Used to test if the user has been found
                 let bFound = false;
+                let questionType = "";
+                let likeID = "";
 
+                // --Run through the array of liked posts to see which posts this user has liked.
                 for (let k = 0; k < questions.length; k++) {
+                    // ---If the user has been found
                     if (USER === questions[k].userID) {
-                        bFound = true;
+
+                        // ----If the user liked this specific question
+                        if (questionID === questions[k].questionID) {
+                            bFound = true;
+                            questionType = questions[k].type;
+                            likeID = questions[k]._id;
+                        }
+
                     }
                 }
 
+                // If the user HASN'T liked this post yet
                 if (bFound === false) {
-                    addLike();
+                    // Increase likes by 1
+                    addLike(1);
 
+                    // Axios post to add another like to the database
                     let url = "http://localhost:5002/api/like_add/";
                     let data = {
                         userID: USER,
@@ -80,10 +109,52 @@ function QuestionPage() {
                         type: "like"
                     }
 
-                    Axios.post(url, data)
-
-                } else {
+                    Axios.post(url, data);
                     document.getElementById("btnLike").style.color = 'gray';
+
+                } else if (bFound === true && questionType === "like") {
+                    // If the user has already liked the post, delete the entry
+
+                    // Build the url and the data
+                    let url = "http://localhost:5002/api/like_delete/" + likeID;
+
+                    // Delete the entry to unlike the post
+                    Axios.delete(url).catch("Error deleting");
+
+                    // Decrease likes with one
+                    addLike(-1);
+
+                    // Set the button to gray to discourage like spamming
+                    document.getElementById("btnLike").style.color = 'gray';
+
+                } else if (bFound === true && questionType === 'dislike') {
+                    // if the user changes from a dislike to a like
+                    try {
+
+                        // Build the url and the data
+                        let url = "http://localhost:5002/api/like_update/" + likeID;
+                        let updata = {
+                            userID: USER,
+                            questionID: questionID,
+                            type: "like"
+                        }
+
+                        // Both are correct
+                        // console.log(url);
+                        // console.log(updata);
+
+                        // Update the db with the new like
+                        Axios.put(url, updata).catch(console.log("Axios error"));
+
+                        addLike(1);
+                        addDislike(-1);
+
+                        document.getElementById("btnLike").style.color = 'gray';
+
+                    } catch (error) {
+                        console.log('error adding like')
+                    }
+
                 }
 
             })
@@ -91,17 +162,134 @@ function QuestionPage() {
                 console.error(`Error fetching user data: ${err.message}`);
             });
 
+    }
+
+    // Handles the dislike clicking
+    const handleDislike = async () => {
+
+        // Get all users to find who is currently logged in 
+        Axios.get('http://localhost:5002/api/getUsers')
+            .then((res) => {
+
+                // The response is an array of all the users
+                let users = res.data;
+
+                // get who is currently signed in
+                let email = sessionStorage.getItem('email');
+
+                // Gather the user ID of who is currently logged in based on which email matches the one in the DB
+                for (let k = 0; k < users.length; k++) {
+                    if (users[k].email === email) {
+                        sessionStorage.setItem('userID', users[k]._id);
+                    }
+                }
+            })
+
+        // Get all likes
+        Axios.get('http://localhost:5002/api/like_get_all/')
+            .then((res) => {
+                // --Set the likes to a variable to see which questions this user has liked. 
+                // --This prevents the same person from disliking the same post more than once.
+                let questions = res.data;
+
+                // --Call session storage once to ensure it is never lagging behind.
+                // --Set a variable to the ID of the logged in user.
+                let USER = sessionStorage.getItem('userID');
+
+                // --Used to test if the user has been found
+                let bFound = false;
+                let questionType = "";
+                let likeID = "";
+
+                // --Run through the array of liked posts to see which posts this user has liked.
+                for (let k = 0; k < questions.length; k++) {
+                    // ---If the user has been found
+                    if (USER === questions[k].userID) {
+
+                        // ----If the user liked this specific question
+                        if (questionID === questions[k].questionID) {
+                            bFound = true;
+                            questionType = questions[k].type;
+                            likeID = questions[k]._id;
+                        }
+
+                    }
+                }
+
+                // If the user HASN'T liked this post yet
+                if (bFound === false) {
+                    // Increase likes by 1
+                    addDislike(1);
+
+                    // Axios post to add another like to the database
+                    let url = "http://localhost:5002/api/like_add/";
+                    let data = {
+                        userID: USER,
+                        questionID: questionID,
+                        type: "dislike"
+                    }
+
+                    Axios.post(url, data);
+                    document.getElementById("btnDislike").style.color = 'gray';
+
+                } else if (bFound === true && questionType === "dislike") {
+                    // If the user has already disliked the post, delete the entry
+
+                    // Build the url and the data
+                    let url = "http://localhost:5002/api/like_delete/" + likeID;
+
+                    // Delete the entry to unlike the post
+                    Axios.delete(url).catch("Error deleting");
+
+                    // Decrease likes with one
+                    addDislike(-1);
+
+                    // Set the button to gray to discourage like spamming
+                    document.getElementById("btnDislike").style.color = 'gray';
+
+                } else if (bFound === true && questionType === "like") {
+                    // if the user changes from a like to a dislike
+                    try {
+
+                        // Build the url and the data
+                        let url = "http://localhost:5002/api/like_update/" + likeID;
+                        let updata = {
+                            userID: USER,
+                            questionID: questionID,
+                            type: "dislike"
+                        }
+
+                        // Update the db with the new like
+                        Axios.put(url, updata).catch(console.log("Axios error"));
+
+                        addDislike(1);
+                        addLike(-1);
+
+                        document.getElementById("btnDislike").style.color = 'gray';
+
+                    } catch (error) {
+                        console.log('error adding dislike')
+                    }
+
+                }
+
+            })
+            .catch((err) => {
+                console.error(`Error fetching user data: ${err.message}`);
+            });
 
     }
 
     useEffect(() => {
         // Fetch the question
         // console.log(`http://localhost:5002/api/question_get_single/${questionID}`);
-        console.log('id ' + id);
+        // console.log('id ' + id);
+
         Axios.get(`http://localhost:5002/api/question_get_single/${id}`)
             .then((result) => {
                 setQuestion(result.data);
 
+                // If there are no tags
                 if (result.data.tags === undefined) {
                     result.data.tags = ["No Tags"];
                 }
@@ -127,17 +315,27 @@ function QuestionPage() {
 
                 Axios.get('http://localhost:5002/api/like_get_all/')
                     .then((res) => {
+                        // --Gather all liked questions and set them to the variable here
                         let questions = res.data;
+                        // ---console.log(questions);
 
+                        // variable to count the amount of likes and dislikes
+                        let iLikes = 0;
+                        let iDislikes = 0;
+
+                        // Count how many likes there are
                         for (let k = 0; k < questions.length; k++) {
                             if (questions[k].questionID === id) {
                                 switch (questions[k].type) {
                                     case "like":
-                                        addLike();
+                                        // increase like amount by one
+                                        iLikes++;
+                                        // console.log('Found Like');
                                         break;
 
                                     case "dislike":
-                                        addDislike();
+                                        iDislikes++;
+                                        // console.log('Found Dislike');
                                         break;
 
                                     case "none":
@@ -145,6 +343,10 @@ function QuestionPage() {
                                 }
                             }
                         }
+
+                        // set the amount of likes equal to the amount counted
+                        addLike(iLikes);
+                        addDislike(iDislikes);
 
                     })
                     .catch((err) => {
@@ -156,10 +358,9 @@ function QuestionPage() {
             });
     }, []);
 
-    // TODO image displaying
     const serverURL = 'http://localhost:5002/images';
     const imageURL = `${serverURL}/${question.image}`;
-    console.log(imageURL);
+    // console.log(imageURL);
 
     return (
         <div className="question-page-con">
@@ -195,10 +396,11 @@ function QuestionPage() {
                     <Button variant="contained" sx={{ margin: "auto" }}><BiXCircle />Delete</Button>
                     <br></br>
                     <p>Likes: {like}</p>
+                    <p>Dislikes: {dislike}</p>
 
-                    <Button onClick={handleClick} id="btnLike">Like</Button>
+                    <Button onClick={handleLike} id="btnLike">Like</Button>
                     <br></br>
-                    <Button>Dislike</Button>
+                    <Button onClick={handleDislike} id="btnDislike">Dislike</Button>
                 </Grid>
             </Grid>
 

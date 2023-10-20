@@ -21,8 +21,8 @@ router.get('/api/like_get_single/:id', async (req, res) => {
 
 // Update
 router.put('/api/like_update/:id', async (req, res) => {
-    const { id } = req.params.id;
-    await LikeSchema.updateOne({ id }, req.body)
+    const id  = req.params.id;
+    await LikeSchema.findByIdAndUpdate(id, req.body)
         .then(response => res.json(response))
         .catch(error => res.status(500).json(error))
 });
