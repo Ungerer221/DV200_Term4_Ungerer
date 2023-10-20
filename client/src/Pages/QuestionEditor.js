@@ -30,7 +30,6 @@ function QuestionEditor() {
     const [titleAlert, setTitleAlert] = useState(false);
     const [contentAlert, setContentAlert] = useState(false);
 
-
     const getImage = (e) => {
         let imageFile = e.target.files[0];
         console.log(imageFile);
@@ -43,7 +42,6 @@ function QuestionEditor() {
         };
         reader.readAsDataURL(e.target.files[0]);
     };
-
 
     const addQuestion = (e) => {
 
@@ -85,57 +83,63 @@ function QuestionEditor() {
         }
     }
 
-    return (
-        <>
-            {/* <Box sx={{width: 200}} alignItems="center">
-                <Stack direction="column" justifyContent="flex-start" alignItems="center" spacing={3} component="form" noValidate autoComplete="off" >
-                    
-                        <TextField fullWidth required id="title" label="Add a title" />
-                        <TextField fullWidth required id="title" label="Add a title" />
-                    
-                </Stack>
-            </Box> */}
-            <Grid container spacing={4} sx={{
-                maxWidth: 500, marginTop: 10, marginLeft: "auto", marginRight: "auto", '--Grid-borderWidth': '2px',
-                borderTop: 'var(--Grid-borderWidth) solid',
-                borderLeft: 'var(--Grid-borderWidth) solid',
-                borderRight: 'var(--Grid-borderWidth) solid',
-                borderBottom: 'var(--Grid-borderWidth) solid',
-                borderRadius: 4,
-                borderColor: '#FF3F00'
-            }}>
-                <Grid xs={12} >
-                    <Typography variant="h4" sx={{ color: '#FF3F00' }} > Ask a Question </Typography>
-                    <TextField fullWidth required id="title" label="Add a title" variant="standard" onChange={(e) => setTitle(e.target.value)} />
-                    {titleAlert && <Alert severity="error"> Add a Title </Alert>}
-                    <TextField fullWidth required id="content" label="Add Content" multiline rows={12} variant="standard" onChange={(e) => setContent(e.target.value)} />
-                    {contentAlert && <Alert severity="error"> Add Content </Alert>}
-                </Grid>
-            </Grid>
+    if (!sessionStorage.getItem('token')) {
+        
+        window.location = "/Signin";
 
-            <Grid container sx={{
-                maxWidth: 200, marginTop: '14px', marginLeft: "auto", marginRight: "auto", padding: '10px', '--Grid-borderWidth': '2px',
-                borderTop: 'var(--Grid-borderWidth) solid',
-                borderTopColor: '#FFFF',
-                borderLeft: 'var(--Grid-borderWidth) solid',
-                borderRight: 'var(--Grid-borderWidth) solid',
-                borderBottom: 'var(--Grid-borderWidth) solid',
-                borderLeftColor: '#FF3F00',
-                borderRightColor: '#FF3F00',
-                borderBottomColor: '#FF3F00',
-                borderRadius: 1
-            }}>
-                <Box justifyContent={'center'} sx={{ margin: "auto" }}>
-                    <Button component="label" variant="outlined" sx={{ color: '#FF3F00', borderColor: '#FF3F00' }} >
-                        Upload Image
-                        <VisuallyHiddenInput type="file" onChange={getImage} />
-                    </Button>
-                    <img id="preview" style={{ width: 100, height: 100, marginTop: 20 }} alt=" " />
-                </Box>
-            </Grid>
-            <Button variant="contained" sx={{ marginTop: '15px' }} onClick={addQuestion} > Done </Button>
-        </>
-    )
+    } else {
+        return (
+            <>
+                {/* <Box sx={{width: 200}} alignItems="center">
+                    <Stack direction="column" justifyContent="flex-start" alignItems="center" spacing={3} component="form" noValidate autoComplete="off" >
+                        
+                            <TextField fullWidth required id="title" label="Add a title" />
+                            <TextField fullWidth required id="title" label="Add a title" />
+                        
+                    </Stack>
+                </Box> */}
+                <Grid container spacing={4} sx={{
+                    maxWidth: 500, marginTop: 10, marginLeft: "auto", marginRight: "auto", '--Grid-borderWidth': '2px',
+                    borderTop: 'var(--Grid-borderWidth) solid',
+                    borderLeft: 'var(--Grid-borderWidth) solid',
+                    borderRight: 'var(--Grid-borderWidth) solid',
+                    borderBottom: 'var(--Grid-borderWidth) solid',
+                    borderRadius: 4,
+                    borderColor: '#FF3F00'
+                }}>
+                    <Grid xs={12} >
+                        <Typography variant="h4" sx={{ color: '#FF3F00' }} > Ask a Question </Typography>
+                        <TextField fullWidth required id="title" label="Add a title" variant="standard" onChange={(e) => setTitle(e.target.value)} />
+                        {titleAlert && <Alert severity="error"> Add a Title </Alert>}
+                        <TextField fullWidth required id="content" label="Add Content" multiline rows={12} variant="standard" onChange={(e) => setContent(e.target.value)} />
+                        {contentAlert && <Alert severity="error"> Add Content </Alert>}
+                    </Grid>
+                </Grid>
+    
+                <Grid container sx={{
+                    maxWidth: 200, marginTop: '14px', marginLeft: "auto", marginRight: "auto", padding: '10px', '--Grid-borderWidth': '2px',
+                    borderTop: 'var(--Grid-borderWidth) solid',
+                    borderTopColor: '#FFFF',
+                    borderLeft: 'var(--Grid-borderWidth) solid',
+                    borderRight: 'var(--Grid-borderWidth) solid',
+                    borderBottom: 'var(--Grid-borderWidth) solid',
+                    borderLeftColor: '#FF3F00',
+                    borderRightColor: '#FF3F00',
+                    borderBottomColor: '#FF3F00',
+                    borderRadius: 1
+                }}>
+                    <Box justifyContent={'center'} sx={{ margin: "auto" }}>
+                        <Button component="label" variant="outlined" sx={{ color: '#FF3F00', borderColor: '#FF3F00' }} >
+                            Upload Image
+                            <VisuallyHiddenInput type="file" onChange={getImage} />
+                        </Button>
+                        <img id="preview" style={{ width: 100, height: 100, marginTop: 20 }} alt=" " />
+                    </Box>
+                </Grid>
+                <Button variant="contained" sx={{ marginTop: '15px' }} onClick={addQuestion} > Done </Button>
+            </>
+        )
+    }
 }
 
 export default QuestionEditor;

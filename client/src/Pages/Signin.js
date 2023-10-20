@@ -33,6 +33,8 @@ const SignIn = () => {
       const { data: res } = await axios.post(url, data);
       sessionStorage.setItem("token", res.data);
 
+      window.location = '/Home';
+
     } catch (error) {
 
       if (error.response &&

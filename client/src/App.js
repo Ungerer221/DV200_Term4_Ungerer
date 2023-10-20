@@ -17,13 +17,13 @@ import { useState } from 'react';
 function App() {
 
   // the initial state is false = so the user isnt logged in 
-  const [IsLogged, setIsLogged] = useState(false);
-  
-  const user = sessionStorage.getItem("token");
+  // const [IsLogged, setIsLogged] = useState(false);
 
-  if (user){
-    setIsLogged(true)
-  }
+  // const user = sessionStorage.getItem("token");
+
+  // if (user) {
+  //   setIsLogged(true)
+  // }
 
   // let content;
   // // so if isLogged = true the it must allow the user to ask question 
@@ -56,8 +56,8 @@ function App() {
         {/* <Route path='/' element={<HomePage/>}/> */}
 
         {/* {IsLogged && <Route path="/" element={<HomePage />} />} */}
-        {IsLogged ? <Route path="/" element={<HomePage/>}/> : <Route path='/SignUp' element={<SignUp/>}/>}
-        
+        {/* {IsLogged ? <Route path="/ask" element={<QuestionEditor />} /> : <Route path='/SignUp' element={<SignUp />} />} */}
+
         {/* this is making so that the used to be home path is now the signup until user is logged in  */}
         <Route path="/" element={<Navigate replace to="/SignUp" />} />
         {/* the other home link for after the user has logged  */}
@@ -68,6 +68,7 @@ function App() {
         <Route path='/Signup' element={<SignUp />} />
         <Route path='/Question' element={<QuestionPage />} />
         <Route path='/ask' element={<QuestionEditor />} />
+
       </Routes>
 
       <Footer></Footer>
