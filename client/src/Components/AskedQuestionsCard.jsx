@@ -9,6 +9,8 @@ import Grid from '@mui/material/Grid';
 import Chip from '@mui/material/Chip';
 import Button from '@mui/material/Button';
 
+import Axios from "axios";
+
 
 // CSS 
 import './AskedQuestionsCard.css'
@@ -18,6 +20,23 @@ const AskedQuestionsCard = () => {
     // likes & dislike counter function 
     // likes 
     const [like, setLike] = useState(0); // here we can fetch the number from the database
+
+    // get all with a for loop that finds this question's id within the likes model
+    // each time it finds the id it increases likes or dislikes by 1
+
+    Axios.get('http://localhost:5002/api/like_get_all/')
+        .then((res) => {
+            let questions = res.data;
+
+            for (let k = 0; k < questions.length; k++) {
+                // if (questions.questionID === ) {
+                    
+                // }
+            }
+        })
+        .catch((err) => {
+            console.error(`Error fetching user data: ${err.message}`);
+        });
 
     function addLike() {
         setLike(like + 1);
@@ -71,26 +90,6 @@ const AskedQuestionsCard = () => {
                     Sapiente distinctio ab ipsam ut? Quas odit numquam, debitis labore adipisci dolor facere.
                     Id accusantium error laborum distinctio a impedit nemo repudiandae!
                     Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                    Sapiente distinctio ab ipsam ut? Quas odit numquam, debitis labore adipisci dolor facere.
-                    Id accusantium error laborum distinctio a impedit nemo repudiandae!
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                    Sapiente distinctio ab ipsam ut? Quas odit numquam, debitis labore adipisci dolor facere.
-                    Id accusantium error laborum distinctio a impedit nemo repudiandae!
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                    Sapiente distinctio ab ipsam ut? Quas odit numquam, debitis labore adipisci dolor facere.
-                    Id accusantium error laborum distinctio a impedit nemo repudiandae!
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                    Sapiente distinctio ab ipsam ut? Quas odit numquam, debitis labore adipisci dolor facere.
-                    Id accusantium error laborum distinctio a impedit nemo repudiandae!
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                    Sapiente distinctio ab ipsam ut? Quas odit numquam, debitis labore adipisci dolor facere.
-                    Id accusantium error laborum distinctio a impedit nemo repudiandae!
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                    Sapiente distinctio ab ipsam ut? Quas odit numquam, debitis labore adipisci dolor facere.
-                    Id accusantium error laborum distinctio a impedit nemo repudiandae!
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                    Sapiente distinctio ab ipsam ut? Quas odit numquam, debitis labore adipisci dolor facere.
-                    Id accusantium error laborum distinctio a impedit nemo repudiandae!
                 </p>
             </div>
 

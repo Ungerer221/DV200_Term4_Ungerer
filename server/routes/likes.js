@@ -8,19 +8,19 @@ const LikeSchema = require('../models/likes.js');
 const router = express();
 
 // Get all
-router.get('/api/question_get_all/', async (req, res) => {
+router.get('/api/like_get_all/', async (req, res) => {
     const findOrder = await LikeSchema.find();
     res.json(findOrder);
 });
 
 // Get Single
-router.get('/api/question_get_single/:id', async (req, res) => {
+router.get('/api/like_get_single/:id', async (req, res) => {
     const findOrder = await LikeSchema.findById(req.params.id)
     res.json(findOrder)
 });
 
 // Update
-router.put('/api/question_update/:id', async (req, res) => {
+router.put('/api/like_update/:id', async (req, res) => {
     const { id } = req.params.id;
     await LikeSchema.updateOne({ id }, req.body)
         .then(response => res.json(response))
@@ -28,7 +28,7 @@ router.put('/api/question_update/:id', async (req, res) => {
 });
 
 // Create
-router.post('/api/question_add/', async (req, res) => {
+router.post('/api/like_add/', async (req, res) => {
     const car = new LikeSchema({
 
         client: req.body.client,
@@ -42,7 +42,7 @@ router.post('/api/question_add/', async (req, res) => {
 });
 
 //Delete
-router.delete('/api/question_delete/:id', async (req, res) => {
+router.delete('/api/like_delete/:id', async (req, res) => {
     await LikeSchema.findByIdAndDelete(req.params.id)
         .then(response => res.json(response))
         .catch(error => res.status(500).json(error))
