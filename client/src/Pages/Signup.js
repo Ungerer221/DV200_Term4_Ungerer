@@ -46,11 +46,23 @@ const SignUp = () => {
       <form className="form">
         <label>Username:</label>
         <input className='uname' id='username' onChange={handleChange} name="username" type="text" placeholder="Enter your username" required />
+        {/* error message  */}
+        <label for='username' className='signup-username-error-message'>
+          <p>Username already exists!</p>
+        </label>
+
         <label >Email:</label>
         <input className='email' id='email' onChange={handleChange} name="email" type="email" placeholder="Enter your email" required />
+        {/* error message  */}
+        <label for='email' className='signup-email-error-message'>
+          <p>Email is invalid</p>
+        </label>
+
         <label >Password:</label>
         <input className='password' id='password' onChange={handleChange} name="password" type="password" placeholder="Enter your password" required />
+
         <br></br>
+
         <div className="form-footer">
           <p> Already Have An Account? <Nav.Link href='/SignIn' style={{ textDecoration: 'none', color: '#fc525e', fontWeight: '700' }}>Login</Nav.Link></p>
         </div>

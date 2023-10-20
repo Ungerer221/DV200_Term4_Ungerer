@@ -85,3 +85,32 @@ h2 {
   color: blue;
   cursor: pointer;
 }
+.login-invalid-message-email{
+  background-color: rgb(245, 229, 229);
+  border-radius: 12px;
+  font-weight: 700;
+  color: red;
+  margin-bottom: 10px;
+}
+.login-invalid-message-password{
+  background-color: rgb(245, 229, 229);
+  border-radius: 12px;
+  font-weight: 700;
+  color: red;
+  margin-bottom: 10px;
+}
+
+.signup-username-error-message{
+  background-color: rgb(245, 229, 229);
+  border-radius: 12px;
+  font-weight: 700;
+  color: red;
+  margin-bottom: 10px;
+}
+.signup-email-error-message{
+  background-color: rgb(245, 229, 229);
+  border-radius: 12px;
+  font-weight: 700;
+  color: red;
+  margin-bottom: 10px;
+}

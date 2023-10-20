@@ -55,10 +55,18 @@ const SignIn = () => {
       <form className="form">
         <label >Email:</label>
         <input className='email' id='email' onChange={handleChange} name="email" type="email" placeholder="Enter your email" required />
+        {/* error message here  */}
+        <label className='login-invalid-message-email'>
+          <p>Email is incorrect or invalid!</p>
+        </label>
 
         <label >Password:</label>
         <input className='password' id='password' onChange={handleChange} name="password" type="password" placeholder="Enter your password" required />
-        
+        {/* error message here  */}
+        <label className='login-invalid-message-password' for='password'>
+          <p>password is incorrect</p>
+        </label>
+
         <br></br>
         <br></br>
         <br></br>
