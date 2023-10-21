@@ -16,6 +16,9 @@ import Axios from "axios";
 
 const AnswerCards = (props) => {
 
+    const [AnswerTitle,setAnswerTitle] = useState(props.title);
+    const [AnswerText, setAnswerText] = useState(props.text);
+
     const [username, setUsername] = useState();
     let isAdmin = false;
 

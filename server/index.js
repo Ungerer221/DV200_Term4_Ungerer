@@ -8,6 +8,7 @@ const questionRoute = require('./routes/question');
 const userRoute = require('./routes/users');
 const likeRoute = require('./routes/likes');
 const authRoute = require('./routes/auth');
+const answerRoute = require('./routes/answer');
 
 require('dotenv/config')
 
@@ -38,6 +39,7 @@ app.use(questionRoute);
 app.use(userRoute);
 app.use(likeRoute);
 app.use(authRoute);
+app.use(answerRoute);
 
 mongoose.connect(process.env.DB_CONNECTION, {
     useNewUrlParser: true,

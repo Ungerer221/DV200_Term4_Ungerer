@@ -6,9 +6,11 @@ import Avatar from '@mui/material/Avatar';
 import Chip from '@mui/material/Chip';
 import Button from '@mui/material/Button';
 import { BiXCircle } from 'react-icons/bi';
+import TextField from '@mui/material/TextField';
 
 import './QuestionPage.css';
 import AnswerCards from "../Components/AnswerCards";
+// import answer from "../../../server/models/answer";
 
 function QuestionPage() {
     const questionID = sessionStorage.getItem("QuestionClick");
@@ -20,8 +22,14 @@ function QuestionPage() {
     let id = searchParams.get('id');
 
     // Initialize as null in case there are no comments
-    const [answers, setAnswers] = useState(0);
+    const [answers, setAnswers] = useState();
     const [renderAnswers, setRenderAnswers] = useState(null);
+
+    const [AnswerTitle, setAnswerTitle] = useState();
+    const [AnswerText, setAnswerText] = useState();
+    const [updateAnswers, setUpdateAnswers]=useState();
+
+    const [error, setError] = useState("");
 
     // likes & dislike counter function 
     // likes 
@@ -410,13 +418,70 @@ function QuestionPage() {
     const imageURL = `${serverURL}/${question.image}`;
     // console.log(imageURL);
 
+    // answer question functionality !!!!
+    const AnswerQ = (e) => {
+        document.getElementById("answer-title-field").style.display = "block"
+        document.getElementById("answer-main-field").style.display = "block"
+        document.getElementById("answer-question-submit").style.display = "block"
+    }
+
+    const CancelQ = (e) => {
+        document.getElementById("answer-title-field").style.display = "none"
+        document.getElementById("answer-main-field").style.display = "none"
+        document.getElementById("answer-question-submit").style.display = "none"
+    }
+    // adding a question 
+    useEffect(() => {
+        // getting the answers 
+        // ? end up changing the port to current to show the answers but then the app crashes
+        Axios.get('http://localhost:5003/api/answer_get_all/')
+            .then(res => {
+                let answerData = res.data;
+                console.log(answerData);
+
+                let renderAnswers = answerData.map((item) => <AnswerCards key={item._id} title={item.title} text={item.text} />)
+
+                setAnswers(renderAnswers);
+                setUpdateAnswers(false);
+            })
+            .catch(err => console.log(err));
+    }, [updateAnswers])
+
+    const getAnswerTitle = (e) => {
+        let value = e.target.value;
+        setAnswerTitle(value);
+    }
+    const getAnswerText = (e) => {
+        let value = e.target.value;
+        setAnswerText(value);
+    }
+    // add question 
+    const addAnswer = (e) => {
+        let payload = {
+            title: AnswerTitle,
+            text: AnswerText
+        }
+
+        // ? the add function works if i change the port to my current which is 5002 - Ungerer
+        Axios.post('http://localhost:5002/api/add_Answer/', payload)
+            .then(res => {
+                console.log(res.data)
+                // setUpdateAnswer(true)
+            })
+            .catch(err => {
+                console.log(err)
+                setError(err)
+            })
+    }
+
+
     return (
         <div className="question-page-con">
             <Grid container spacing={0}>
                 {/* Render user information */}
                 <Grid item xs={2}>
                     <Grid item xs={12}>
-                        <Avatar sx={{ width: '110px', height: '110px', margin: 'auto' }}>H</Avatar>
+                        <Avatar sx={{ width: '110px', height: '110px', margin: 'auto' }}>Z</Avatar>
                     </Grid>
                     <Grid item xs={12}>
                         <p>{username}</p>
@@ -459,6 +524,35 @@ function QuestionPage() {
                 </Grid>
             </Grid>
 
+            {/* answer question form section  */}
+            <Grid container spacing={0}>
+                <Grid xs={12} sx={{ marginBottom: '20px' }}>
+                    {/* //? when you first click the button it pops up with a weird error but if you close the error it functions fine */}
+                    <Button onClick={AnswerQ} variant="contained">Answer</Button>
+                </Grid>
+                <Grid id="answer-title-field" xs={12} sx={{ marginTop: '10px' }} style={{ display: 'none' }}>
+                    <TextField
+                        sx={{ width: '50%', maxWidth: '700px', }}
+                        label="Answer Title"
+                        variant="outlined"
+                        onChange={getAnswerTitle}
+                    ></TextField>
+                </Grid>
+                <Grid id="answer-main-field" xs={12} sx={{ marginTop: '20px', marginBottom: '20px' }} style={{ display: 'none' }}>
+                    <TextField
+                        sx={{ width: '50%', maxWidth: '700px', }}
+                        label="Answer field"
+                        multiline
+                    // rows={5}
+                    onChange={getAnswerText}
+                    ></TextField>
+                </Grid>
+                <Grid id="answer-question-submit" xs={12} sx={{ marginBottom: '20px' }} style={{ display: "none" }}>
+                    <Button onClick={addAnswer} variant="outlined">Submit</Button>
+                    <Button onClick={CancelQ} sx={{ fontSize: '24px' }}><BiXCircle /></Button>
+                </Grid>
+            </Grid>
+
             {/* Answers section */}
             <div className="answers_bg">
                 <Grid container spacing={0}>
@@ -472,6 +566,9 @@ function QuestionPage() {
                     </Grid>
                 </Grid>
                 {/* Render answers here */}
+                <Grid>
+                    {answers}
+                </Grid>
                 {/* If there are no answers, do the following: */}
                 {answers ? renderAnswers : <p>No answers available yet.</p>}
 
