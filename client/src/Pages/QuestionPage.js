@@ -280,6 +280,54 @@ function QuestionPage() {
 
     }
 
+    const handleDelete = async () => {
+        // Get all users to find who is currently logged in 
+        Axios.get('http://localhost:5002/api/getUsers')
+            .then((res) => {
+
+                // The response is an array of all the users
+                let users = res.data;
+
+                // get who is currently signed in
+                let email = sessionStorage.getItem('email');
+
+                // Gather the user ID of who is currently logged in based on which email matches the one in the DB
+                for (let k = 0; k < users.length; k++) {
+                    if (users[k].email === email) {
+                        // Correct user ID is logged
+                        // console.log(users[k]._id);
+                        sessionStorage.setItem('userID', users[k]._id);
+                    }
+                }
+
+                let url = 'http://localhost:5002/api/question_get_single/' + questionID;
+
+                Axios.get(url).then(res => {
+                    let FoundUser = res.data.user;
+                    console.log(FoundUser);
+                    console.log(sessionStorage.getItem('userID'));
+
+                    if (sessionStorage.getItem("admin") === true || FoundUser === sessionStorage.getItem('userID')) {
+
+                        if (window.confirm('Are you sure you want to delete this question? This cannot be undone.') === true) {
+                            // Build the url and the data
+                            let url = "http://localhost:5002/api/question_delete/" + questionID;
+
+                            // Delete the entry to unlike the post
+                            Axios.delete(url).catch("Error deleting");
+
+                            window.location = '/Home';
+                        }
+
+                    } else {
+                        window.alert("You do not have permissions to delete this question.")
+                    }
+                })
+            })
+
+
+    }
+
     useEffect(() => {
         // Fetch the question
         // console.log(`http://localhost:5002/api/question_get_single/${questionID}`);
@@ -393,7 +441,7 @@ function QuestionPage() {
                 </Grid>
                 {/* Render delete button */}
                 <Grid item xs={2}>
-                    <Button variant="contained" sx={{ margin: "auto" }}><BiXCircle />Delete</Button>
+                    <Button variant="contained" sx={{ margin: "auto" }} id="btnDelete" onClick={handleDelete}><BiXCircle />Delete</Button>
                     <br></br>
                     <p>Likes: {like}</p>
                     <p>Dislikes: {dislike}</p>

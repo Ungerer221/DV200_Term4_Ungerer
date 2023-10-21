@@ -58,9 +58,25 @@ function QuestionEditor() {
             setTitleAlert(false);
             setContentAlert(false);
 
+            Axios.get('http://localhost:5002/api/getUsers')
+                .then((res) => {
+
+                    let users = res.data;
+
+                    // get who is currently signed in
+                    let email = sessionStorage.getItem('email');
+
+                    // Gather the user ID of who is currently logged in based on which email matches the one in the DB
+                    for (let k = 0; k < users.length; k++) {
+                        if (users[k].email === email) {
+                            sessionStorage.setItem('userID', users[k]._id);
+                        }
+                    }
+                })
+
             const payload = new FormData()
             let data = {
-                id: '652d15bff515d55a85c47a7d', // replace with actual ID input (from session/localstorage?)
+                id: sessionStorage.getItem('userID'), // replace with actual ID input (from session/localstorage?)
                 title: title,
                 text: content,
                 date: formatDate,
@@ -80,11 +96,13 @@ function QuestionEditor() {
                     }
                 )
             console.log(payload)
+
+            window.location = '/Home';
         }
     }
 
     if (!sessionStorage.getItem('token')) {
-        
+
         window.location = "/Signin";
 
     } else {
@@ -115,7 +133,7 @@ function QuestionEditor() {
                         {contentAlert && <Alert severity="error"> Add Content </Alert>}
                     </Grid>
                 </Grid>
-    
+
                 <Grid container sx={{
                     maxWidth: 200, marginTop: '14px', marginLeft: "auto", marginRight: "auto", padding: '10px', '--Grid-borderWidth': '2px',
                     borderTop: 'var(--Grid-borderWidth) solid',
