@@ -12,7 +12,8 @@ const SignUp = () => {
   const [data, setData] = useState({
     username: "",
     email: "",
-    password: ""
+    password: "",
+    image: ""
   });
 
   // const [errorr, setErrorr] = useState("");
@@ -27,6 +28,7 @@ const SignUp = () => {
     try {
       const url = 'http://localhost:5002/api/createUser';
       const { data: res } = await Axios.post(url, data);
+      console.log(res.message);
       // setErrorr(res.message);
     } catch (error) {
       if (error.response &&
