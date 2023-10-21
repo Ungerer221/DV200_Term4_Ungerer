@@ -46,5 +46,15 @@ router.post('/api/createUser', async (req, res) => {
 });
 
 // add delete user
+router.delete('/api/User/:id', async (req, res) => {
+    const delSpecUser = await User.findByIdAndDelete(req.params.id)
+    res.json(delSpecUser)
+});
+
+//update User
+router.put('/api/User/:id', async (req, res) => {
+    const upSpecUser = await User.findByIdAndUpdate(req.params.id)
+    res.json(upSpecUser)
+});
 
 module.exports = router;
