@@ -1,37 +1,81 @@
-import React from "react";
-import { Nav } from 'react-bootstrap'
-import { useState } from 'react';
-
-import { BiXCircle, BiLike, BiDislike } from 'react-icons/bi'
+import React, { useEffect, useState } from "react";
+import Axios from "axios";
+import { useNavigate } from 'react-router-dom';
 
 // MUI 
-import Grid from '@mui/material/Grid';
 import Chip from '@mui/material/Chip';
-import Button from '@mui/material/Button';
 
-import Axios from "axios";
-
+import { BiLike, BiDislike } from 'react-icons/bi'
 
 // CSS 
 import './AskedQuestionsCard.css'
 
-const AskedQuestionsCard = () => {
+const AskedQuestionsCard = (props) => {
+
+const navigate = useNavigate();
 
     // likes & dislike counter function 
     // likes 
     const [like, setLike] = useState(0); // here we can fetch the number from the database
-
-    function addLike() {
-        setLike(like + 1);
+    function addLike(Amount) {
+        setLike(like + Amount);
     };
 
     // dislikes 
     const [dislike, setDislike] = useState(0);
-
-    function addDislike() {
-        setDislike(dislike + 1);
+    function addDislike(Amount) {
+        setDislike(dislike + Amount);
     };
-    // function end
+
+    useEffect(() => {
+
+        Axios.get('http://localhost:5002/api/like_get_all/')
+            .then((res) => {
+                // --Gather all liked questions and set them to the variable here
+                let questions = res.data;
+                // ---console.log(questions);
+
+                // variable to count the amount of likes and dislikes
+                let iLikes = 0;
+                let iDislikes = 0;
+
+                // Count how many likes there are
+                for (let k = 0; k < questions.length; k++) {
+                    if (questions[k].questionID === props.id) {
+                        switch (questions[k].type) {
+                            case "like":
+                                // increase like amount by one
+                                iLikes++;
+                                // console.log('Found Like');
+                                break;
+
+                            case "dislike":
+                                iDislikes++;
+                                // console.log('Found Dislike');
+                                break;
+
+                            case "none":
+                                break;
+                        }
+                    }
+                }
+
+                // set the amount of likes equal to the amount counted
+                addLike(iLikes);
+                addDislike(iDislikes);
+
+            })
+            .catch((err) => {
+                console.error(`Error fetching user data: ${err.message}`);
+            });
+    }, []);
+
+    const redirect = () => {
+        const queryParams = new URLSearchParams();
+        queryParams.append('id', props.id);
+        sessionStorage.setItem("QuestionClick", props.id);
+        navigate(`/question?${queryParams.toString()}`);
+    };
 
     return (
         <div className="askedQuestionCard-Container">
@@ -45,47 +89,37 @@ const AskedQuestionsCard = () => {
                         <img src="" alt=""></img>
                     </div>
                     {/* user name & surname  */}
-                    <h1 className="askedQuestionsCard-Title">Question Title</h1>
+                    <h1 className="askedQuestionsCard-Title"> {props.title} </h1>
                 </div>
 
                 {/* like and dislike buttons con  */}
                 <div className="askedQuestionCard-like-dislike-btn-con">
                     <button onClick={addLike}><BiLike /> Like {like}</button>
-                    <button className="askedQuestionCard-dislike-btn" onClick={addDislike}><BiDislike /> Dislike {dislike}</button>
+                    <button className="askedQuestionCard-dislike-btn"><BiDislike /> Dislike {dislike}</button>
                     {/* <button><BiXCircle/> Delete</button> */}
                 </div>
             </div>
 
             {/* divider  */}
             <div className="askedQuestionCard-divider"></div>
-
             <div className="askedQuestionCard-tags">
-                <Chip label="JavaScript" variant="outlined" />
-                <Chip label="CSS" variant="outlined" />
-                <Chip label="HTML" variant="outlined" />
-                <Chip label="React" variant="outlined" />
-                <Chip label="Python" variant="outlined" />
+                {Array.isArray(props.tags) ? (
+                    props.tags.map((tag, index) => (
+                        <Chip key={index} label={tag} variant="outlined" />
+                    ))
+                ) : (
+                    <Chip label={"No Tags"} variant="outlined" />
+                )}
             </div>
 
             <div className="askedQuestioncard-content">
                 <p>
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                    Sapiente distinctio ab ipsam ut? Quas odit numquam, debitis labore adipisci dolor facere.
-                    Id accusantium error laborum distinctio a impedit nemo repudiandae!
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                    {props.text}
                 </p>
             </div>
 
             {/* <Nav.Link href='#'>See more</Nav.Link> */}
-            <p style={{ color: '#37C5F1', fontWeight: 'bold', cursor: 'pointer' }}>See More</p>
-
-            <div className="askedQuestionCard-medals">
-                <Chip sx={{ height: "20px" }} label="JavaScript" />
-                <Chip sx={{ height: "20px" }} label="CSS" />
-                <Chip sx={{ height: "20px" }} label="HTML" />
-                <Chip sx={{ height: "20px" }} label="React" />
-                <Chip sx={{ height: "20px" }} label="Python" />
-            </div>
+            <p style={{ color: '#37C5F1', fontWeight: 'bold', cursor: 'pointer' }} onClick={redirect} >See More</p>
 
         </div>
     )

@@ -18,7 +18,7 @@ function QuestionPage() {
     const [username, setUsername] = useState("");
 
     // Get the user id
-    const [Id, setId] = useState();
+    const [Id, setId] = useState('');
 
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
@@ -53,28 +53,19 @@ function QuestionPage() {
     const handleLike = async () => {
 
         // Get all users to find who is currently logged in 
-        Axios.get('http://localhost:5002/api/getUsers')
-            .then((res) => {
+        let usermail = sessionStorage.getItem('useremail');
 
-                // The response is an array of all the users
-                let users = res.data;
+        try {
+            Axios.get("http://localhost:5002/api/GetUserID/" + usermail)
+                .then((res) => {
+                    const response = res;
+                    setId(response.data[0]._id);
+                })
 
-                // get who is currently signed in
-                let email = sessionStorage.getItem('email');
-
-                // Both are correct
-                // console.log(users);
-                // console.log(email);
-
-                // Gather the user ID of who is currently logged in based on which email matches the one in the DB
-                for (let k = 0; k < users.length; k++) {
-                    if (users[k].email === email) {
-                        // Correct user ID is logged
-                        // console.log(users[k]._id);
-                        sessionStorage.setItem('userID', users[k]._id);
-                    }
-                }
-            })
+        } catch (error) {
+            console.log(error);
+            console.log('User ID not found');
+        }
 
         // Get all likes
         Axios.get('http://localhost:5002/api/like_get_all/')
@@ -85,7 +76,7 @@ function QuestionPage() {
 
                 // --Call session storage once to ensure it is never lagging behind.
                 // --Set a variable to the ID of the logged in user.
-                let USER = sessionStorage.getItem('userID');
+                let USER = Id;
 
                 // --Used to test if the user has been found
                 let bFound = false;
@@ -179,35 +170,27 @@ function QuestionPage() {
     const handleDislike = async () => {
 
         // Get all users to find who is currently logged in 
-        Axios.get('http://localhost:5002/api/getUsers')
-            .then((res) => {
+        let usermail = sessionStorage.getItem('useremail');
 
-                // The response is an array of all the users
-                let users = res.data;
+        try {
+            Axios.get("http://localhost:5002/api/GetUserID/" + usermail)
+                .then((res) => {
+                    const response = res;
+                    setId(response.data[0]._id);
+                })
 
-                // get who is currently signed in
-                let email = sessionStorage.getItem('email');
+        } catch (error) {
+            console.log(error);
+            console.log('User ID not found');
+        }
 
-                // Gather the user ID of who is currently logged in based on which email matches the one in the DB
-                for (let k = 0; k < users.length; k++) {
-                    if (users[k].email === email) {
-                        sessionStorage.setItem('userID', users[k]._id);
-                    }
-                }
-            })
-
-        // Get all likes
+        // Get all dislikes
         Axios.get('http://localhost:5002/api/like_get_all/')
             .then((res) => {
-                // --Set the likes to a variable to see which questions this user has liked. 
-                // --This prevents the same person from disliking the same post more than once.
                 let questions = res.data;
 
-                // --Call session storage once to ensure it is never lagging behind.
-                // --Set a variable to the ID of the logged in user.
-                let USER = sessionStorage.getItem('userID');
+                let USER = Id;
 
-                // --Used to test if the user has been found
                 let bFound = false;
                 let questionType = "";
                 let likeID = "";
@@ -432,7 +415,7 @@ function QuestionPage() {
     }, []);
 
     const serverURL = 'http://localhost:5002/images';
-    const imageURL = `${serverURL}/${question.image}`; 
+    const imageURL = `${serverURL}/${question.image}`;
     // console.log(imageURL);
 
     // answer question functionality !!!!

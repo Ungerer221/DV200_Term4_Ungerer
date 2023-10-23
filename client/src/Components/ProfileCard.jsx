@@ -1,16 +1,11 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import "./ProfileCard.css"
 
-//bootstrap
-// import Row from 'react-bootstrap/Row';
-// import Col from 'react-bootstrap/Col';
-
 // MUI
-import Box from '@mui/material/Box';
-import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
-import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
+
+import Axios from "axios";
 
 const ProfileCard = (props) => {
 
@@ -23,12 +18,65 @@ const ProfileCard = (props) => {
     const serverURL = 'http://localhost:5002/images';
     const imageURL = `${serverURL}/${props.image}`;
 
+    // total likes and dislikes
+    const [totalLike, setTotalLike] = useState(0);
+    const [totalDislikes, setTotalDislikes] = useState(0);
+
+    function addTotalLike(Amount) {
+        setTotalLike(totalLike + Amount);
+    };
+
+    function addTotalDislike(Amount) {
+        setTotalDislikes(totalDislikes + Amount);
+    };
+
+    useEffect(() => {
+
+        Axios.get('http://localhost:5002/api/like_get_all/')
+            .then((res) => {
+                // --Gather all liked questions and set them to the variable here
+                let questions = res.data;
+                console.log(questions);
+
+                // variable to count the amount of likes and dislikes
+                let iLikes = 0;
+                let iDislikes = 0;
+
+                // Count how many likes there are
+                for (let k = 0; k < questions.length; k++) {
+                    if (questions[k].userID === props.id) {
+                        switch (questions[k].type) {
+                            case "like":
+                                console.log('Found Like');
+                                iLikes++;
+                                break;
+
+                            case "dislike":
+                                iDislikes++;
+                                console.log('Found Dislike');
+                                break;
+
+                            case "none":
+                                break;
+                        }
+                    }
+                }
+
+                addTotalLike(iLikes);
+                addTotalDislike(iDislikes);
+
+            })
+            .catch((err) => {
+                console.error(`Error fetching user data: ${err.message}`);
+            });
+    }, []);
+
     return (
         <>
             <div className="profilecard-container" style={{ display: 'block' }} id='default'>
                 <Grid container spacing={0}>
                     <Grid item xs={2} md={2}>
-                    <img src={imageURL} className="question_img"></img>
+                        <img src={imageURL} className="question_img"></img>
                     </Grid>
                     <Grid item xs={6} md={6}>
                         <div className="profilecard-userInfo-con">
@@ -56,8 +104,7 @@ const ProfileCard = (props) => {
                                 </div>
                                 {/* likes  */}
                                 <div className="profilecard-stats-likes">
-                                    <p>Likes: 00</p>
-                                    {/* <p> 00</p> */}
+                                    <p>Likes: {totalLike}</p>
                                 </div>
                             </div>
                         </div>

@@ -16,7 +16,7 @@ import Axios from "axios";
 
 const AnswerCards = (props) => {
 
-    const [AnswerTitle,setAnswerTitle] = useState(props.title);
+    const [AnswerTitle, setAnswerTitle] = useState(props.title);
     const [AnswerText, setAnswerText] = useState(props.text);
 
     const [username, setUsername] = useState();
@@ -26,6 +26,13 @@ const AnswerCards = (props) => {
     Axios.get('http://localhost:5002/api/getUser/' + props.user)
         .then(res => { setUsername(res.data.username) })
         .catch(err => console.log(err))
+
+    const handleClick = () => {
+        sessionStorage.setItem('user', false);
+        sessionStorage.setItem('useID', props.user);
+
+        window.location = '/Profile';
+    }
 
     return (
         <div>
@@ -37,7 +44,7 @@ const AnswerCards = (props) => {
                             <Avatar sx={{ width: '110px', height: '110px', margin: 'auto' }}>H</Avatar>
                         </Grid>
                         <Grid xs={12}>
-                            <p>{username}</p>
+                            <Button onClick={handleClick}>{username}</Button>
                         </Grid>
                     </Grid>
                     {/* Column 2  */}

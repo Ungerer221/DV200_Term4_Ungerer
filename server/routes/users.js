@@ -34,8 +34,8 @@ const upload = multer({
 //Update
 router.put('/api/updateuser/:id', upload.single('image'), async (req, res) => {
 
-    let data = JSON.parse(req.body.data);
     if (req.file) {
+        let data = JSON.parse(req.body.data);
         const user = ({
             username: data.username,
             email: data.email,
@@ -44,7 +44,9 @@ router.put('/api/updateuser/:id', upload.single('image'), async (req, res) => {
         await User.findByIdAndUpdate(req.params.id, user)
             .then(response => res.json(response))
             .catch(error => res.status(500).json(error))
+
     } else {
+        let data = req.body;
         const user = ({
             username: data.username,
             email: data.email
@@ -61,12 +63,7 @@ router.post('/api/createUser', async (req, res) => {
     try {
         console.log("Data that was received from the client side:");
         console.log(req.body);
-        // TODO This commented out code below was causing an instant error - when i commented it out, the data could work and a user was created
-        // const {error} = validate(req.body);
 
-        // if (error) {
-        //     return res.status(400).send({message: error.details[0].message});
-        // };
         const user = await User.findOne({ email: req.body.email });
 
         if (user) {
@@ -86,12 +83,6 @@ router.post('/api/createUser', async (req, res) => {
 router.delete('/api/User/:id', async (req, res) => {
     const delSpecUser = await User.findByIdAndDelete(req.params.id)
     res.json(delSpecUser)
-});
-
-//update User
-router.put('/api/User/:id', async (req, res) => {
-    const upSpecUser = await User.findByIdAndUpdate(req.params.id)
-    res.json(upSpecUser)
 });
 
 router.get('/api/GetUserID/:email', async (req, res) => {
