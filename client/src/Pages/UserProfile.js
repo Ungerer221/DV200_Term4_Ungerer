@@ -51,6 +51,24 @@ function Profile() {
 
     const save = (e) => {
 
+        // Get all users to find who is currently logged in 
+        axios.get('http://localhost:5002/api/getUsers')
+            .then((res) => {
+
+                // The response is an array of all the users
+                let users = res.data;
+
+                // get who is currently signed in
+                let email = sessionStorage.getItem('email');
+
+                // Gather the user ID of who is currently logged in based on which email matches the one in the DB
+                for (let k = 0; k < users.length; k++) {
+                    if (users[k].email === email) {
+                        sessionStorage.setItem('userID', users[k]._id);
+                    }
+                }
+            })
+
         const updateUser = new FormData()
 
         let details = {
@@ -60,7 +78,7 @@ function Profile() {
         updateUser.append('details', JSON.stringify(details));
         updateUser.append('imageUp', image);
 
-        axios.put('http://localhst:5002/api/updateuser/' + { id }, updateUser)
+        axios.put('http://localhst:5002/api/updateuser/' + sessionStorage.getItem('userID'), updateUser)
             .then(() => {
                 document.getElementById("default").style.display = 'block';
                 document.getElementById("update-user-profile").style.display = 'none';
