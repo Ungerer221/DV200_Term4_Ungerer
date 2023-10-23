@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 
+
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -25,6 +26,8 @@ const VisuallyHiddenInput = styled('input')({
     width: 1,
 });
 
+
+
 function Profile() {
 
     // const [Image, setImage] = useState();
@@ -34,7 +37,6 @@ function Profile() {
     const [id, setId] = useState('');
     // const [info, setInfo] = useState();
     const [profile, setProfile] = useState();
-
     // Previously asked questions
     const [paq, setPaq] = useState(null);
 
@@ -64,33 +66,28 @@ function Profile() {
 
             });
 
-
         const fetchData = async () => {
             if (!sessionStorage.getItem('user')) {
-
                 setId(sessionStorage.getItem('useID'));
-
             } else {
-
                 let usermail = sessionStorage.getItem('useremail');
-
                 try {
-
-                    axios.get("http://localhost:5002/api/GetUserID/" + usermail)
-                        .then((res) => {
-                            const response = res;
-                            setId(response.data[0]._id);
-                        })
-
+                    const response = await axios.get("http://localhost:5002/api/GetUserID/" + usermail);
+                    console.log(response.data[0]._id);
+                    setId(response.data[0]._id);
                 } catch (error) {
                     console.log(error);
                     console.log('User ID not found');
                 }
             }
 
+            console.log('if');
+
+
             if (id) {
                 try {
                     const userResponse = await axios.get('http://localhost:5002/api/getUser/' + id);
+                    console.log(userResponse.data.email);
                     let info = userResponse.data;
                     setProfile(<ProfileCard username={info.username} id={info._id} image={info.image} />);
                 } catch (error) {
@@ -103,8 +100,8 @@ function Profile() {
         fetchData();
     }, [id]);
 
-
     const save = (e) => {
+
         // Get all users to find who is currently logged in 
         let usermail = sessionStorage.getItem('useremail');
 
@@ -126,17 +123,13 @@ function Profile() {
             username: userName,
             email: email
         }
-
         updateUser.append('details', JSON.stringify(details));
         updateUser.append('imageUp', image);
-
-        console.log(details);
 
         axios.put('http://localhost:5002/api/updateuser/' + id, updateUser)
             .then(() => {
                 document.getElementById("default").style.display = 'block';
                 document.getElementById("update-user-profile").style.display = 'none';
-
                 window.location.reload('false');
             })
             .catch((err) => {
@@ -210,7 +203,11 @@ function Profile() {
             <h1 className="prev-asked-questions-title">Previously Asked Questions</h1>
 
             <div className="prev-asked-questions-card-con">
-                {paq}
+                <AskedQuestionsCard />
+                <AskedQuestionsCard />
+                <AskedQuestionsCard />
+                <AskedQuestionsCard />
+                <AskedQuestionsCard />
             </div>
 
         </div>

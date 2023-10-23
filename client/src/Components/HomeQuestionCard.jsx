@@ -8,7 +8,7 @@ import './HomeQuestionCard.css';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import Chip from '@mui/material/Chip';
-import Button from '@mui/material/Button';
+import Button from '@mui/material/Button'; 
 
 // Axios import
 import Axios from "axios";
@@ -16,6 +16,7 @@ import Axios from "axios";
 const HomeQuestionCard = ({ user, title, date, text, id }) => {
 
     const [username, setUsername] = useState("");
+    console.log(user)
 
     const navigate = useNavigate();
 
@@ -23,7 +24,7 @@ const HomeQuestionCard = ({ user, title, date, text, id }) => {
     useEffect(() => {
         Axios.get('http://localhost:5002/api/getUser/' + user)
             .then((res) => {
-                setUsername(res.data.username);
+                console.log(res);
             })
             .catch((err) => {
                 console.error(`Error fetching user data: ${err.message}`);

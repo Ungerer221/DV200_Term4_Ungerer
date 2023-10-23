@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import { styled } from '@mui/material/styles';
@@ -29,6 +29,18 @@ function QuestionEditor() {
     const [content, setContent] = useState('');
     const [titleAlert, setTitleAlert] = useState(false);
     const [contentAlert, setContentAlert] = useState(false);
+    const [userID, setUserID] = useState();
+
+    useEffect(() => {
+        let mail = sessionStorage.getItem('useremail');
+        Axios.get('http://localhost:5002/api/GetUserID/' + mail)
+            .then((res) => {
+                console.log(res.data[0]._id);
+                setUserID(res.data[0]._id);
+            })
+
+    }, []);
+
 
     const [id, setId] = useState('');
 
@@ -92,14 +104,13 @@ function QuestionEditor() {
                 .then(
                     (response) => {
                         console.log(response.statusText);
+                        window.location = '/Home';
                     },
                     (error) => {
                         console.log(error);
                     }
                 )
             console.log(payload)
-
-            window.location = '/Home';
         }
     }
 
