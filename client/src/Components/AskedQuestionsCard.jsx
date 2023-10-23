@@ -12,7 +12,8 @@ import './AskedQuestionsCard.css'
 
 const AskedQuestionsCard = (props) => {
 
-const navigate = useNavigate();
+    const navigate = useNavigate();
+    const [id, setId] = useState('');
 
     // likes & dislike counter function 
     // likes 
@@ -28,6 +29,21 @@ const navigate = useNavigate();
     };
 
     useEffect(() => {
+
+        let usermail = sessionStorage.getItem('useremail');
+
+        try {
+
+            Axios.get("http://localhost:5002/api/GetUserID/" + usermail)
+                .then((res) => {
+                    const response = res;
+                    setId(response.data[0]._id);
+                })
+
+        } catch (error) {
+            console.log(error);
+            console.log('User ID not found');
+        }
 
         Axios.get('http://localhost:5002/api/like_get_all/')
             .then((res) => {
@@ -77,51 +93,58 @@ const navigate = useNavigate();
         navigate(`/question?${queryParams.toString()}`);
     };
 
-    return (
-        <div className="askedQuestionCard-Container">
-            {/* row 1  */}
-            <div className="askedQuestionCard-header-row">
+    if (props.user === id) {
+        return (
+            <div className="askedQuestionCard-Container">
+                {/* row 1  */}
+                <div className="askedQuestionCard-header-row">
 
-                {/* card title info  */}
-                <div className="askedQuestionCard-title-info">
-                    {/* logo */}
-                    <div className="askedQuestionCard-logo">
-                        <img src="" alt=""></img>
+                    {/* card title info  */}
+                    <div className="askedQuestionCard-title-info">
+                        {/* logo */}
+                        <div className="askedQuestionCard-logo">
+                            <img src="" alt=""></img>
+                        </div>
+                        {/* user name & surname  */}
+                        <h1 className="askedQuestionsCard-Title"> {props.title} </h1>
                     </div>
-                    {/* user name & surname  */}
-                    <h1 className="askedQuestionsCard-Title"> {props.title} </h1>
+
+                    {/* like and dislike buttons con  */}
+                    <div className="askedQuestionCard-like-dislike-btn-con">
+                        <button onClick={addLike}><BiLike /> Like {like}</button>
+                        <button className="askedQuestionCard-dislike-btn"><BiDislike /> Dislike {dislike}</button>
+                        {/* <button><BiXCircle/> Delete</button> */}
+                    </div>
                 </div>
 
-                {/* like and dislike buttons con  */}
-                <div className="askedQuestionCard-like-dislike-btn-con">
-                    <button onClick={addLike}><BiLike /> Like {like}</button>
-                    <button className="askedQuestionCard-dislike-btn"><BiDislike /> Dislike {dislike}</button>
-                    {/* <button><BiXCircle/> Delete</button> */}
+                {/* divider  */}
+                <div className="askedQuestionCard-divider"></div>
+                <div className="askedQuestionCard-tags">
+                    {Array.isArray(props.tags) ? (
+                        props.tags.map((tag, index) => (
+                            <Chip key={index} label={tag} variant="outlined" />
+                        ))
+                    ) : (
+                        <Chip label={"No Tags"} variant="outlined" />
+                    )}
                 </div>
+
+                <div className="askedQuestioncard-content">
+                    <p>
+                        {props.text}
+                    </p>
+                </div>
+
+                {/* <Nav.Link href='#'>See more</Nav.Link> */}
+                <p style={{ color: '#37C5F1', fontWeight: 'bold', cursor: 'pointer' }} onClick={redirect} >See More</p>
+
             </div>
+        )
+    } else {
+        return (
+            <div style={{ display: 'none' }}></div>
+        )
+    }
 
-            {/* divider  */}
-            <div className="askedQuestionCard-divider"></div>
-            <div className="askedQuestionCard-tags">
-                {Array.isArray(props.tags) ? (
-                    props.tags.map((tag, index) => (
-                        <Chip key={index} label={tag} variant="outlined" />
-                    ))
-                ) : (
-                    <Chip label={"No Tags"} variant="outlined" />
-                )}
-            </div>
-
-            <div className="askedQuestioncard-content">
-                <p>
-                    {props.text}
-                </p>
-            </div>
-
-            {/* <Nav.Link href='#'>See more</Nav.Link> */}
-            <p style={{ color: '#37C5F1', fontWeight: 'bold', cursor: 'pointer' }} onClick={redirect} >See More</p>
-
-        </div>
-    )
 }
 export default AskedQuestionsCard

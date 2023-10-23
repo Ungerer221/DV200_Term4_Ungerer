@@ -29,6 +29,7 @@ const SignUp = () => {
       const url = 'http://localhost:5002/api/createUser';
       const { data: res } = await Axios.post(url, data);
       console.log(res.message);
+      window.location = '/SignIn'
       setErrorr(res.message);
     } catch (error) {
       if (error.response &&

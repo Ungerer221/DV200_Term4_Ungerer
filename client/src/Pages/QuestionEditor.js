@@ -30,6 +30,8 @@ function QuestionEditor() {
     const [titleAlert, setTitleAlert] = useState(false);
     const [contentAlert, setContentAlert] = useState(false);
 
+    const [id, setId] = useState('');
+
     const getImage = (e) => {
         let imageFile = e.target.files[0];
         console.log(imageFile);
@@ -58,30 +60,31 @@ function QuestionEditor() {
             setTitleAlert(false);
             setContentAlert(false);
 
-            Axios.get('http://localhost:5002/api/getUsers')
-                .then((res) => {
+            let usermail = sessionStorage.getItem('useremail');
 
-                    let users = res.data;
+            try {
+                Axios.get("http://localhost:5002/api/GetUserID/" + usermail)
+                    .then((res) => {
+                        const response = res;
+                        setId(response.data[0]._id);
+                    })
 
-                    // get who is currently signed in
-                    let email = sessionStorage.getItem('email');
-
-                    // Gather the user ID of who is currently logged in based on which email matches the one in the DB
-                    for (let k = 0; k < users.length; k++) {
-                        if (users[k].email === email) {
-                            sessionStorage.setItem('userID', users[k]._id);
-                        }
-                    }
-                })
+            } catch (error) {
+                console.log(error);
+                console.log('User ID not found');
+            }
 
             const payload = new FormData()
+
             let data = {
-                id: sessionStorage.getItem('userID'), // replace with actual ID input (from session/localstorage?)
+                id: id,
                 title: title,
                 text: content,
                 date: formatDate,
                 comments: '',
             }
+            console.log(data);
+
             payload.append('data', JSON.stringify(data));
             payload.append('image', Image);
 
