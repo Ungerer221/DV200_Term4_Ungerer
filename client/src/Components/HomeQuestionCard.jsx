@@ -68,4 +68,5 @@ const HomeQuestionCard = ({ user, title, date, text, id }) => {
         </div>
     )
 }
+
 export default HomeQuestionCard
