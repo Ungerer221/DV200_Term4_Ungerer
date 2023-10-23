@@ -16,7 +16,7 @@ const SignUp = () => {
     image: ""
   });
 
-  // const [errorr, setErrorr] = useState("");
+  const [errorr, setErrorr] = useState("");
 
   const handleChange = ({ currentTarget: input }) => {
     setData({ ...data, [input.name]: input.value });
@@ -29,7 +29,7 @@ const SignUp = () => {
       const url = 'http://localhost:5002/api/createUser';
       const { data: res } = await Axios.post(url, data);
       console.log(res.message);
-      // setErrorr(res.message);
+      setErrorr(res.message);
     } catch (error) {
       if (error.response &&
         error.response.status >= 400 &&
@@ -50,14 +50,14 @@ const SignUp = () => {
         <input className='uname' id='username' onChange={handleChange} name="username" type="text" placeholder="Enter your username" required />
         {/* error message  */}
         <label for='username' className='signup-username-error-message'>
-          <p>Username already exists!</p>
+          <p> {errorr} </p>
         </label>
 
         <label >Email:</label>
         <input className='email' id='email' onChange={handleChange} name="email" type="email" placeholder="Enter your email" required />
         {/* error message  */}
         <label for='email' className='signup-email-error-message'>
-          <p>Email is invalid</p>
+          <p> {errorr} </p>
         </label>
 
         <label >Password:</label>

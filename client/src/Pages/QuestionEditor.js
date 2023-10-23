@@ -92,7 +92,6 @@ function QuestionEditor() {
                     },
                     (error) => {
                         console.log(error);
-
                     }
                 )
             console.log(payload)
