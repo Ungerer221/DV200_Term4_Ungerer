@@ -35,29 +35,27 @@ const upload = multer({
 router.put('/api/updateuser/:id', upload.single('imageUp'), async (req, res) => {
 
     if (req.file) {
-        console.log(req.body);
-        console.log("---------");
         let data = req.body;
-
-        // let data = JSON.parse(req.body);
-        // console.log(data);
-        // console.log("---------");
 
         const user = ({
             username: data.username,
             email: data.email,
             image: req.file.filename
         })
+
         await User.findByIdAndUpdate(req.params.id, user)
             .then(response => res.json(response))
             .catch(error => res.status(500).json(error))
 
     } else {
         let data = req.body;
+        data = JSON.parse(data.details);
+
         const user = ({
             username: data.username,
             email: data.email
         })
+        
         await User.findByIdAndUpdate(req.params.id, user)
             .then(response => res.json(response))
             .catch(error => res.status(500).json(error))

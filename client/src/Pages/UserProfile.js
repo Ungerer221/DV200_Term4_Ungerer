@@ -126,13 +126,18 @@ function Profile() {
             username: userName,
             email: email
         }
+
         updateUser.append('details', JSON.stringify(details));
         updateUser.append('imageUp', image);
+
+        console.log(details);
 
         axios.put('http://localhost:5002/api/updateuser/' + id, updateUser)
             .then(() => {
                 document.getElementById("default").style.display = 'block';
                 document.getElementById("update-user-profile").style.display = 'none';
+
+                window.location.reload('false');
             })
             .catch((err) => {
                 console.log("error", err)

@@ -31,6 +31,8 @@ app.use(cors({
 //Middleware
 app.use(express.static('images'));
 app.use('/images', express.static('images'));
+app.use(express.static('userImages'));
+app.use('/userImages', express.static('userImages'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 

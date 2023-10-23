@@ -116,3 +116,10 @@
     position: relative;
     left: 128px;
 }
+
+.profile_img {
+    height: 180px;
+    width: 180px;
+
+    padding-top: 20px;
+}

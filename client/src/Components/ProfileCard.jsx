@@ -15,7 +15,7 @@ const ProfileCard = (props) => {
         document.getElementById("default").style.display = 'none'
         document.getElementById("update-user-profile").style.display = 'block'
     }
-    const serverURL = 'http://localhost:5002/images';
+    const serverURL = 'http://localhost:5002/userImages';
     const imageURL = `${serverURL}/${props.image}`;
 
     // total likes and dislikes
@@ -76,7 +76,7 @@ const ProfileCard = (props) => {
             <div className="profilecard-container" style={{ display: 'block' }} id='default'>
                 <Grid container spacing={0}>
                     <Grid item xs={2} md={2}>
-                        <img src={imageURL} className="question_img"></img>
+                        <img src={imageURL} className="profile_img"></img>
                     </Grid>
                     <Grid item xs={6} md={6}>
                         <div className="profilecard-userInfo-con">
