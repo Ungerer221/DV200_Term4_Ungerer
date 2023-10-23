@@ -5,6 +5,7 @@ import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import { styled } from '@mui/material/styles';
+import axios from "axios";
 
 // components 
 import ProfileCard from '../Components/ProfileCard.jsx';
@@ -29,25 +30,44 @@ const VisuallyHiddenInput = styled('input')({
 
 function Profile() {
 
-    const [Image, setImage] = useState();
+    // const [Image, setImage] = useState();
+    const [userName, setUserName] = useState();
+    const [email, setEmail] = useState();
+    const [image, setImage] = useState();
+
 
     const getImage = (e) => {
         let imageFile = e.target.files[0];
         console.log(imageFile);
         setImage(imageFile);
 
-        let reader = new FileReader();
-        reader.onload = () => {
-            let output = document.getElementById('preview');
-            output.src = reader.result;
-        };
-        reader.readAsDataURL(e.target.files[0]);
+        // let reader = new FileReader();
+        // reader.onload = () => {
+        //     let output = document.getElementById('preview');
+        //     output.src = reader.result;
+        // };
+        // reader.readAsDataURL(e.target.files[0]);
     };
 
-
     const save = (e) => {
-        document.getElementById("default").style.display = 'block'
-        document.getElementById("update-user-profile").style.display = 'none'
+
+        const updateUser = new FormData()
+
+        let details = {
+            username: userName,
+            email: email
+        }
+        updateUser.append('details', JSON.stringify(details));
+        updateUser.append('imageUp', image);
+
+        axios.put('http://localhst:5002/api/updateuser/' + { id }, updateUser)
+            .then(() => {
+                document.getElementById("default").style.display = 'block';
+                document.getElementById("update-user-profile").style.display = 'none';
+            })
+            .catch((err) => {
+                console.log("error", err)
+            })
     }
 
     return (
@@ -73,8 +93,9 @@ function Profile() {
                                 {/* <h1 style={{ marginTop: 0 }}>User Name & Surname</h1> */}
                                 {/* <input name="username" type="text" placeholder="enter new username" className="update-profile-username-input"></input> */}
                                 <Grid container>
-                                    <TextField id="" label="New Username" variant="outlined"></TextField>
-                                    <TextField id="" label="New Email" variant="outlined" sx={{ marginLeft: '10px' }}></TextField>
+                                    //default text should be curent information
+                                    <TextField id="Username" label="New Username" variant="outlined" onChange={(e) => setUserName(e.target.value)} ></TextField>
+                                    <TextField id="Email" label="New Email" variant="outlined" sx={{ marginLeft: '10px' }} onChange={(e) => setEmail(e.target.value)} ></TextField>
                                 </Grid>
 
                                 <h3>ID Number: 000 000 0000</h3>
