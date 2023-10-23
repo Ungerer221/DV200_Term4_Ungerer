@@ -415,7 +415,7 @@ function QuestionPage() {
     }, []);
 
     const serverURL = 'http://localhost:5002/images';
-    const imageURL = `${serverURL}/${question.image}`;
+    const imageURL = `${serverURL}/${question.image}`; 
     // console.log(imageURL);
 
     // answer question functionality !!!!

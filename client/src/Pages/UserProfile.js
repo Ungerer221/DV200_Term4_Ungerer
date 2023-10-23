@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 
 import Grid from '@mui/material/Grid';
@@ -34,6 +34,8 @@ function Profile() {
     const [userName, setUserName] = useState();
     const [email, setEmail] = useState();
     const [image, setImage] = useState();
+    const [id, setId] = useState('');
+
 
 
     const getImage = (e) => {
@@ -48,6 +50,58 @@ function Profile() {
         // };
         // reader.readAsDataURL(e.target.files[0]);
     };
+
+    // if (!sessionStorage.getItem('user')) {
+    //     setId(sessionStorage.getItem('useID'));
+    // } else {
+    //     let usermail = sessionStorage.getItem('useremail');
+    //     try {
+    //         axios.get("http://localhost:5002/api/GetUserID/" + usermail)
+    //         .then((res) => {
+    //         console.log(res.data[0]._id);
+    //         setId(res.data[0]._id);                
+    //         })
+
+    //     } catch (error) {
+    //         console.log(error);
+    //         console.log('User ID not found');
+    //     }
+    // }
+
+    useEffect(() => {
+
+        const fetchData = async () => {
+            if (!sessionStorage.getItem('user')) {
+                setId(sessionStorage.getItem('useID'));
+            } else {
+                let usermail = sessionStorage.getItem('useremail');
+                try {
+                    const response = await axios.get("http://localhost:5002/api/GetUserID/" + usermail);
+                    console.log(response.data[0]._id);
+                    setId(response.data[0]._id);
+                } catch (error) {
+                    console.log(error);
+                    console.log('User ID not found');
+                }
+            }
+
+            console.log('if');
+
+
+            if (id) {
+                try {
+                    const userResponse = await axios.get('http://localhost:5002/api/getUser/' + id);
+                    console.log(userResponse.data[0].email);
+                } catch (error) {
+                    console.log(error);
+                    console.log('User not found');
+                }
+            }
+        };
+
+        fetchData();
+    }, [id]);
+
 
     const save = (e) => {
 
@@ -111,9 +165,9 @@ function Profile() {
                                 {/* <h1 style={{ marginTop: 0 }}>User Name & Surname</h1> */}
                                 {/* <input name="username" type="text" placeholder="enter new username" className="update-profile-username-input"></input> */}
                                 <Grid container>
-                                    {/* //default text should be curent information */}
-                                    <TextField id="Username" label={userName} variant="outlined" onChange={(e) => setUserName(e.target.value)} ></TextField>
-                                    <TextField id="Email" label={email} variant="outlined" sx={{ marginLeft: '10px' }} onChange={(e) => setEmail(e.target.value)} ></TextField>
+                                    //default text should be curent information
+                                    <TextField id="Username" label="New Username" variant="outlined" onChange={(e) => setUserName(e.target.value)} ></TextField>
+                                    <TextField id="Email" label="New Email" variant="outlined" sx={{ marginLeft: '10px' }} onChange={(e) => setEmail(e.target.value)} ></TextField>
                                 </Grid>
 
                                 <h3>ID Number: 000 000 0000</h3>
