@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 
 // CSS 
 import './AnswerCard.css'
@@ -16,17 +16,34 @@ import Axios from "axios";
 
 const AnswerCards = (props) => {
 
-    const [AnswerTitle,setAnswerTitle] = useState(props.title);
+    const [AnswerTitle, setAnswerTitle] = useState(props.title);
     const [AnswerText, setAnswerText] = useState(props.text);
 
+    const [question, setQuestion] = useState({});
+
+
     const [username, setUsername] = useState();
+    const [image, setImage] = useState();
+
+    // image useState 
     let isAdmin = false;
 
-    // Get specific user
-    Axios.get('http://localhost:5002/api/getUser/' + props.user)
-        .then(res => { setUsername(res.data.username) })
-        .catch(err => console.log(err))
 
+
+    // Get specific user
+    // put in a useEffect 
+    useEffect(() => {
+        Axios.get('http://localhost:5002/api/getUser/' + props.user)
+            .then(res => {
+                setUsername(res.data.username);
+                setImage(res.data.image)
+            })
+            .catch(err => console.log(err))
+
+        const serverURL = 'http://localhost:5002/images';
+        const answerImg = `${serverURL}/${image}`;
+    },[]);
+    // ---
     return (
         <div>
             <Box sx={{ flexGrow: 1 }}>
@@ -34,7 +51,12 @@ const AnswerCards = (props) => {
                     {/* Column 1 the user avatar */}
                     <Grid xs={2}>
                         <Grid xs={12}>
-                            <Avatar sx={{ width: '110px', height: '110px', margin: 'auto' }}>H</Avatar>
+                            <Avatar sx={{ width: '110px', height: '110px', margin: 'auto' }}>
+                                H
+                                {/* <answerImg /> */}
+                                {/* fix the undifined error try putting the img into a div or move cont out of useEffect */}
+                                {/* <img src={answerImg} alt=''></img> */}
+                            </Avatar>
                         </Grid>
                         <Grid xs={12}>
                             <p>{username}</p>
