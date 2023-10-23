@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const {User, validate} = require('../models/users');
+const { User, validate } = require('../models/users');
 const bcrypt = require("bcrypt");
 const Joi = require("joi");
 const path = require('path');
@@ -42,16 +42,16 @@ router.put('/api/updateuser/:id', upload.single('image'), async (req, res) => {
             image: req.file.filename
         })
         await User.findByIdAndUpdate(req.params.id, user)
-        .then(response => res.json(response))
-        .catch(error => res.status(500).json(error))
+            .then(response => res.json(response))
+            .catch(error => res.status(500).json(error))
     } else {
         const user = ({
             username: data.username,
             email: data.email
         })
         await User.findByIdAndUpdate(req.params.id, user)
-        .then(response => res.json(response))
-        .catch(error => res.status(500).json(error))
+            .then(response => res.json(response))
+            .catch(error => res.status(500).json(error))
     }
 
 });
@@ -67,18 +67,18 @@ router.post('/api/createUser', async (req, res) => {
         // if (error) {
         //     return res.status(400).send({message: error.details[0].message});
         // };
-        const user = await User.findOne({email: req.body.email});
+        const user = await User.findOne({ email: req.body.email });
 
         if (user) {
-            return res.status(409).send({message: "An account with that email already exists"});
+            return res.status(409).send({ message: "An account with that email already exists" });
         }
         const salt = await bcrypt.genSalt(Number(process.env.SALT));
         const hashPassword = await bcrypt.hash(req.body.password, salt);
 
-        await new User({...req.body, password: hashPassword}).save();
-        res.status(201).send({message: "User created successfully!! Log In"});
+        await new User({ ...req.body, password: hashPassword }).save();
+        res.status(201).send({ message: "User created successfully!! Log In" });
     } catch (error) {
-        res.status(500).send({message: "Internal Servor Error"});
+        res.status(500).send({ message: "Internal Servor Error" });
     }
 });
 
@@ -93,5 +93,13 @@ router.put('/api/User/:id', async (req, res) => {
     const upSpecUser = await User.findByIdAndUpdate(req.params.id)
     res.json(upSpecUser)
 });
+
+router.get('/api/GetUserID/:email', async (req, res) => {
+    const userID = await User.find()
+        .where('email')
+        .in(req.params.email);
+
+    res.json(userID);
+})
 
 module.exports = router;

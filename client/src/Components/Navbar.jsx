@@ -42,6 +42,10 @@ const Navbar = () => {
         </Grid>
     )
 
+    const handleSignOut = () => {
+        sessionStorage.clear()
+    }
+
     return (
         <>
             <div className="navbar-con">
@@ -62,8 +66,8 @@ const Navbar = () => {
                         <Nav.Link className="navbar-page-links-options" href='/Profile'>Profile</Nav.Link>
                         <Nav.Link className="navbar-page-links-options" href='/#'>Admin</Nav.Link>
                         <Nav.Link className="navbar-page-links-options" href='/Signup'>Sign Up</Nav.Link>
-                        {/* onClick this needs to end the session for the logout function */} 
-                        <Nav.Link className="navbar-page-links-options" href='/SignIn'>Sign Out</Nav.Link>
+                        {/* onClick this needs to end the session for the logout function */}
+                        <Nav.Link className="navbar-page-links-options" href='/SignIn' onClick={handleSignOut}>Sign Out</Nav.Link>
 
                     </Stack>
                 </div>

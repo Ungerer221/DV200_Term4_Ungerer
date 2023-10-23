@@ -30,9 +30,17 @@ const SignIn = () => {
       const url = 'http://localhost:5002/api/auth'
       const { data: res } = await axios.post(url, data);
       sessionStorage.setItem("token", res.data);
-      sessionStorage.setItem('email', data.email);
+      const email = data.email;
 
-      window.location = '/Home';
+      const urlGet = "http://localhost:5002/api/GetUserID/" + email;
+      const userFound = axios.get(urlGet).then(() => {
+
+        console.log(userFound);
+
+        sessionStorage.setItem('userID', userFound._id);
+
+        //window.location = '/Home';
+      })
 
     } catch (error) {
 
