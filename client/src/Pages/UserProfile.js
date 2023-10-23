@@ -105,24 +105,20 @@ function Profile() {
 
 
     const save = (e) => {
-
         // Get all users to find who is currently logged in 
-        axios.get('http://localhost:5002/api/getUsers')
-            .then((res) => {
+        let usermail = sessionStorage.getItem('useremail');
 
-                // The response is an array of all the users
-                let users = res.data;
+        try {
+            axios.get("http://localhost:5002/api/GetUserID/" + usermail)
+                .then((res) => {
+                    const response = res;
+                    setId(response.data[0]._id);
+                })
 
-                // get who is currently signed in
-                let email = sessionStorage.getItem('email');
-
-                // Gather the user ID of who is currently logged in based on which email matches the one in the DB
-                for (let k = 0; k < users.length; k++) {
-                    if (users[k].email === email) {
-                        sessionStorage.setItem('userID', users[k]._id);
-                    }
-                }
-            })
+        } catch (error) {
+            console.log(error);
+            console.log('User ID not found');
+        }
 
         const updateUser = new FormData()
 

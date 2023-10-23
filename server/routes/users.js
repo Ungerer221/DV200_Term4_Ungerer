@@ -32,10 +32,17 @@ const upload = multer({
 });
 
 //Update
-router.put('/api/updateuser/:id', upload.single('image'), async (req, res) => {
+router.put('/api/updateuser/:id', upload.single('imageUp'), async (req, res) => {
 
     if (req.file) {
-        let data = JSON.parse(req.body.data);
+        console.log(req.body);
+        console.log("---------");
+        let data = req.body;
+
+        // let data = JSON.parse(req.body);
+        // console.log(data);
+        // console.log("---------");
+
         const user = ({
             username: data.username,
             email: data.email,
