@@ -1,14 +1,14 @@
-const mongoose = require('mongoose');
+// const mongoose = require('mongoose');
 
-const AnswerSchema = mongoose.Schema({
-    title: {
-        type: String,
-        require: true
-    },
-    text: {
-        type: String,
-        require: true
-    }
-});
+// const AnswerSchema = mongoose.Schema({
+//     title: {
+//         type: String,
+//         require: true
+//     },
+//     text: {
+//         type: String,
+//         require: true
+//     }
+// });
 
-module.exports = mongoose.model("Answer", AnswerSchema);
+// module.exports = mongoose.model("Answer", AnswerSchema);

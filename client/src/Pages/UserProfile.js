@@ -111,9 +111,9 @@ function Profile() {
                                 {/* <h1 style={{ marginTop: 0 }}>User Name & Surname</h1> */}
                                 {/* <input name="username" type="text" placeholder="enter new username" className="update-profile-username-input"></input> */}
                                 <Grid container>
-                                    //default text should be curent information
-                                    <TextField id="Username" label="New Username" variant="outlined" onChange={(e) => setUserName(e.target.value)} ></TextField>
-                                    <TextField id="Email" label="New Email" variant="outlined" sx={{ marginLeft: '10px' }} onChange={(e) => setEmail(e.target.value)} ></TextField>
+                                    {/* //default text should be curent information */}
+                                    <TextField id="Username" label={userName} variant="outlined" onChange={(e) => setUserName(e.target.value)} ></TextField>
+                                    <TextField id="Email" label={email} variant="outlined" sx={{ marginLeft: '10px' }} onChange={(e) => setEmail(e.target.value)} ></TextField>
                                 </Grid>
 
                                 <h3>ID Number: 000 000 0000</h3>
