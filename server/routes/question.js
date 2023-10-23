@@ -37,8 +37,9 @@ const upload = multer({
 
 // Update
 router.put('/api/question/:id', upload.single('image'), async (req, res) => {
-    let data = JSON.parse(req.body.data)
+    // If an image was sent with
     if (req.file) {
+        let data = JSON.parse(req.body.data);
         const question = ({
             user: data.id,
             title: data.title,
@@ -51,6 +52,7 @@ router.put('/api/question/:id', upload.single('image'), async (req, res) => {
             .then(response => res.json(response))
             .catch(error => res.status(500).json(error))
     } else {
+        let data = req.body;
         const question = ({
             user: data.id,
             title: data.title,

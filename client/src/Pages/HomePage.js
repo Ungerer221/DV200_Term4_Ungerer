@@ -34,21 +34,7 @@ function HomePage() {
             })
             .catch(err => console.log(err))
 
-    }, []); // Fetch data when props.user changes
-
-    // when false then dont allow quest to ask question
-    const [IsLogged, setIsLogged] = useState(false);
-    const user = localStorage.getItem("token");
-
-    function checkUser() {
-        // how to make it check ???
-        // if user if found the set state to true \ else if no user if found then remain false 
-        if (user) {
-            setIsLogged(true);
-        }
-        // if state = true then give permissions 
-    }
-
+    }, []);
 
     return (
         <>

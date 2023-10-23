@@ -67,8 +67,7 @@ const Navbar = () => {
                         spacing={4}
                     >
                         <Nav.Link className="navbar-page-links-options" href='/Home'>Home</Nav.Link>
-                        <Nav.Link className="navbar-page-links-options" href='/Profile' onClick={handleProfile}> Profile </Nav.Link>
-                        <Nav.Link className="navbar-page-links-options" href='/#'>Admin</Nav.Link>
+                        <Nav.Link className="navbar-page-links-options" href='/Profile'>Profile</Nav.Link>
                         <Nav.Link className="navbar-page-links-options" href='/Signup'>Sign Up</Nav.Link>
                         {/* onClick this needs to end the session for the logout function */}
                         <Nav.Link className="navbar-page-links-options" href='/SignIn' onClick={handleSignOut}>Sign Out</Nav.Link>

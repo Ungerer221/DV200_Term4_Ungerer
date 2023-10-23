@@ -17,6 +17,9 @@ function QuestionPage() {
     const [question, setQuestion] = useState({});
     const [username, setUsername] = useState("");
 
+    // Get the user id
+    const [Id, setId] = useState();
+
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
     let id = searchParams.get('id');
@@ -27,7 +30,7 @@ function QuestionPage() {
 
     const [AnswerTitle, setAnswerTitle] = useState();
     const [AnswerText, setAnswerText] = useState();
-    const [updateAnswers, setUpdateAnswers]=useState();
+    const [updateAnswers, setUpdateAnswers] = useState();
 
     const [error, setError] = useState("");
 
@@ -337,10 +340,24 @@ function QuestionPage() {
     }
 
     useEffect(() => {
-        // Fetch the question
-        // console.log(`http://localhost:5002/api/question_get_single/${questionID}`);
-        // console.log('id ' + id);
 
+        // Set the id the the user that is currently logged in
+        let usermail = sessionStorage.getItem('useremail');
+        Axios.get("http://localhost:5002/api/GetUserID/" + usermail)
+            .then((response) => {
+                if (response.data && response.data[0] && response.data[0]._id) {
+                    const foundUserId = response.data[0]._id;
+                    setId(foundUserId);
+                    console.log(foundUserId);
+                } else {
+                    console.log("User ID not found in the response.");
+                }
+            })
+            .catch((error) => {
+                console.error("Error fetching user ID:", error);
+            });
+
+        // Fetch the question
         Axios.get(`http://localhost:5002/api/question_get_single/${id}`)
             .then((result) => {
                 setQuestion(result.data);
@@ -430,50 +447,62 @@ function QuestionPage() {
         document.getElementById("answer-main-field").style.display = "none"
         document.getElementById("answer-question-submit").style.display = "none"
     }
-    // adding a question 
-    useEffect(() => {
-        // getting the answers 
-        // ? end up changing the port to current to show the answers but then the app crashes
-        Axios.get('http://localhost:5003/api/answer_get_all/')
-            .then(res => {
-                let answerData = res.data;
-                console.log(answerData);
-
-                let renderAnswers = answerData.map((item) => <AnswerCards key={item._id} title={item.title} text={item.text} />)
-
-                setAnswers(renderAnswers);
-                setUpdateAnswers(false);
-            })
-            .catch(err => console.log(err));
-    }, [updateAnswers])
 
     const getAnswerTitle = (e) => {
         let value = e.target.value;
         setAnswerTitle(value);
     }
+
     const getAnswerText = (e) => {
         let value = e.target.value;
         setAnswerText(value);
     }
+
     // add question 
     const addAnswer = (e) => {
-        let payload = {
-            title: AnswerTitle,
-            text: AnswerText
-        }
 
-        // ? the add function works if i change the port to my current which is 5002 - Ungerer
-        Axios.post('http://localhost:5002/api/add_Answer/', payload)
-            .then(res => {
-                console.log(res.data)
-                // setUpdateAnswer(true)
-            })
-            .catch(err => {
-                console.log(err)
-                setError(err)
-            })
+        let urlGet = 'http://localhost:5002/api/question_get_single/' + questionID;
+
+        Axios.get(urlGet).then(res => {
+            const Comments = res.data.comments;
+            console.log(Comments);
+
+            let push = {
+                user: Id,
+                title: AnswerTitle,
+                text: AnswerText
+            }
+
+            Comments.push(push);
+            console.log(Comments);
+
+            const userData = res.data.user;
+            const title = res.data.title;
+            const text = res.data.text;
+            const date = res.data.date;
+
+            let payload = {
+                user: userData,
+                title: title,
+                text: text,
+                date: date,
+                comments: Comments
+            }
+
+            console.log(payload);
+
+            let url = 'http://localhost:5002/api/question/' + questionID;
+            Axios.put(url, payload)
+                .then(res => {
+                    console.log(res.data)
+                    window.location.reload(false);
+                })
+                .catch(err => {
+                    console.log(err)
+                    setError(err)
+                })
+        });
     }
-
 
     return (
         <div className="question-page-con">
@@ -543,8 +572,8 @@ function QuestionPage() {
                         sx={{ width: '50%', maxWidth: '700px', }}
                         label="Answer field"
                         multiline
-                    // rows={5}
-                    onChange={getAnswerText}
+                        // rows={5}
+                        onChange={getAnswerText}
                     ></TextField>
                 </Grid>
                 <Grid id="answer-question-submit" xs={12} sx={{ marginBottom: '20px' }} style={{ display: "none" }}>
