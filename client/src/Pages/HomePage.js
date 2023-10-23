@@ -93,6 +93,7 @@ function HomePage() {
                         </Grid>
                         {/* question tile  */}
                         <Grid xs={12} sx={{ marginTop: '20px' }}>
+                            {/* if you comment this out then the server stops crashing   */}
                             {questions}
                         </Grid>
                     </Grid>
