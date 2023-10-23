@@ -27,7 +27,7 @@ function HomePage() {
         Axios.get('http://localhost:5002/api/question_get_all/')
             .then(res => {
                 let questionData = res.data;
-
+                console.log(questionData)
                 let renderQuestions = questionData.map((item) =>
                     <HomeQuestionCard key={item._id} id={item._id} user={item.user} title={item.title} text={item.text} date={item.date} comments={item.comments} image={item.image} />);
                 setQuestions(renderQuestions);

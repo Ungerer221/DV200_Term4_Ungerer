@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import { styled } from '@mui/material/styles';
@@ -29,6 +29,18 @@ function QuestionEditor() {
     const [content, setContent] = useState('');
     const [titleAlert, setTitleAlert] = useState(false);
     const [contentAlert, setContentAlert] = useState(false);
+    const [userID, setUserID] = useState();
+    
+    useEffect(() => {
+      let mail = sessionStorage.getItem('useremail');
+      Axios.get('http://localhost:5002/api/GetUserID/' + mail)
+      .then((res) => {
+        console.log(res.data[0]._id);
+        setUserID(res.data[0]._id);
+      })
+    
+    }, []);
+    
 
     const getImage = (e) => {
         let imageFile = e.target.files[0];
@@ -58,25 +70,9 @@ function QuestionEditor() {
             setTitleAlert(false);
             setContentAlert(false);
 
-            Axios.get('http://localhost:5002/api/getUsers')
-                .then((res) => {
-
-                    let users = res.data;
-
-                    // get who is currently signed in
-                    let email = sessionStorage.getItem('email');
-
-                    // Gather the user ID of who is currently logged in based on which email matches the one in the DB
-                    for (let k = 0; k < users.length; k++) {
-                        if (users[k].email === email) {
-                            sessionStorage.setItem('userID', users[k]._id);
-                        }
-                    }
-                })
-
             const payload = new FormData()
             let data = {
-                id: sessionStorage.getItem('userID'), // replace with actual ID input (from session/localstorage?)
+                id: userID, // replace with actual ID input (from session/localstorage?)
                 title: title,
                 text: content,
                 date: formatDate,
@@ -89,14 +85,13 @@ function QuestionEditor() {
                 .then(
                     (response) => {
                         console.log(response.statusText);
+                        window.location = '/Home';
                     },
                     (error) => {
                         console.log(error);
                     }
                 )
             console.log(payload)
-
-            window.location = '/Home';
         }
     }
 

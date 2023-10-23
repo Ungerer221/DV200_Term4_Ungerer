@@ -344,6 +344,8 @@ function QuestionPage() {
         Axios.get(`http://localhost:5002/api/question_get_single/${id}`)
             .then((result) => {
                 setQuestion(result.data);
+                console.log('question'+question);
+                console.log("data.user" + result.data.user)
 
                 // If there are no tags
                 if (result.data.tags === undefined) {
@@ -354,6 +356,7 @@ function QuestionPage() {
                 Axios.get(`http://localhost:5002/api/getUser/${result.data.user}`)
                     .then((userResult) => {
                         setUsername(userResult.data.username);
+                        console.log(userResult.data.username)
                     })
                     .catch((err) => {
                         console.error("Error fetching user:", err);
