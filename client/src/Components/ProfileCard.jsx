@@ -12,7 +12,7 @@ import Grid from '@mui/material/Grid';
 import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 
-const ProfileCard = () => {
+const ProfileCard = (props) => {
 
     const [updateProfile, setUpdateProfile] = useState();
 
@@ -20,19 +20,21 @@ const ProfileCard = () => {
         document.getElementById("default").style.display = 'none'
         document.getElementById("update-user-profile").style.display = 'block'
     }
+    const serverURL = 'http://localhost:5002/images';
+    const imageURL = `${serverURL}/${props.image}`;
 
     return (
         <>
             <div className="profilecard-container" style={{ display: 'block' }} id='default'>
                 <Grid container spacing={0}>
                     <Grid item xs={2} md={2}>
-                        <image />
+                    <img src={imageURL} className="question_img"></img>
                     </Grid>
                     <Grid item xs={6} md={6}>
                         <div className="profilecard-userInfo-con">
                             <div>
-                                <h1 style={{ marginTop: 0 }}>User Name & Surname</h1>
-                                <h3>ID Number: 000 000 0000</h3>
+                                <h1 style={{ marginTop: 0 }} > {props.username} </h1>
+                                <h3>ID Number: {props.id} </h3>
                                 <p className="interests-text">Interests:</p>
                                 <div className="userInfo-tags">
                                     <button>javascript</button>

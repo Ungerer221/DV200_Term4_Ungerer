@@ -35,7 +35,8 @@ function Profile() {
     const [email, setEmail] = useState();
     const [image, setImage] = useState();
     const [id, setId] = useState('');
-
+    // const [info, setInfo] = useState();
+    const [profile, setProfile] = useState();
 
 
     const getImage = (e) => {
@@ -50,23 +51,6 @@ function Profile() {
         // };
         // reader.readAsDataURL(e.target.files[0]);
     };
-
-    // if (!sessionStorage.getItem('user')) {
-    //     setId(sessionStorage.getItem('useID'));
-    // } else {
-    //     let usermail = sessionStorage.getItem('useremail');
-    //     try {
-    //         axios.get("http://localhost:5002/api/GetUserID/" + usermail)
-    //         .then((res) => {
-    //         console.log(res.data[0]._id);
-    //         setId(res.data[0]._id);                
-    //         })
-
-    //     } catch (error) {
-    //         console.log(error);
-    //         console.log('User ID not found');
-    //     }
-    // }
 
     useEffect(() => {
 
@@ -91,7 +75,9 @@ function Profile() {
             if (id) {
                 try {
                     const userResponse = await axios.get('http://localhost:5002/api/getUser/' + id);
-                    console.log(userResponse.data[0].email);
+                    console.log(userResponse.data.email);
+                    let info = userResponse.data;
+                    setProfile(<ProfileCard username={info.username} id={info._id} image={info.image} />);
                 } catch (error) {
                     console.log(error);
                     console.log('User not found');
@@ -145,7 +131,7 @@ function Profile() {
     return (
 
         <div className="Profile-main-container">
-            <ProfileCard />
+            {profile}
             {/* input card for updating user info  */}
             <div className="profile-update-card" style={{ display: 'none' }} id='update-user-profile'>
                 <Grid container spacing={0}>
