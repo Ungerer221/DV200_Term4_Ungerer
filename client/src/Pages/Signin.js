@@ -16,10 +16,8 @@ const SignIn = () => {
     password: ""
   });
 
-  const [error, setError] = useState({
-    email: '',
-    password: '',
-  });
+  const [error, setError] = useState();
+  // const [eror, setEror] = useState();
 
   const handleChange = ({ currentTarget: input }) => {
     setData({ ...data, [input.name]: input.value })
@@ -39,11 +37,13 @@ const SignIn = () => {
     } catch (error) {
 
       if (error.response && error.response.status >= 400 && error.response.status <= 500) {
-        const errorData = error.response.data;
-        setError({
-          email: errorData.email ? errorData.email : 'Email is incorrect or invalid!',
-          password: errorData.password ? errorData.password : 'Password is incorrect!',
-        });
+        const errorData = error.response.data.message;
+        setError(errorData);
+        console.log(error)
+        //   {
+        //   email: errorData.email ? errorData.email : 'Email is incorrect or invalid!',
+        //   password: errorData.password ? errorData.password : 'Password is incorrect!',
+        // }
       }
     }
   };
@@ -64,7 +64,7 @@ const SignIn = () => {
           placeholder="Enter your email"
           required
         />
-        {error.email && <p className='login-invalid-message-email'>{error.email}</p>}
+        {error && <p className='login-invalid-message-email'> { error } </p>}
 
         <label>Password:</label>
         <input
@@ -76,7 +76,7 @@ const SignIn = () => {
           placeholder="Enter your password"
           required
         />
-        {error.password && <p className='login-invalid-message-password'>{error.password}</p>}
+        {error && <p className='login-invalid-message-password'> { error } </p>}
 
         <br></br>
         <br></br>
