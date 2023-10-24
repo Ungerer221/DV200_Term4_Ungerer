@@ -16,7 +16,10 @@ const SignIn = () => {
     password: ""
   });
 
-  // const [errorr, setErrorr] = useState("");
+  const [error, setError] = useState({
+    email: '',
+    password: '',
+  });
 
   const handleChange = ({ currentTarget: input }) => {
     setData({ ...data, [input.name]: input.value })
@@ -35,16 +38,15 @@ const SignIn = () => {
 
     } catch (error) {
 
-      if (error.response &&
-        error.response.status >= 400 &&
-        error.response.status <= 500) {
-
-        console.log(error.response.data.message)
-
+      if (error.response && error.response.status >= 400 && error.response.status <= 500) {
+        const errorData = error.response.data;
+        setError({
+          email: errorData.email ? errorData.email : 'Email is incorrect or invalid!',
+          password: errorData.password ? errorData.password : 'Password is incorrect!',
+        });
       }
-
     }
-  }
+  };
 
   return (
     <div className="form-container">
@@ -52,19 +54,29 @@ const SignIn = () => {
       {/* Add your logo here */}
       <h2>Log In</h2>
       <form className="form">
-        <label >Email:</label>
-        <input className='email' id='email' onChange={handleChange} name="email" type="email" placeholder="Enter your email" required />
-        {/* error message here  */}
-        <label className='login-invalid-message-email'>
-          <p>Email is incorrect or invalid!</p>
-        </label>
+        <label>Email:</label>
+        <input
+          className='email'
+          id='email'
+          onChange={handleChange}
+          name="email"
+          type="email"
+          placeholder="Enter your email"
+          required
+        />
+        {error.email && <p className='login-invalid-message-email'>{error.email}</p>}
 
-        <label >Password:</label>
-        <input className='password' id='password' onChange={handleChange} name="password" type="password" placeholder="Enter your password" required />
-        {/* error message here  */}
-        <label className='login-invalid-message-password' for='password'>
-          <p>password is incorrect</p>
-        </label>
+        <label>Password:</label>
+        <input
+          className='password'
+          id='password'
+          onChange={handleChange}
+          name="password"
+          type="password"
+          placeholder="Enter your password"
+          required
+        />
+        {error.password && <p className='login-invalid-message-password'>{error.password}</p>}
 
         <br></br>
         <br></br>
