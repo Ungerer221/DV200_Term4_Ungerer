@@ -13,7 +13,7 @@ import AnswerCards from "../Components/AnswerCards";
 // import answer from "../../../server/models/answer";
 
 function QuestionPage() {
-    const questionID = sessionStorage.getItem("QuestionClick");
+    // const questionID = sessionStorage.getItem("QuestionClick");
     const [question, setQuestion] = useState({});
     const [username, setUsername] = useState("");
 
@@ -22,7 +22,7 @@ function QuestionPage() {
 
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
-    let id = searchParams.get('id');
+    const questionID = searchParams.get('id');
 
     // Initialize as null in case there are no comments
     const [answers, setAnswers] = useState();
@@ -318,8 +318,6 @@ function QuestionPage() {
                     }
                 })
             })
-
-
     }
 
     useEffect(() => {
@@ -341,11 +339,11 @@ function QuestionPage() {
             });
 
         // Fetch the question
-        Axios.get(`http://localhost:5002/api/question_get_single/${id}`)
+        Axios.get(`http://localhost:5002/api/question_get_single/${questionID}`)
             .then((result) => {
                 setQuestion(result.data);
-                console.log('question'+question);
-                console.log("data.user" + result.data.user)
+                console.log(question);
+                console.log(result.data)
 
                 // If there are no tags
                 if (result.data.tags === undefined) {
@@ -356,7 +354,7 @@ function QuestionPage() {
                 Axios.get(`http://localhost:5002/api/getUser/${result.data.user}`)
                     .then((userResult) => {
                         setUsername(userResult.data.username);
-                        console.log(userResult.data.username)
+                        console.log(userResult.data)
                     })
                     .catch((err) => {
                         console.error("Error fetching user:", err);
@@ -365,7 +363,7 @@ function QuestionPage() {
                 // If the comments array is not empty, do the following:
                 if (result.data.comments.length > 1) {
                     setRenderAnswers(
-                        result.data.comments.map((item) => (
+                        result.data.comments.slice(1).map((item) => (
                             <AnswerCards key={item._id} id={item._id} user={item.user} title={item.title} text={item.text} />
                         ))
                     );
@@ -384,7 +382,7 @@ function QuestionPage() {
 
                         // Count how many likes there are
                         for (let k = 0; k < questions.length; k++) {
-                            if (questions[k].questionID === id) {
+                            if (questions[k].questionID === questionID) {
                                 switch (questions[k].type) {
                                     case "like":
                                         // increase like amount by one
@@ -419,6 +417,8 @@ function QuestionPage() {
 
     const serverURL = 'http://localhost:5002/images';
     const imageURL = `${serverURL}/${question.image}`;
+    // console.log(question);
+    // console.log("image " + question.image)
     // console.log(imageURL);
 
     // answer question functionality !!!!

@@ -22,6 +22,18 @@ router.get('/api/question_get_single/:id', async (req, res) => {
     res.json(findQuestionSingle)
 });
 
+// get users questions
+router.get('/api/usersquestion/:userid', async (req, res) => {
+    try {
+        const questions = await QuestionSchema.find({ user: req.params.userid })
+        res.json(questions);
+    } catch (error) {
+        console.log(error)
+        console.log('none found')
+    }
+
+})
+
 //Middleware
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
