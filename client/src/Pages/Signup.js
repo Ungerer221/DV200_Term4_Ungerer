@@ -1,27 +1,28 @@
-import React, { useState } from 'react'
-import { Nav } from 'react-bootstrap'
-import Axios from 'axios'
+import React, { useState } from 'react';
+import { Nav } from 'react-bootstrap';
+import Axios from 'axios';
 
 import './Forms.css';
 import { Link } from 'react-router-dom';
 
-// import HomePage from './HomePage'
-
 const SignUp = () => {
-
   const [data, setData] = useState({
-    username: "",
-    email: "",
-    password: "",
-    image: ""
+    username: '',
+    email: '',
+    password: '',
+    image: '',
   });
 
-  const [errorr, setErrorr] = useState("");
+  const [errors, setErrors] = useState({
+    username: '',
+    email: '',
+    password: '',
+  });
 
   const handleChange = ({ currentTarget: input }) => {
     setData({ ...data, [input.name]: input.value });
-    console.log(input.name);
-  }
+    setErrors({ ...errors, [input.name]: '' }); // Clear errors when user types
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -29,40 +30,34 @@ const SignUp = () => {
       const url = 'http://localhost:5002/api/createUser';
       const { data: res } = await Axios.post(url, data);
       console.log(res.message);
-      window.location = '/SignIn'
-      setErrorr(res.message);
+      window.location = '/SignIn';
     } catch (error) {
-      if (error.response &&
-        error.response.status >= 400 &&
-        error.response.status <= 500
-      ) {
-        console.log("Error on user create Axios Post")
+      if (error.response && error.response.status >= 400 && error.response.status <= 500) {
+        const errorData = error.response.data;
+        setErrors({
+          username: errorData.username ? errorData.username : 'User name already exists!',
+          email: errorData.email ? errorData.email : 'Email belongs to an existing account!',
+          password: errorData.password ? errorData.password : '',
+        });
       }
     }
-  }
+  };
 
   return (
     <div className="form-container">
-      {/* Logo */}
-      {/* Add your logo here */}
       <h2>Sign Up</h2>
       <form className="form">
         <label>Username:</label>
         <input className='uname' id='username' onChange={handleChange} name="username" type="text" placeholder="Enter your username" required />
-        {/* error message  */}
-        <label for='username' className='signup-username-error-message'>
-          <p> {errorr} </p>
-        </label>
+        {errors.username && <p className='signup-username-error-message'>{errors.username}</p>}
 
-        <label >Email:</label>
+        <label>Email:</label>
         <input className='email' id='email' onChange={handleChange} name="email" type="email" placeholder="Enter your email" required />
-        {/* error message  */}
-        <label for='email' className='signup-email-error-message'>
-          <p> {errorr} </p>
-        </label>
+        {errors.email && <p className='signup-email-error-message'>{errors.email}</p>}
 
-        <label >Password:</label>
+        <label>Password:</label>
         <input className='password' id='password' onChange={handleChange} name="password" type="password" placeholder="Enter your password" required />
+        {errors.password && <p className='signup-password-error-message'>{errors.password}</p>}
 
         <br></br>
 
@@ -72,7 +67,7 @@ const SignUp = () => {
       </form>
       <br></br>
       <br></br>
-      <button className='subbut' onClick={handleSubmit} > Done </button>
+      <button className='subbut' onClick={handleSubmit}>Done</button>
     </div>
   );
 };
