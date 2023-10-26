@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react"
+import { useNavigate } from 'react-router-dom';
 
 // CSS 
 import './AnswerCard.css'
@@ -24,15 +25,18 @@ const AnswerCards = (props) => {
 
     const [username, setUsername] = useState();
     const [image, setImage] = useState();
+    const navigate = useNavigate();
 
     // image useState 
     let isAdmin = false;
 
     const handleClick = () => {
-        sessionStorage.setItem('user', true);
-        sessionStorage.setItem('useID', props.user);
-
-        window.location = '/Profile';
+        // sessionStorage.setItem('user', false);
+        // sessionStorage.setItem('useID', props.user);
+        const queryParams = new URLSearchParams();
+        queryParams.append('userid', props.user);
+        sessionStorage.setItem("UserIDQuestionPage", props.user);
+        navigate(`/profile?${queryParams.toString()}`);
     }
     // Get specific user
     // put in a useEffect 
@@ -63,7 +67,7 @@ const AnswerCards = (props) => {
                             </Avatar>
                         </Grid>
                         <Grid xs={12}>
-                            <Button onClick={handleClick}>{username}</Button>
+                            <Button onClick={handleClick}> {username} </Button>
                         </Grid>
                     </Grid>
                     {/* Column 2  */}

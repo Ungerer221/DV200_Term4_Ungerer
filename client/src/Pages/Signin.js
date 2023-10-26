@@ -27,7 +27,6 @@ const SignIn = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-
       const url = 'http://localhost:5002/api/auth'
       const { data: res } = await axios.post(url, data);
       sessionStorage.setItem("token", res.data);

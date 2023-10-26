@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useLocation } from 'react-router-dom';
 
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
@@ -36,8 +37,11 @@ function Profile() {
     const [profile, setProfile] = useState();
     // Previously asked questions
     const [paq, setPaq] = useState(null);
-    // Where the user came from
-    const user = sessionStorage.getItem('user');
+    // const userPage = sessionStorage.getItem('user')
+
+    const location = useLocation();
+    const searchParams = new URLSearchParams(location.search);
+    const userID = searchParams.get('userid');
 
     const getImage = (e) => {
         let imageFile = e.target.files[0];
@@ -46,7 +50,7 @@ function Profile() {
     };
 
     useEffect(() => {
-
+        // const userPage = sessionStorage.getItem('user');
         axios.get('http://localhost:5002/api/question_get_all/')
             .then((result) => {
                 const data = result.data;
@@ -64,45 +68,45 @@ function Profile() {
 
         const fetchData = async () => {
             console.log('fetch');
-            console.log(user);
+            // console.log(user);
 
-            if (user === 'true') {
+            // if (user === 'true') {
 
-                setId(sessionStorage.getItem('useID'));
-                console.log('not from profile');
+            //     setId(sessionStorage.getItem('useID'));
+            //     console.log('not from profile');
 
-            } else if (user === 'false') {
+            // } else if (user === 'false') {
 
-                console.log('from profile');
-                let usermail = sessionStorage.getItem('useremail');
+            //     console.log('from profile');
+            //     let usermail = sessionStorage.getItem('useremail');
 
+            //     try {
+
+            //         axios.get("http://localhost:5002/api/GetUserID/" + usermail)
+            //             .then((res) => {
+            //                 const response = res;
+            //                 setId(response.data[0]._id);
+            //             })
+
+            //         const response = await axios.get("http://localhost:5002/api/GetUserID/" + usermail);
+            //         setId(response.data[0]._id);
+            //     } catch (error) {
+            //         console.log(error);
+            //         console.log('User ID not found');
+            //     }
+            // }
+
+            // if (id) {
+                // console.log(id);
                 try {
-
-                    axios.get("http://localhost:5002/api/GetUserID/" + usermail)
-                        .then((res) => {
-                            const response = res;
-                            setId(response.data[0]._id);
-                        })
-
-                    const response = await axios.get("http://localhost:5002/api/GetUserID/" + usermail);
-                    setId(response.data[0]._id);
-                } catch (error) {
-                    console.log(error);
-                    console.log('User ID not found');
-                }
-            }
-
-            if (id) {
-                console.log(id);
-                try {
-                    const userResponse = await axios.get('http://localhost:5002/api/getUser/' + id);
+                    const userResponse = await axios.get('http://localhost:5002/api/getUser/' + userID);
+                    console.log(userResponse.data.email);
                     let info = userResponse.data;
                     setProfile(<ProfileCard username={info.username} id={info._id} image={info.image} />);
                 } catch (error) {
                     console.log(error);
                     console.log('User not found');
                 }
-            }
         };
 
         fetchData();

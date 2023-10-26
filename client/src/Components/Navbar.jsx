@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useEffect, useState } from "react"
+import { useNavigate } from 'react-router-dom';
+import axios from "axios";
 import './Navbar.css';
 
 import { Nav } from 'react-bootstrap'
@@ -18,6 +20,22 @@ import { BiCog, BiHome, BiUser, BiLogOut } from "react-icons/bi";
 
 const Navbar = () => {
 
+    useEffect(() => {
+        const fetchUserId = async () => {
+            let usermail = sessionStorage.getItem('useremail');
+            try {
+                const response = await axios.get("http://localhost:5002/api/GetUserID/" + usermail);
+                console.log(response.data[0]._id);
+                setId(response.data[0]._id);
+            } catch (error) {
+                console.log(error);
+                console.log('User ID not found');
+            }
+        };
+    
+        fetchUserId();
+    }, []);
+
     // Snackbark
     const [state, setState] = React.useState({
         open: false,
@@ -25,6 +43,10 @@ const Navbar = () => {
         horizontal: 'center',
     });
     const { vertical, horizontal, open } = state;
+
+    const [id, setId] = useState();
+    const navigate = useNavigate();
+
 
     const handleClick = (newState) => () => {
         setState({ ...newState, open: true });
@@ -46,8 +68,13 @@ const Navbar = () => {
         sessionStorage.clear()
     }
 
-    const handleProfile = () => {
-        sessionStorage.setItem('user', false);
+    const handleProfile = async () => {
+        // sessionStorage.setItem('user', false);
+        // sessionStorage.setItem('useID', props.user);
+        const queryParams = new URLSearchParams();
+        queryParams.append('userid', id);
+        sessionStorage.setItem("UserIDNavBar", id);
+        navigate(`/profile?${queryParams.toString()}`);
     }
 
     return (
@@ -67,7 +94,7 @@ const Navbar = () => {
                         spacing={4}
                     >
                         <Nav.Link className="navbar-page-links-options" href='/Home'>Home</Nav.Link>
-                        <Nav.Link className="navbar-page-links-options" href='/Profile' onClick={handleProfile}>Profile</Nav.Link>
+                        <Nav.Link className="navbar-page-links-options" onClick={handleProfile}>Profile</Nav.Link>
                         <Nav.Link className="navbar-page-links-options" href='/Signup'>Sign Up</Nav.Link>
                         {/* onClick this needs to end the session for the logout function */}
                         <Nav.Link className="navbar-page-links-options" href='/SignIn' onClick={handleSignOut}>Sign Out</Nav.Link>
