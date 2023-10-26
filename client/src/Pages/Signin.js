@@ -32,6 +32,11 @@ const SignIn = () => {
       const { data: res } = await axios.post(url, data);
       sessionStorage.setItem("token", res.data);
       sessionStorage.setItem("useremail", data.email);
+
+      if (data.email === 'Nico@gmail.com' || data.email === 'wetso@gmail.com' || data.email === 'ryno@gmail.com') {
+        sessionStorage.setItem('Admin', true);
+      }
+
       window.location = '/Home';
 
     } catch (error) {
