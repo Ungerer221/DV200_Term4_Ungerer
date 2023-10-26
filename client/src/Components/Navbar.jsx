@@ -17,6 +17,7 @@ import { Avatar } from "@mui/material";
 
 // React Icons 
 import { BiCog, BiHome, BiUser, BiLogOut } from "react-icons/bi";
+import NavLogo from '../Assets/Images/Logo.svg'
 
 const Navbar = () => {
 
@@ -80,7 +81,9 @@ const Navbar = () => {
     return (
         <>
             <div className="navbar-con">
-                <div className="navbar-logo">Logo</div>
+                <div className="navbar-logo">
+                    <img src={NavLogo} alt=""></img>
+                </div>
                 <div className="navbar-page-links">
                     {/* <Nav.Link className="navbar-page-links-options" href='/Home'>Home</Nav.Link> */}
                     {/* <Nav.Link className="navbar-page-links-options" href='/Profile'>Profile</Nav.Link> */}
@@ -105,7 +108,7 @@ const Navbar = () => {
                 <div className="other-buttons">
 
                     {/* Profil button  */}
-                    <button className="nav-profile-dropdown-btn">
+                    {/* <button className="nav-profile-dropdown-btn">
                         <Avatar></Avatar>
                         <div className="nav-profile-dropdown-content">
                             <Grid xs={12}>
@@ -143,9 +146,9 @@ const Navbar = () => {
                             </Grid>
                         </div>
 
-                    </button>
+                    </button> */}
 
-                    <Tooltip title="hello... again">
+                    {/* <Tooltip title="hello... again">
                         <Box sx={{}}>
                             {hellobutton}
                             <Snackbar
@@ -156,7 +159,7 @@ const Navbar = () => {
                                 key={vertical + horizontal}
                             />
                         </Box>
-                    </Tooltip>
+                    </Tooltip> */}
 
                 </div>
 

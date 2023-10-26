@@ -10,12 +10,16 @@ import TextField from '@mui/material/TextField';
 
 import './QuestionPage.css';
 import AnswerCards from "../Components/AnswerCards";
+import axios from "axios";
 // import answer from "../../../server/models/answer";
 
 function QuestionPage() {
     // const questionID = sessionStorage.getItem("QuestionClick");
     const [question, setQuestion] = useState({});
     const [username, setUsername] = useState("");
+
+    // for the user avatar image
+    const [userImage, setUserImage] = useState();
 
     // Get the user id
     const [Id, setId] = useState('');
@@ -354,6 +358,7 @@ function QuestionPage() {
                 Axios.get(`http://localhost:5002/api/getUser/${result.data.user}`)
                     .then((userResult) => {
                         setUsername(userResult.data.username);
+                        setUserImage(userResult.data.image)
                         console.log(userResult.data)
                     })
                     .catch((err) => {
@@ -415,11 +420,17 @@ function QuestionPage() {
             });
     }, []);
 
+
     const serverURL = 'http://localhost:5002/images';
     const imageURL = `${serverURL}/${question.image}`;
     // console.log(question);
     // console.log("image " + question.image)
     // console.log(imageURL);
+
+    // USER IMAGE for avater 
+    // const serverURLUser = 'http://localhost:5002/userImage';
+    // const imageURL02 = `${serverURL}/${userImage.image}`;
+    // console.log(imageURL02)
 
     // answer question functionality !!!!
     const AnswerQ = (e) => {
@@ -496,7 +507,11 @@ function QuestionPage() {
                 {/* Render user information */}
                 <Grid item xs={2}>
                     <Grid item xs={12}>
-                        <Avatar sx={{ width: '110px', height: '110px', margin: 'auto' }}>Z</Avatar>
+                        <Avatar
+                            sx={{ width: '110px', height: '110px', margin: 'auto' }}
+                            src={{}} alt='Z'>
+                            Z
+                        </Avatar>
                     </Grid>
                     <Grid item xs={12}>
                         <p>{username}</p>
