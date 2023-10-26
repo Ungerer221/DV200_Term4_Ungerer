@@ -10,6 +10,26 @@ import Axios from "axios";
 const ProfileCard = (props) => {
 
     const [updateProfile, setUpdateProfile] = useState();
+    const [id, setId] = useState(null);
+
+    useEffect(() => {
+        // Get user ID from session storage
+        let usermail = sessionStorage.getItem('useremail');
+
+        try {
+            Axios.get("http://localhost:5002/api/GetUserID/" + usermail)
+                .then((res) => {
+                    const response = res;
+                    setId(response.data[0]._id);
+                });
+        } catch (error) {
+            console.log(error);
+            console.log('User ID not found');
+        }
+    }, []);
+
+    // Conditionally render the "Update" button
+    const isCurrentUser = id === props.id;
 
     const update = (e) => {
         document.getElementById("default").style.display = 'none'
@@ -107,11 +127,13 @@ const ProfileCard = (props) => {
                         </div>
                     </Grid>
                     <Grid item xs={4} md={4}>
-                        <Button onClick={update} className="profilecard-Logout-btn" variant="outlined" sx={{ color: 'orange', border: "solid 1px orange" }}>Update</Button>
+                        {isCurrentUser && (
+                            <Button onClick={update} className="profilecard-Logout-btn" variant="outlined" sx={{ color: 'orange', border: "solid 1px orange" }}>Update</Button>
+                        )}
                     </Grid>
                 </Grid>
             </div>
         </>
     )
 }
-export default ProfileCard
+export default ProfileCard;
