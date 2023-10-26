@@ -34,6 +34,8 @@ const SignIn = () => {
 
       if (data.email === 'Nico@gmail.com' || data.email === 'wetso@gmail.com' || data.email === 'ryno@gmail.com') {
         sessionStorage.setItem('Admin', true);
+      } else {
+        sessionStorage.setItem('Admin', false);
       }
 
       window.location = '/Home';
