@@ -36,7 +36,6 @@ const ProfileCard = (props) => {
             .then((res) => {
                 // --Gather all liked questions and set them to the variable here
                 let questions = res.data;
-                console.log(questions);
 
                 // variable to count the amount of likes and dislikes
                 let iLikes = 0;
@@ -47,13 +46,11 @@ const ProfileCard = (props) => {
                     if (questions[k].userID === props.id) {
                         switch (questions[k].type) {
                             case "like":
-                                console.log('Found Like');
                                 iLikes++;
                                 break;
 
                             case "dislike":
                                 iDislikes++;
-                                console.log('Found Dislike');
                                 break;
 
                             case "none":

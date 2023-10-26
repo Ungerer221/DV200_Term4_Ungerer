@@ -47,7 +47,7 @@ const Navbar = () => {
     }
 
     const handleProfile = () => {
-        sessionStorage.setItem('user', true);
+        sessionStorage.setItem('user', false);
     }
 
     return (

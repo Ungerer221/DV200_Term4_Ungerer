@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 
-
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -26,8 +25,6 @@ const VisuallyHiddenInput = styled('input')({
     width: 1,
 });
 
-
-
 function Profile() {
 
     // const [Image, setImage] = useState();
@@ -39,6 +36,8 @@ function Profile() {
     const [profile, setProfile] = useState();
     // Previously asked questions
     const [paq, setPaq] = useState(null);
+    // Where the user came from
+    const user = sessionStorage.getItem('user');
 
     const getImage = (e) => {
         let imageFile = e.target.files[0];
@@ -51,11 +50,8 @@ function Profile() {
         axios.get('http://localhost:5002/api/question_get_all/')
             .then((result) => {
                 const data = result.data;
-                console.log(data);
 
                 for (let k = 0; k < data.length; k++) {
-
-                    console.log(data[k]);
 
                     setPaq(
                         data.map((item) => (
@@ -67,13 +63,28 @@ function Profile() {
             });
 
         const fetchData = async () => {
-            if (!sessionStorage.getItem('user')) {
+            console.log('fetch');
+            console.log(user);
+
+            if (user === 'true') {
+
                 setId(sessionStorage.getItem('useID'));
-            } else {
+                console.log('not from profile');
+
+            } else if (user === 'false') {
+
+                console.log('from profile');
                 let usermail = sessionStorage.getItem('useremail');
+
                 try {
+
+                    axios.get("http://localhost:5002/api/GetUserID/" + usermail)
+                        .then((res) => {
+                            const response = res;
+                            setId(response.data[0]._id);
+                        })
+
                     const response = await axios.get("http://localhost:5002/api/GetUserID/" + usermail);
-                    console.log(response.data[0]._id);
                     setId(response.data[0]._id);
                 } catch (error) {
                     console.log(error);
@@ -81,13 +92,10 @@ function Profile() {
                 }
             }
 
-            console.log('if');
-
-
             if (id) {
+                console.log(id);
                 try {
                     const userResponse = await axios.get('http://localhost:5002/api/getUser/' + id);
-                    console.log(userResponse.data.email);
                     let info = userResponse.data;
                     setProfile(<ProfileCard username={info.username} id={info._id} image={info.image} />);
                 } catch (error) {
@@ -203,11 +211,7 @@ function Profile() {
             <h1 className="prev-asked-questions-title">Previously Asked Questions</h1>
 
             <div className="prev-asked-questions-card-con">
-                <AskedQuestionsCard />
-                <AskedQuestionsCard />
-                <AskedQuestionsCard />
-                <AskedQuestionsCard />
-                <AskedQuestionsCard />
+                {paq}
             </div>
 
         </div>

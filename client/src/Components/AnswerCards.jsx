@@ -28,9 +28,8 @@ const AnswerCards = (props) => {
     // image useState 
     let isAdmin = false;
 
-
     const handleClick = () => {
-        sessionStorage.setItem('user', false);
+        sessionStorage.setItem('user', true);
         sessionStorage.setItem('useID', props.user);
 
         window.location = '/Profile';
