@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react"
 import { useNavigate } from 'react-router-dom';
 import axios from "axios";
 import './Navbar.css';
+import { useLocation } from 'react-router-dom';
 
 import { Nav } from 'react-bootstrap'
 
@@ -20,6 +21,14 @@ import { BiCog, BiHome, BiUser, BiLogOut } from "react-icons/bi";
 import NavLogo from '../Assets/Images/Logo.svg'
 
 const Navbar = () => {
+    const [isLoggedIn, setIsLoggedIn] = useState(!!sessionStorage.getItem('useremail'));
+    const [isSignUpPage, setIsSignUpPage] = useState(false);
+    const location = useLocation();
+
+    useEffect(() => {
+        setIsSignUpPage(location.pathname === '/Signup');
+    }, [location.pathname]);
+
 
     useEffect(() => {
         const fetchUserId = async () => {
@@ -66,7 +75,8 @@ const Navbar = () => {
     )
 
     const handleSignOut = () => {
-        sessionStorage.clear()
+        sessionStorage.clear();
+        setIsLoggedIn(false);
     }
 
     const handleProfile = async () => {
@@ -97,11 +107,17 @@ const Navbar = () => {
                         spacing={4}
                     >
                         <Nav.Link className="navbar-page-links-options" href='/Home'>Home</Nav.Link>
-                        <Nav.Link className="navbar-page-links-options" onClick={handleProfile}>Profile</Nav.Link>
-                        <Nav.Link className="navbar-page-links-options" href='/Signup'>Sign Up</Nav.Link>
                         {/* onClick this needs to end the session for the logout function */}
-                        <Nav.Link className="navbar-page-links-options" href='/SignIn' onClick={handleSignOut}>Sign Out</Nav.Link>
 
+                        {isLoggedIn && (
+                        <Nav.Link className="navbar-page-links-options" onClick={handleProfile}>Profile</Nav.Link>
+                        )}
+                        {!isLoggedIn && !isSignUpPage && (
+                            <Nav.Link className="navbar-page-links-options" href='/Signup'>Sign Up</Nav.Link>
+                        )}
+                        {isLoggedIn && (
+                            <Nav.Link className="navbar-page-links-options" href='/SignIn' onClick={handleSignOut}>Sign Out</Nav.Link>
+                        )}
                     </Stack>
                 </div>
 
