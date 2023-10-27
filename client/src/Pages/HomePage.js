@@ -18,7 +18,6 @@ import HomeQuestionCard from "../Components/HomeQuestionCard";
 function HomePage() {
 
     const [questions, setQuestions] = useState();
-    const [search, setSearch] = useState(false);
     
     const [searchParams, setSearchParams] = useSearchParams({search: ''})
     const searcher = searchParams.get('search')
@@ -27,11 +26,11 @@ function HomePage() {
 
     useEffect(() => {
         // Read all questions
-        // if (search === true) {
-        //     setAxiosCall('http://localhost:5002/api/searchquestion/' + searcher)
-        // } else if (search === false) {
-        //     setAxiosCall('http://localhost:5002/api/question_get_all/')
-        // }
+        if (searcher === '') {
+            setAxiosCall('http://localhost:5002/api/question_get_all/');
+        } else {
+            setAxiosCall('http://localhost:5002/api/searchquestion/' + searcher);
+        }
         Axios.get(axiosCall)
             .then(res => {
                 let questionData = res.data;
@@ -44,12 +43,9 @@ function HomePage() {
     }, [axiosCall]);
 
     const handleSearch = () => {
-
         if (searcher === '') {
-            setSearch(false)
             setAxiosCall('http://localhost:5002/api/question_get_all/');
         } else {
-            setSearch(true)
             setAxiosCall('http://localhost:5002/api/searchquestion/' + searcher);
         }
     }
