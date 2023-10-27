@@ -10,7 +10,7 @@ const router = express();
 const path = require('path');
 const multer = require('multer');
 
-// Get all - WORKS
+// Get all
 router.get('/api/question_get_all/', async (req, res) => {
     const findQuestion = await QuestionSchema.find();
     res.json(findQuestion);
@@ -22,6 +22,7 @@ router.get('/api/question_get_single/:id', async (req, res) => {
     res.json(findQuestionSingle)
 });
 
+//search questions
 router.get('/api/searchquestion/:search', async (req, res) => {
     try {
         const searchTerm = req.params.search
@@ -38,6 +39,17 @@ router.get('/api/searchquestion/:search', async (req, res) => {
     }
 
 });
+
+router.get('/api/userquestions/:userid', async (req, res) => {
+    try {
+        const id = req.params.userid
+        const questions = await QuestionSchema.find({user: id})
+        res.json(questions)
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ error: 'Internal server error' });
+    }
+})
 
 
 //Middleware

@@ -30,21 +30,6 @@ const AskedQuestionsCard = (props) => {
 
     useEffect(() => {
 
-        let usermail = sessionStorage.getItem('useremail');
-
-        try {
-
-            Axios.get("http://localhost:5002/api/GetUserID/" + usermail)
-                .then((res) => {
-                    const response = res;
-                    setId(response.data[0]._id);
-                })
-
-        } catch (error) {
-            console.log(error);
-            console.log('User ID not found');
-        }
-
         Axios.get('http://localhost:5002/api/like_get_all/')
             .then((res) => {
                 // --Gather all liked questions and set them to the variable here
@@ -93,7 +78,7 @@ const AskedQuestionsCard = (props) => {
         navigate(`/question?${queryParams.toString()}`);
     };
 
-    if (props.user === id) {
+    if (props.user === props.userID) {
         return (
             <div className="askedQuestionCard-Container">
                 {/* row 1  */}

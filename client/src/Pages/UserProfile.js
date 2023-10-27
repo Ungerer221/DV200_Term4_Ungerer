@@ -50,67 +50,32 @@ function Profile() {
     };
 
     useEffect(() => {
-        // const userPage = sessionStorage.getItem('user');
-        axios.get('http://localhost:5002/api/question_get_all/')
-            .then((result) => {
-                const data = result.data;
+        console.log(userID)
 
-                for (let k = 0; k < data.length; k++) {
-
-                    setPaq(
-                        data.map((item) => (
-                            <AskedQuestionsCard key={item._id} id={item._id} user={item.user} title={item.title} text={item.text} tags={item.tags} />
-                        ))
-                    );
-                }
-
-            });
+        axios.get('http://localhost:5002/api/userquestions/' + userID)
+        .then((result) => {
+            const data = result.data;
+            console.log(data)
+            let renderQuestions = data.map((item) => <AskedQuestionsCard key={item._id} id={item._id} user={item.user} title={item.title} text={item.text} tags={item.tags} userID={userID} />)
+            setPaq(renderQuestions)
+        })
+        .catch(error => console.log(error))
 
         const fetchData = async () => {
             console.log('fetch');
-            // console.log(user);
-
-            // if (user === 'true') {
-
-            //     setId(sessionStorage.getItem('useID'));
-            //     console.log('not from profile');
-
-            // } else if (user === 'false') {
-
-            //     console.log('from profile');
-            //     let usermail = sessionStorage.getItem('useremail');
-
-            //     try {
-
-            //         axios.get("http://localhost:5002/api/GetUserID/" + usermail)
-            //             .then((res) => {
-            //                 const response = res;
-            //                 setId(response.data[0]._id);
-            //             })
-
-            //         const response = await axios.get("http://localhost:5002/api/GetUserID/" + usermail);
-            //         setId(response.data[0]._id);
-            //     } catch (error) {
-            //         console.log(error);
-            //         console.log('User ID not found');
-            //     }
-            // }
-
-            // if (id) {
-                // console.log(id);
-                try {
-                    const userResponse = await axios.get('http://localhost:5002/api/getUser/' + userID);
-                    console.log(userResponse.data.email);
-                    let info = userResponse.data;
-                    setProfile(<ProfileCard username={info.username} id={info._id} image={info.image} />);
-                } catch (error) {
-                    console.log(error);
-                    console.log('User not found');
-                }
+            try {
+                const userResponse = await axios.get('http://localhost:5002/api/getUser/' + userID);
+                console.log(userResponse.data.email);
+                let info = userResponse.data;
+                setProfile(<ProfileCard username={info.username} id={info._id} image={info.image} />);
+            } catch (error) {
+                console.log(error);
+                console.log('User not found');
+            }
         };
 
         fetchData();
-    }, [id]);
+    }, [userID]);
 
     const save = (e) => {
 
@@ -138,7 +103,7 @@ function Profile() {
         updateUser.append('details', JSON.stringify(details));
         updateUser.append('imageUp', image);
 
-        axios.put('http://localhost:5002/api/updateuser/' + id, updateUser)
+        axios.put('http://localhost:5002/api/updateuser/' + userID, updateUser)
             .then(() => {
                 document.getElementById("default").style.display = 'block';
                 document.getElementById("update-user-profile").style.display = 'none';
