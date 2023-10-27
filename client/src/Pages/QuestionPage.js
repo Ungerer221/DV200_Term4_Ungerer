@@ -358,8 +358,9 @@ function QuestionPage() {
                 Axios.get(`http://localhost:5002/api/getUser/${result.data.user}`)
                     .then((userResult) => {
                         setUsername(userResult.data.username);
-                        setUserImage(userResult.data.image)
-                        console.log(userResult.data)
+                        setUserImage(userResult.data.image);
+                        console.log(userResult.data);
+                        console.log(userResult.data.image);
                     })
                     .catch((err) => {
                         console.error("Error fetching user:", err);
@@ -428,9 +429,9 @@ function QuestionPage() {
     // console.log(imageURL);
 
     // USER IMAGE for avater 
-    // const serverURLUser = 'http://localhost:5002/userImage';
-    // const imageURL02 = `${serverURL}/${userImage.image}`;
-    // console.log(imageURL02)
+    const serverURLUser = 'http://localhost:5002/userImage';
+    const imageURL02 = `${serverURLUser}/${''}`;
+    console.log(imageURL02)
 
     // answer question functionality !!!!
     const AnswerQ = (e) => {
@@ -509,7 +510,7 @@ function QuestionPage() {
                     <Grid item xs={12}>
                         <Avatar
                             sx={{ width: '110px', height: '110px', margin: 'auto' }}
-                            src={{}} alt='Z'>
+                            src={{imageURL02}}>
                             Z
                         </Avatar>
                     </Grid>

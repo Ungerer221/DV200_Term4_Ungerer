@@ -1,5 +1,5 @@
-import React from "react";
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import { Link, useSearchParams } from 'react-router-dom';
 
 import Axios from "axios";
 
@@ -15,16 +15,24 @@ import LandingImage from '../Assets/Images/10.svg'
 // components
 import HomeQuestionCard from "../Components/HomeQuestionCard";
 
-// Import UseState and Effect
-import { useState, useEffect } from 'react';
-
 function HomePage() {
 
     const [questions, setQuestions] = useState();
+    const [search, setSearch] = useState(false);
+    
+    const [searchParams, setSearchParams] = useSearchParams({search: ''})
+    const searcher = searchParams.get('search')
+    const [axiosCall, setAxiosCall] = useState('http://localhost:5002/api/question_get_all/');
+    
 
     useEffect(() => {
         // Read all questions
-        Axios.get('http://localhost:5002/api/question_get_all/')
+        // if (search === true) {
+        //     setAxiosCall('http://localhost:5002/api/searchquestion/' + searcher)
+        // } else if (search === false) {
+        //     setAxiosCall('http://localhost:5002/api/question_get_all/')
+        // }
+        Axios.get(axiosCall)
             .then(res => {
                 let questionData = res.data;
                 console.log(questionData)
@@ -33,8 +41,18 @@ function HomePage() {
                 setQuestions(renderQuestions);
             })
             .catch(err => console.log(err))
+    }, [axiosCall]);
 
-    }, []);
+    const handleSearch = () => {
+
+        if (searcher === '') {
+            setSearch(false)
+            setAxiosCall('http://localhost:5002/api/question_get_all/');
+        } else {
+            setSearch(true)
+            setAxiosCall('http://localhost:5002/api/searchquestion/' + searcher);
+        }
+    }
 
     return (
         <>
@@ -75,7 +93,10 @@ function HomePage() {
                             </Link> */}
                         </Grid>
                         <Grid xs={12} sx={{ marginTop: '20px' }}>
-                            <input type="text" placeholder="Search for a question" className="home-search-question-input"></input>
+                            <input type="text" placeholder="Search for a question" className="home-search-question-input" onChange={(e) => setSearchParams(prev => { 
+                                prev.set('search', e.target.value) 
+                                return prev })} />
+                                <Button onClick={handleSearch}>Button Here</Button>
                         </Grid>
                         {/* question tile  */}
                         <Grid xs={12} sx={{ marginTop: '20px' }}>

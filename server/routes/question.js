@@ -22,17 +22,23 @@ router.get('/api/question_get_single/:id', async (req, res) => {
     res.json(findQuestionSingle)
 });
 
-// get users questions
-router.get('/api/usersquestion/:userid', async (req, res) => {
+router.get('/api/searchquestion/:search', async (req, res) => {
     try {
-        const questions = await QuestionSchema.find({ user: req.params.userid })
-        res.json(questions);
+        const searchTerm = req.params.search
+        const questions = await QuestionSchema.find({
+            $or: [
+                { title: new RegExp(searchTerm, 'i') },
+                { text: new RegExp(searchTerm, 'i') }
+            ]
+        });
+        res.json(questions)
     } catch (error) {
         console.log(error)
-        console.log('none found')
+        console.log('none')
     }
 
-})
+});
+
 
 //Middleware
 const storage = multer.diskStorage({
