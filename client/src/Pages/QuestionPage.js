@@ -10,13 +10,16 @@ import TextField from '@mui/material/TextField';
 
 import './QuestionPage.css';
 import AnswerCards from "../Components/AnswerCards";
-import axios from "axios";
+import ErrorCard from "../Components/ErrorCard";
 // import answer from "../../../server/models/answer";
 
 function QuestionPage() {
     // const questionID = sessionStorage.getItem("QuestionClick");
     const [question, setQuestion] = useState({});
     const [username, setUsername] = useState("");
+    const [errorMessage, setErrorMessage] = useState();
+    const [errorS, setErrorS] = useState(false);
+
 
     // for the user avatar image
     const [userImage, setUserImage] = useState();
@@ -327,20 +330,20 @@ function QuestionPage() {
     useEffect(() => {
 
         // Set the id the the user that is currently logged in
-        let usermail = sessionStorage.getItem('useremail');
-        Axios.get("http://localhost:5002/api/GetUserID/" + usermail)
-            .then((response) => {
-                if (response.data && response.data[0] && response.data[0]._id) {
-                    const foundUserId = response.data[0]._id;
-                    setId(foundUserId);
-                    console.log(foundUserId);
-                } else {
-                    console.log("User ID not found in the response.");
-                }
-            })
-            .catch((error) => {
-                console.error("Error fetching user ID:", error);
-            });
+        // let usermail = sessionStorage.getItem('useremail');
+        // Axios.get("http://localhost:5002/api/GetUserID/" + usermail)
+        //     .then((response) => {
+        //         if (response.data && response.data[0] && response.data[0]._id) {
+        //             const foundUserId = response.data[0]._id;
+        //             setId(foundUserId);
+        //             console.log(foundUserId);
+        //         } else {
+        //             console.log("User ID not found in the response.");
+        //         }
+        //     })
+        //     .catch((error) => {
+        //         console.error("Error fetching user ID:", error);
+        //     });
 
         // Fetch the question
         Axios.get(`http://localhost:5002/api/question_get_single/${questionID}`)
@@ -358,8 +361,9 @@ function QuestionPage() {
                 Axios.get(`http://localhost:5002/api/getUser/${result.data.user}`)
                     .then((userResult) => {
                         setUsername(userResult.data.username);
-                        setUserImage(userResult.data.image);
-                        console.log(userResult.data);
+                        const serverURLUser = 'http://localhost:5002/userImages';
+                        setUserImage(`${serverURLUser}/${userResult.data.image}`);
+                        console.log(userImage);
                         console.log(userResult.data.image);
                     })
                     .catch((err) => {
@@ -418,6 +422,8 @@ function QuestionPage() {
             })
             .catch((err) => {
                 console.error("Error fetching question:", err);
+                setErrorS(true);
+                setErrorMessage(<ErrorCard message={err.message} />)
             });
     }, []);
 
@@ -427,11 +433,6 @@ function QuestionPage() {
     // console.log(question);
     // console.log("image " + question.image)
     // console.log(imageURL);
-
-    // USER IMAGE for avater 
-    const serverURLUser = 'http://localhost:5002/userImage';
-    const imageURL02 = `${serverURLUser}/${''}`;
-    console.log(imageURL02)
 
     // answer question functionality !!!!
     const AnswerQ = (e) => {
@@ -503,108 +504,111 @@ function QuestionPage() {
     }
 
     return (
-        <div className="question-page-con">
-            <Grid container spacing={0}>
-                {/* Render user information */}
-                <Grid item xs={2}>
-                    <Grid item xs={12}>
-                        <Avatar
-                            sx={{ width: '110px', height: '110px', margin: 'auto' }}
-                            src={{imageURL02}}>
-                            Z
-                        </Avatar>
-                    </Grid>
-                    <Grid item xs={12}>
-                        <p>{username}</p>
-                    </Grid>
-                    <Grid item xs={12}>
-                        <p>{question.date}</p>
-                    </Grid>
-                </Grid>
-                {/* Render question information */}
-                <Grid item xs={8}>
-                    <h1>{question.title}</h1>
-                    <p>{question.text}</p>
-                    <div>
-                        {Array.isArray(question.tags) ? (
-                            question.tags.map((tag, index) => (
-                                <Chip key={index} label={tag} variant="outlined" />
-                            ))
-                        ) : (
-                            <Chip label={"No Tags"} variant="outlined" />
-                        )}
-                    </div>
-                </Grid>
-                {/* Render delete button */}
-                <Grid item xs={2}>
-                    <Button variant="contained" sx={{ margin: "auto" }} id="btnDelete" onClick={handleDelete}><BiXCircle />Delete</Button>
-                    <br></br>
-                    <p>Likes: {like}</p>
-                    <p>Dislikes: {dislike}</p>
-
-                    <Button onClick={handleLike} id="btnLike">Like</Button>
-                    <br></br>
-                    <Button onClick={handleDislike} id="btnDislike">Dislike</Button>
-                </Grid>
-            </Grid>
-
-            {/* Image row */}
-            <Grid container spacing={0}>
-                <Grid item xs={12}>
-                    <img src={imageURL} alt={question.title} className="question_img"></img>
-                </Grid>
-            </Grid>
-
-            {/* answer question form section  */}
-            <Grid container spacing={0}>
-                <Grid xs={12} sx={{ marginBottom: '20px' }}>
-                    {/* //? when you first click the button it pops up with a weird error but if you close the error it functions fine */}
-                    <Button onClick={AnswerQ} variant="contained">Answer</Button>
-                </Grid>
-                <Grid id="answer-title-field" xs={12} sx={{ marginTop: '10px' }} style={{ display: 'none' }}>
-                    <TextField
-                        sx={{ width: '50%', maxWidth: '700px', }}
-                        label="Answer Title"
-                        variant="outlined"
-                        onChange={getAnswerTitle}
-                    ></TextField>
-                </Grid>
-                <Grid id="answer-main-field" xs={12} sx={{ marginTop: '20px', marginBottom: '20px' }} style={{ display: 'none' }}>
-                    <TextField
-                        sx={{ width: '50%', maxWidth: '700px', }}
-                        label="Answer field"
-                        multiline
-                        // rows={5}
-                        onChange={getAnswerText}
-                    ></TextField>
-                </Grid>
-                <Grid id="answer-question-submit" xs={12} sx={{ marginBottom: '20px' }} style={{ display: "none" }}>
-                    <Button onClick={addAnswer} variant="outlined">Submit</Button>
-                    <Button onClick={CancelQ} sx={{ fontSize: '24px' }}><BiXCircle /></Button>
-                </Grid>
-            </Grid>
-
-            {/* Answers section */}
-            <div className="answers_bg">
-                <Grid container spacing={0}>
-                    <Grid item xs={12}>
-                        <Grid container>
-                            <Grid item xs={2}>
-                                <p id="answers_text">Answers:</p>
+        <>
+            {errorS ? errorMessage :
+                <div className="question-page-con">
+                    <Grid container spacing={0}>
+                        {/* Render user information */}
+                        <Grid item xs={2}>
+                            <Grid item xs={12}>
+                                <Avatar
+                                    sx={{ width: '110px', height: '110px', margin: 'auto' }}
+                                    src={userImage}>
+                                </Avatar>
                             </Grid>
-                            <Grid item xs={10}></Grid>
+                            <Grid item xs={12}>
+                                <p>{username}</p>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <p>{question.date}</p>
+                            </Grid>
+                        </Grid>
+                        {/* Render question information */}
+                        <Grid item xs={8}>
+                            <h1>{question.title}</h1>
+                            <p>{question.text}</p>
+                            <div>
+                                {Array.isArray(question.tags) ? (
+                                    question.tags.map((tag, index) => (
+                                        <Chip key={index} label={tag} variant="outlined" />
+                                    ))
+                                ) : (
+                                    <Chip label={"No Tags"} variant="outlined" />
+                                )}
+                            </div>
+                        </Grid>
+                        {/* Render delete button */}
+                        <Grid item xs={2}>
+                            <Button variant="contained" sx={{ margin: "auto" }} id="btnDelete" onClick={handleDelete}><BiXCircle />Delete</Button>
+                            <br></br>
+                            <p>Likes: {like}</p>
+                            <p>Dislikes: {dislike}</p>
+
+                            <Button onClick={handleLike} id="btnLike">Like</Button>
+                            <br></br>
+                            <Button onClick={handleDislike} id="btnDislike">Dislike</Button>
                         </Grid>
                     </Grid>
-                </Grid>
-                {/* Render answers here */}
-                <Grid>
-                    {answers}
-                </Grid>
-                {/* If there are no answers, do the following: */}
-                {answers ? renderAnswers : <p>No answers available yet.</p>}
 
-            </div>
-        </div>
+                    {/* Image row */}
+                    <Grid container spacing={0}>
+                        <Grid item xs={12}>
+                            <img src={imageURL} alt={question.title} className="question_img"></img>
+                        </Grid>
+                    </Grid>
+
+                    {/* answer question form section  */}
+                    <Grid container spacing={0}>
+                        <Grid xs={12} sx={{ marginBottom: '20px' }}>
+                            {/* //? when you first click the button it pops up with a weird error but if you close the error it functions fine */}
+                            <Button onClick={AnswerQ} variant="contained">Answer</Button>
+                        </Grid>
+                        <Grid id="answer-title-field" xs={12} sx={{ marginTop: '10px' }} style={{ display: 'none' }}>
+                            <TextField
+                                sx={{ width: '50%', maxWidth: '700px', }}
+                                label="Answer Title"
+                                variant="outlined"
+                                onChange={getAnswerTitle}
+                            ></TextField>
+                        </Grid>
+                        <Grid id="answer-main-field" xs={12} sx={{ marginTop: '20px', marginBottom: '20px' }} style={{ display: 'none' }}>
+                            <TextField
+                                sx={{ width: '50%', maxWidth: '700px', }}
+                                label="Answer field"
+                                multiline
+                                // rows={5}
+                                onChange={getAnswerText}
+                            ></TextField>
+                        </Grid>
+                        <Grid id="answer-question-submit" xs={12} sx={{ marginBottom: '20px' }} style={{ display: "none" }}>
+                            <Button onClick={addAnswer} variant="outlined">Submit</Button>
+                            <Button onClick={CancelQ} sx={{ fontSize: '24px' }}><BiXCircle /></Button>
+                        </Grid>
+                    </Grid>
+
+                    {/* Answers section */}
+                    <div className="answers_bg">
+                        <Grid container spacing={0}>
+                            <Grid item xs={12}>
+                                <Grid container>
+                                    <Grid item xs={2}>
+                                        <p id="answers_text">Answers:</p>
+                                    </Grid>
+                                    <Grid item xs={10}></Grid>
+                                </Grid>
+                            </Grid>
+                        </Grid>
+                        {/* Render answers here */}
+                        <Grid>
+                            {answers}
+                        </Grid>
+                        {/* If there are no answers, do the following: */}
+                        {answers ? renderAnswers : <p>No answers available yet.</p>}
+
+                    </div>
+                </div>
+            }
+        </>
     );
 }
 

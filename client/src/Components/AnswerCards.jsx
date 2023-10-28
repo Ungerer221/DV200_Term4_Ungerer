@@ -16,42 +16,32 @@ import { BiXCircle } from 'react-icons/bi';
 import Axios from "axios";
 
 const AnswerCards = (props) => {
-
-    const [AnswerTitle, setAnswerTitle] = useState(props.title);
-    const [AnswerText, setAnswerText] = useState(props.text);
-
-    const [question, setQuestion] = useState({});
-
-
     const [username, setUsername] = useState();
     const [image, setImage] = useState();
     const navigate = useNavigate();
 
-    // image useState 
     let isAdmin = false;
 
+    useEffect(() => {
+        console.log('answer user' + props.user)
+        Axios.get('http://localhost:5002/api/getUser/' + props.user)
+            .then(res => {
+                setUsername(res.data.username);
+                console.log(res.data);
+                const serverURL = 'http://localhost:5002/userimages';
+                setImage(`${serverURL}/${res.data.image}`)
+                console.log(image);
+            })
+            .catch(err => console.log(err))
+    },[]);
+
     const handleClick = () => {
-        // sessionStorage.setItem('user', false);
-        // sessionStorage.setItem('useID', props.user);
         const queryParams = new URLSearchParams();
         queryParams.append('userid', props.user);
         sessionStorage.setItem("UserIDQuestionPage", props.user);
         navigate(`/profile?${queryParams.toString()}`);
     }
-    // Get specific user
-    // put in a useEffect 
-    useEffect(() => {
-        Axios.get('http://localhost:5002/api/getUser/' + props.user)
-            .then(res => {
-                setUsername(res.data.username);
-                setImage(res.data.image)
-            })
-            .catch(err => console.log(err))
-
-        const serverURL = 'http://localhost:5002/images';
-        const answerImg = `${serverURL}/${image}`;
-    },[]);
-    // ---
+    
     return (
         <div>
             <Box sx={{ flexGrow: 1 }}>
@@ -59,8 +49,10 @@ const AnswerCards = (props) => {
                     {/* Column 1 the user avatar */}
                     <Grid xs={2}>
                         <Grid xs={12}>
-                            <Avatar sx={{ width: '110px', height: '110px', margin: 'auto' }}>
-                                H
+                            <Avatar sx={{ width: '110px', height: '110px', margin: 'auto' }}
+                            src={image}
+                            >
+                                
                                 {/* <answerImg /> */}
                                 {/* fix the undifined error try putting the img into a div or move cont out of useEffect */}
                                 {/* <img src={answerImg} alt=''></img> */}

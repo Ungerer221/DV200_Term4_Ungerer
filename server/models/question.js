@@ -29,7 +29,6 @@ const QuestionSchema = mongoose.Schema({
     tags: {
         type: Array
     }
-    // Comments will be an array of objects
 
 });
 

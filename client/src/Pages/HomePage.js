@@ -14,15 +14,20 @@ import LandingImage from '../Assets/Images/10.svg'
 
 // components
 import HomeQuestionCard from "../Components/HomeQuestionCard";
+import ErrorCard from "../Components/ErrorCard";
 
 function HomePage() {
 
     const [questions, setQuestions] = useState();
-    
-    const [searchParams, setSearchParams] = useSearchParams({search: ''})
+    const [errorMes, setErrorMes] = useState();
+    const [error, setError] = useState(false);
+
+
+
+    const [searchParams, setSearchParams] = useSearchParams({ search: '' })
     const searcher = searchParams.get('search')
     const [axiosCall, setAxiosCall] = useState('http://localhost:5002/api/question_get_all/');
-    
+
 
     useEffect(() => {
         // Read all questions
@@ -39,7 +44,12 @@ function HomePage() {
                     <HomeQuestionCard key={item._id} id={item._id} user={item.user} title={item.title} text={item.text} date={item.date} comments={item.comments} image={item.image} />);
                 setQuestions(renderQuestions);
             })
-            .catch(err => console.log(err))
+            .catch(err => {
+                console.log(err)
+                // console.log(err.message + ' error')
+                setErrorMes(<ErrorCard message={err.message} />)
+                setError(true);
+            })
     }, [axiosCall]);
 
     const handleSearch = () => {
@@ -52,57 +62,64 @@ function HomePage() {
 
     return (
         <>
-            <div className="home-page-main-con">
+            {error ? errorMes :
+                <div className="home-page-main-con">
 
-                {/* Section 1 (Landing view) */}
-                <Box sx={{ flexGrow: 1, width: '100%', height: '964px', marginTop: '40px' }}>
-                    <Grid container spacing={0} sx={{ height: '800px' }}>
-                        {/* text content */}
-                        <Grid xs={6} sx={{ margin: 'auto', }}>
-                            <h1 style={{ fontWeight: '400', fontSize: '64px' }}>Welcome to Open Dev Q&A site.</h1>
-                            <p style={{}}>
-                                <b>Description: </b>
-                                Yorem ipsum dolor sit amet, consectetur adipiscing elit.
-                                Nunc vulputate libero et velit interdum, ac aliquet odio mattis.
-                            </p>
-                            <Button variant="contained">Take a Tour</Button>
+                    {/* Section 1 (Landing view) */}
+                    <Box sx={{ flexGrow: 1, width: '100%', height: '964px', marginTop: '40px' }}>
+                        <Grid container spacing={0} sx={{ height: '800px' }}>
+                            {/* text content */}
+                            <Grid xs={6} sx={{ margin: 'auto', }}>
+                                <h1 style={{ fontWeight: '400', fontSize: '64px' }}>Welcome to Open Dev Q&A site.</h1>
+                                <p style={{}}>
+                                    <b>Description: </b>
+                                    Yorem ipsum dolor sit amet, consectetur adipiscing elit.
+                                    Nunc vulputate libero et velit interdum, ac aliquet odio mattis.
+                                </p>
+                                <Button variant="contained">Take a Tour</Button>
+                            </Grid>
+                            {/* Image coloumn  */}
+                            <Grid xs={6} sx={{ margin: 'auto', }}>
+                                <div className="image-placeholder">
+                                    <img src={LandingImage} alt=''></img>
+                                </div>
+                            </Grid>
                         </Grid>
-                        {/* Image coloumn  */}
-                        <Grid xs={6} sx={{ margin: 'auto', }}>
-                            <div className="image-placeholder">
-                                <img src={LandingImage} alt=''></img>
-                            </div>
-                        </Grid>
-                    </Grid>
-                </Box>
+                    </Box>
 
-                {/* Section 2  */}
-                <Box sx={{ flexGrow: 1, marginTop: '40px' }}>
-                    {/* row 1 */}
-                    <Grid container spacing={0}>
-                        <Grid xs={12} sx={{ marginTop: '20px' }}>
-                            <Link to="/ask" className="home-ask-question-input">
-                                Ask A Question
-                            </Link>
-                            {/* <Link ocClick={checkUser} className="home-ask-question-input">
+                    {/* Section 2  */}
+                    <Box sx={{ flexGrow: 1, marginTop: '40px' }}>
+                        {/* row 1 */}
+                        <Grid container spacing={0}>
+                            <Grid xs={12} sx={{ marginTop: '20px' }}>
+                                <Link to="/ask" className="home-ask-question-input">
+                                    Ask A Question
+                                </Link>
+                                {/* <Link ocClick={checkUser} className="home-ask-question-input">
                                 Ask A Question
                             </Link> */}
-                        </Grid>
-                        <Grid xs={12} sx={{ marginTop: '20px' }}>
-                            <input type="text" placeholder="Search for a question" className="home-search-question-input" onChange={(e) => setSearchParams(prev => { 
-                                prev.set('search', e.target.value) 
-                                return prev })} />
-                                <Button onClick={handleSearch}>Button Here</Button>
-                        </Grid>
-                        {/* question tile  */}
-                        <Grid xs={12} sx={{ marginTop: '20px' }}>
-                            {/* if you comment this out then the server stops crashing   */}
-                            {questions}
-                        </Grid>
-                    </Grid>
-                </Box>
+                            </Grid>
+                            <Grid xs={12} sx={{ marginTop: '20px' }}>
+                                {searcher === '' ? <input type="text" placeholder="Search for a question" className="home-search-question-input" onChange={(e) => setSearchParams(prev => {
+                                    prev.set('search', e.target.value)
+                                    return prev
+                                })} /> : <input type="text" className="home-search-question-input" onChange={(e) => setSearchParams(prev => {
+                                    prev.set('search', e.target.value)
+                                    return prev
+                                })} value={searcher} />}
 
-            </div>
+                                <Button onClick={handleSearch}> Test Button Here </Button>
+                            </Grid>
+                            {/* question tile  */}
+                            <Grid xs={12} sx={{ marginTop: '20px' }}>
+                                {/* if you comment this out then the server stops crashing   */}
+                                {questions}
+                            </Grid>
+                        </Grid>
+                    </Box>
+
+                </div>
+            }
         </>
     )
 }

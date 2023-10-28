@@ -3,6 +3,7 @@ const express = require('express');
 
 // accesses the schema of the model for "car". Remove the ".js" if it still doesn't work, I added it after
 const QuestionSchema = require('../models/question.js');
+const LikeSchema = require('../models/likes.js');
 
 // Initialize the router
 const router = express();
@@ -10,16 +11,69 @@ const router = express();
 const path = require('path');
 const multer = require('multer');
 
-// Get all
+// Get all - latest first
 router.get('/api/question_get_all/', async (req, res) => {
-    const findQuestion = await QuestionSchema.find();
-    res.json(findQuestion);
+    try {
+        // Find questions and sort by the createdAt field in descending order
+        const findQuestion = await QuestionSchema.find().sort({ _id: -1 });
+        res.json(findQuestion);
+    } catch (error) {
+        console.error("Error fetching questions:", error);
+        res.status(500).json({ error: "An error occurred while fetching questions" });
+    }
+});
+
+//get all - descending likes
+router.get('/api/questionslikesdesc/', async (req, res) => {
+    try {
+        // Find questions and sort by the createdAt field in descending order
+        const questions = await QuestionSchema.aggregate([
+            {
+                $lookup: {
+                    from: 'likes',
+                    localField: '_id',
+                    foreignField: 'questionID',
+                    as: 'likes',
+                },
+            },
+            {
+                $project: {
+                    _id: 1,
+                    user: 1,
+                    title: 1,
+                    text: 1,
+                    date: 1,
+                    comments: 1,
+                    image: 1,
+                    tags: 1,
+                    likesCount: { $size: '$likes' },
+                },
+            },
+            {
+                $sort: { likesCount: -1 },
+            },
+        ]);
+        res.json(questions);
+    } catch (error) {
+        console.error("Error fetching questions:", error);
+        res.status(500).json({ error: "An error occurred while fetching questions" });
+    }
 });
 
 // Get Single
 router.get('/api/question_get_single/:id', async (req, res) => {
-    const findQuestionSingle = await QuestionSchema.findById(req.params.id)
-    res.json(findQuestionSingle)
+    try {
+        const findQuestionSingle = await QuestionSchema.findById(req.params.id)
+        if (!findQuestionSingle) {
+            res.status(404).json({error: "Question not found"});
+        } else {
+            res.json(findQuestionSingle)
+        }
+    } catch (error) {
+        console.log("Error fetching question", error);
+        res.status(500).json({ error: "An error occured" })
+    }
+
 });
 
 //search questions
@@ -40,10 +94,11 @@ router.get('/api/searchquestion/:search', async (req, res) => {
 
 });
 
+//users questions
 router.get('/api/userquestions/:userid', async (req, res) => {
     try {
         const id = req.params.userid
-        const questions = await QuestionSchema.find({user: id})
+        const questions = await QuestionSchema.find({ user: id })
         res.json(questions)
     } catch (error) {
         console.log(error)

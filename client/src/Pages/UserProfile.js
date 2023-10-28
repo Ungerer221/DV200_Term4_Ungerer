@@ -33,11 +33,9 @@ function Profile() {
     const [email, setEmail] = useState();
     const [image, setImage] = useState();
     const [id, setId] = useState('');
-    // const [info, setInfo] = useState();
     const [profile, setProfile] = useState();
     // Previously asked questions
     const [paq, setPaq] = useState(null);
-    // const userPage = sessionStorage.getItem('user')
 
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
@@ -47,6 +45,13 @@ function Profile() {
         let imageFile = e.target.files[0];
         console.log(imageFile);
         setImage(imageFile);
+
+        let reader = new FileReader();
+        reader.onload = () => {
+            let output = document.getElementById('previewEdit');
+            output.src = reader.result;
+        };
+        reader.readAsDataURL(e.target.files[0]);
     };
 
     useEffect(() => {
@@ -80,19 +85,19 @@ function Profile() {
     const save = (e) => {
 
         // Get all users to find who is currently logged in 
-        let usermail = sessionStorage.getItem('useremail');
+        // let usermail = sessionStorage.getItem('useremail');
 
-        try {
-            axios.get("http://localhost:5002/api/GetUserID/" + usermail)
-                .then((res) => {
-                    const response = res;
-                    setId(response.data[0]._id);
-                })
+        // try {
+        //     axios.get("http://localhost:5002/api/GetUserID/" + usermail)
+        //         .then((res) => {
+        //             const response = res;
+        //             setId(response.data[0]._id);
+        //         })
 
-        } catch (error) {
-            console.log(error);
-            console.log('User ID not found');
-        }
+        // } catch (error) {
+        //     console.log(error);
+        //     console.log('User ID not found');
+        // }
 
         const updateUser = new FormData()
 
@@ -129,6 +134,7 @@ function Profile() {
                             Upload Image
                             <VisuallyHiddenInput type="file" onChange={getImage} />
                         </Button>
+                        <image id='previewEdit' />
                     </Grid>
                     {/* col 2  */}
                     <Grid xs={6}>
@@ -137,7 +143,6 @@ function Profile() {
                                 {/* <h1 style={{ marginTop: 0 }}>User Name & Surname</h1> */}
                                 {/* <input name="username" type="text" placeholder="enter new username" className="update-profile-username-input"></input> */}
                                 <Grid container>
-                                    //default text should be curent information
                                     <TextField id="Username" label="New Username" variant="outlined" onChange={(e) => setUserName(e.target.value)} ></TextField>
                                     <TextField id="Email" label="New Email" variant="outlined" sx={{ marginLeft: '10px' }} onChange={(e) => setEmail(e.target.value)} ></TextField>
                                 </Grid>
