@@ -15,8 +15,11 @@ const multer = require('multer');
 router.get('/api/question_get_all/', async (req, res) => {
     try {
         // Find questions and sort by the createdAt field in descending order
-        const findQuestion = await QuestionSchema.find().sort({ _id: -1 });
-        res.json(findQuestion);
+        const page = req.query.page || 1;
+        const skip = (page - 1) * 5;
+        const findQuestion = await QuestionSchema.find().sort({ _id: -1 }).skip(skip).limit(5);
+        const totalEntries = await QuestionSchema.countDocuments();
+        res.json({entries: findQuestion, totalEntries});
     } catch (error) {
         console.error("Error fetching questions:", error);
         res.status(500).json({ error: "An error occurred while fetching questions" });
@@ -65,7 +68,7 @@ router.get('/api/question_get_single/:id', async (req, res) => {
     try {
         const findQuestionSingle = await QuestionSchema.findById(req.params.id)
         if (!findQuestionSingle) {
-            res.status(404).json({error: "Question not found"});
+            res.status(404).json({ error: "Question not found" });
         } else {
             res.json(findQuestionSingle)
         }
@@ -89,7 +92,7 @@ router.get('/api/searchquestion/:search', async (req, res) => {
         res.json(questions)
     } catch (error) {
         console.log(error)
-        console.log('none')
+        console.log("search error")
     }
 
 });
@@ -122,62 +125,72 @@ const upload = multer({
 
 // Update
 router.put('/api/question/:id', upload.single('image'), async (req, res) => {
-    // If an image was sent with
-    if (req.file) {
-        let data = JSON.parse(req.body.data);
-        const question = ({
-            user: data.id,
-            title: data.title,
-            text: data.text,
-            date: data.date,
-            comments: data.comments,
-            image: req.file.filename
-        })
-        await QuestionSchema.findByIdAndUpdate(req.params.id, question)
-            .then(response => res.json(response))
-            .catch(error => res.status(500).json(error))
-    } else {
-        let data = req.body;
-        const question = ({
-            user: data.id,
-            title: data.title,
-            text: data.text,
-            date: data.date,
-            comments: data.comments
-        })
-        await QuestionSchema.findByIdAndUpdate(req.params.id, question)
-            .then(response => res.json(response))
-            .catch(error => res.status(500).json(error))
+    try {
+        if (req.file) {
+            let data = JSON.parse(req.body.data);
+            const question = ({
+                user: data.id,
+                title: data.title,
+                text: data.text,
+                date: data.date,
+                comments: data.comments,
+                image: req.file.filename
+            })
+            await QuestionSchema.findByIdAndUpdate(req.params.id, question)
+                .then(response => res.json(response))
+                .catch(error => res.status(500).json(error))
+        } else {
+            let data = req.body;
+            const question = ({
+                user: data.id,
+                title: data.title,
+                text: data.text,
+                date: data.date,
+                comments: data.comments
+            })
+            await QuestionSchema.findByIdAndUpdate(req.params.id, question)
+                .then(response => res.json(response))
+                .catch(error => res.status(500).json(error))
+        }
+    } catch (error) {
+        console.log("Error updating question", error);
+        res.status(500).json({ error: "An error occured when updating" })
     }
+
 });
 
 // Create
 router.post('/api/addquestion', upload.single('image'), async (req, res) => {
-    let data = JSON.parse(req.body.data)
-    if (req.file) {
-        const question = new QuestionSchema({
-            user: data.id,
-            title: data.title,
-            text: data.text,
-            date: data.date,
-            comments: data.comments,
-            image: req.file.filename
-        })
-        await question.save()
-            .then(response => res.json(response))
-            .catch(error => res.status(500).json(error)) // status 500 is an internal service error
-    } else {
-        const question = new QuestionSchema({
-            user: data.id,
-            title: data.title,
-            text: data.text,
-            date: data.date,
-            comments: data.comments,
-            image: ""
-        })
-        await question.save()
-            .then(response => res.json(response))
-            .catch(error => res.status(500).json(error))
+    try {
+        let data = JSON.parse(req.body.data)
+        if (req.file) {
+            const question = new QuestionSchema({
+                user: data.id,
+                title: data.title,
+                text: data.text,
+                date: data.date,
+                comments: data.comments,
+                image: req.file.filename
+            })
+            await question.save()
+                .then(response => res.json(response))
+                .catch(error => res.status(500).json(error)) // status 500 is an internal service error
+        } else {
+            const question = new QuestionSchema({
+                user: data.id,
+                title: data.title,
+                text: data.text,
+                date: data.date,
+                comments: data.comments,
+                image: ""
+            })
+            await question.save()
+                .then(response => res.json(response))
+                .catch(error => res.status(500).json(error))
+        }
+    } catch (error) {
+        console.log("Error creating question", error);
+        res.status(500).json({ error: "An error occured when creating the question" })
     }
 
 });

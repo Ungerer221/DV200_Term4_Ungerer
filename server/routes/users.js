@@ -33,34 +33,36 @@ const upload = multer({
 
 //Update
 router.put('/api/updateuser/:id', upload.single('imageUp'), async (req, res) => {
+    try {
+        if (req.file) {
+            let data = req.body;
 
-    if (req.file) {
-        let data = req.body;
+            const user = ({
+                username: data.username,
+                email: data.email,
+                image: req.file.filename
+            })
 
-        const user = ({
-            username: data.username,
-            email: data.email,
-            image: req.file.filename
-        })
+            await User.findByIdAndUpdate(req.params.id, user)
+                .then(response => res.json(response))
+                .catch(error => res.status(500).json(error))
 
-        await User.findByIdAndUpdate(req.params.id, user)
-            .then(response => res.json(response))
-            .catch(error => res.status(500).json(error))
+        } else {
+            let data = req.body;
+            data = JSON.parse(data.details);
 
-    } else {
-        let data = req.body;
-        data = JSON.parse(data.details);
+            const user = ({
+                username: data.username,
+                email: data.email
+            })
 
-        const user = ({
-            username: data.username,
-            email: data.email
-        })
-        
-        await User.findByIdAndUpdate(req.params.id, user)
-            .then(response => res.json(response))
-            .catch(error => res.status(500).json(error))
+            await User.findByIdAndUpdate(req.params.id, user)
+                .then(response => res.json(response))
+                .catch(error => res.status(500).json(error))
+        }
+    } catch (error) {
+
     }
-
 });
 
 // Create
@@ -87,14 +89,15 @@ router.post('/api/createUser', async (req, res) => {
 // add delete user
 router.delete('/api/User/:id', async (req, res) => {
     const delSpecUser = await User.findByIdAndDelete(req.params.id)
-    res.json(delSpecUser)
+    .then(res.json(delSpecUser))
+    .catch(error => res.status(500).json(error))
+    
 });
 
 router.get('/api/GetUserID/:email', async (req, res) => {
     const userID = await User.find()
         .where('email')
         .in(req.params.email);
-
     res.json(userID);
 })
 

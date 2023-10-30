@@ -18,31 +18,36 @@ import ErrorCard from "../Components/ErrorCard";
 
 function HomePage() {
 
-    const [questions, setQuestions] = useState();
+    const [questions, setQuestions] = useState([]);
     const [errorMes, setErrorMes] = useState();
     const [error, setError] = useState(false);
-
-
 
     const [searchParams, setSearchParams] = useSearchParams({ search: '' })
     const searcher = searchParams.get('search')
     const [axiosCall, setAxiosCall] = useState('http://localhost:5002/api/question_get_all/');
-
+    const [page, setPage] = useState(1);
+    const [loadedEntries, setLoadedEntries] = useState(0);
+    const [totalEntries, setTotalEntries] = useState();
+    const [loadMoreS, setloadMoreS] = useState(true);
+    
 
     useEffect(() => {
         // Read all questions
-        if (searcher === '') {
-            setAxiosCall('http://localhost:5002/api/question_get_all/');
-        } else {
-            setAxiosCall('http://localhost:5002/api/searchquestion/' + searcher);
-        }
+        // if (searcher === '') {
+        //     setAxiosCall('http://localhost:5002/api/question_get_all/?page=${page}');
+        // } else {
+        //     setAxiosCall('http://localhost:5002/api/searchquestion/' + searcher);
+        // }
         Axios.get(axiosCall)
             .then(res => {
-                let questionData = res.data;
-                console.log(questionData)
-                let renderQuestions = questionData.map((item) =>
+                const { entries, totalEntries } = res.data;
+                console.log(entries);
+                console.log(totalEntries);
+                setLoadedEntries(loadedEntries + entries.length);
+                setTotalEntries(totalEntries);
+                let renderQuestions = entries.map((item) =>
                     <HomeQuestionCard key={item._id} id={item._id} user={item.user} title={item.title} text={item.text} date={item.date} comments={item.comments} image={item.image} />);
-                setQuestions(renderQuestions);
+                setQuestions(prevQuestions => [...prevQuestions, renderQuestions]);
             })
             .catch(err => {
                 console.log(err)
@@ -50,13 +55,24 @@ function HomePage() {
                 setErrorMes(<ErrorCard message={err.message} />)
                 setError(true);
             })
-    }, [axiosCall]);
+    }, [axiosCall, page]);
 
     const handleSearch = () => {
         if (searcher === '') {
             setAxiosCall('http://localhost:5002/api/question_get_all/');
         } else {
             setAxiosCall('http://localhost:5002/api/searchquestion/' + searcher);
+        }
+    }
+
+    const handleLoadMore = () => {
+        const nextpage = page + 1;
+        setPage(nextpage);
+        console.log('clicked');
+        if (loadedEntries === totalEntries) {
+            setloadMoreS(false);
+        } else {
+            setAxiosCall(`http://localhost:5002/api/question_get_all/?page=${nextpage}`);
         }
     }
 
@@ -113,6 +129,7 @@ function HomePage() {
                                 {/* if you comment this out then the server stops crashing   */}
                                 {questions}
                             </Grid>
+                            <button onClick={handleLoadMore}> Load More </button>
                         </Grid>
                     </Box>
 

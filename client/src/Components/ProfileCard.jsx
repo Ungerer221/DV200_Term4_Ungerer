@@ -6,30 +6,35 @@ import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 
 import Axios from "axios";
+import { useLocation } from "react-router-dom";
 
 const ProfileCard = (props) => {
 
     const [updateProfile, setUpdateProfile] = useState();
-    const [id, setId] = useState(null);
+    const [id, setId] = useState();
 
-    useEffect(() => {
+    const location = useLocation();
+    const searchParams = new URLSearchParams(location.search);
+    const userID = searchParams.get('userid');
+
+    // useEffect(() => {
         // Get user ID from session storage
-        let usermail = sessionStorage.getItem('useremail');
+    //     let usermail = sessionStorage.getItem('useremail');
 
-        try {
-            Axios.get("http://localhost:5002/api/GetUserID/" + usermail)
-                .then((res) => {
-                    const response = res;
-                    setId(response.data[0]._id);
-                });
-        } catch (error) {
-            console.log(error);
-            console.log('User ID not found');
-        }
-    }, []);
+    //     try {
+    //         Axios.get("http://localhost:5002/api/GetUserID/" + usermail)
+    //             .then((res) => {
+    //                 const response = res;
+    //                 console.log(response.data);
+    //             });
+    //     } catch (error) {
+    //         console.log(error);
+    //         console.log('User ID not found');
+    //     }
+    // }, []);
 
     // Conditionally render the "Update" button
-    const isCurrentUser = id === props.id;
+    const isCurrentUser = userID === props.id;
 
     const update = (e) => {
         document.getElementById("default").style.display = 'none'

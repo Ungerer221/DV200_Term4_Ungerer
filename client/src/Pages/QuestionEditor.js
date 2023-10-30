@@ -29,7 +29,9 @@ function QuestionEditor() {
     const [content, setContent] = useState('');
     const [titleAlert, setTitleAlert] = useState(false);
     const [contentAlert, setContentAlert] = useState(false);
-    const [id, setId] = useState('');
+    const [id, setId] = useState();
+    const [imageS, setImageS] = useState(false);
+    
 
     useEffect(() => {
         let usermail = sessionStorage.getItem('useremail');
@@ -52,6 +54,7 @@ function QuestionEditor() {
         let imageFile = e.target.files[0];
         console.log(imageFile);
         setImage(imageFile);
+        setImageS(true);
 
         let reader = new FileReader();
         reader.onload = () => {
@@ -146,7 +149,7 @@ function QuestionEditor() {
                             Upload Image
                             <VisuallyHiddenInput type="file" onChange={getImage} />
                         </Button>
-                        <img id="preview" style={{ width: 100, height: 100, marginTop: 20 }} alt=" " />
+                        {imageS ? <img id="preview" style={{ width: 100, height: 100, marginTop: 20 }} alt=" " /> : null } 
                     </Box>
                 </Grid>
                 <Button variant="contained" sx={{ marginTop: '15px' }} onClick={addQuestion} > Done </Button>

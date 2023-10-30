@@ -30,7 +30,6 @@ function Profile() {
 
     // const [Image, setImage] = useState();
     const [userName, setUserName] = useState();
-    const [email, setEmail] = useState();
     const [image, setImage] = useState();
     const [id, setId] = useState('');
     const [profile, setProfile] = useState();
@@ -102,8 +101,7 @@ function Profile() {
         const updateUser = new FormData()
 
         let details = {
-            username: userName,
-            email: email
+            username: userName
         }
         updateUser.append('details', JSON.stringify(details));
         updateUser.append('imageUp', image);
@@ -144,7 +142,6 @@ function Profile() {
                                 {/* <input name="username" type="text" placeholder="enter new username" className="update-profile-username-input"></input> */}
                                 <Grid container>
                                     <TextField id="Username" label="New Username" variant="outlined" onChange={(e) => setUserName(e.target.value)} ></TextField>
-                                    <TextField id="Email" label="New Email" variant="outlined" sx={{ marginLeft: '10px' }} onChange={(e) => setEmail(e.target.value)} ></TextField>
                                 </Grid>
 
                                 <h3>ID Number: 000 000 0000</h3>
