@@ -575,7 +575,8 @@ function QuestionPage() {
                             <TextField
                                 sx={{ width: '50%', maxWidth: '700px', }}
                                 label="Answer field"
-                                multiline
+                                // this is what is causing the resize loop error
+                                // multiline
                                 // rows={5}
                                 onChange={getAnswerText}
                             ></TextField>
