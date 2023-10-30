@@ -12,6 +12,10 @@ import Button from '@mui/material/Button';
 import './HomePage.css'
 import LandingImage from '../Assets/Images/10.svg'
 
+// icons 
+import { BiSearchAlt, BiDownArrowCircle } from "react-icons/bi";
+import { IoEyeOutline } from "react-icons/io5";
+
 // components
 import HomeQuestionCard from "../Components/HomeQuestionCard";
 import ErrorCard from "../Components/ErrorCard";
@@ -29,7 +33,7 @@ function HomePage() {
     const [loadedEntries, setLoadedEntries] = useState(0);
     const [totalEntries, setTotalEntries] = useState();
     const [loadMoreS, setloadMoreS] = useState(true);
-    
+
 
     useEffect(() => {
         // Read all questions
@@ -88,8 +92,7 @@ function HomePage() {
                             <Grid xs={6} sx={{ margin: 'auto', }}>
                                 <h1 style={{ fontWeight: '400', fontSize: '64px' }}>Welcome to Open Dev Q&A site.</h1>
                                 <p style={{}}>
-                                    <b>Description: </b>
-                                    OpenDev is an open source, developer community forum website where developers can ask questions and answer them.
+                                    We are OpenDev. An open source developer community forum website where developers can ask questions and answer them.
                                 </p>
                             </Grid>
                             {/* Image coloumn  */}
@@ -122,14 +125,17 @@ function HomePage() {
                                     return prev
                                 })} value={searcher} />}
 
-                                <Button onClick={handleSearch}> Test Button Here </Button>
+                                <Button onClick={handleSearch}>
+                                    <BiSearchAlt style={{fontSize:'24px'}}/>
+                                    {/* Test Button Here */}
+                                </Button>
                             </Grid>
                             {/* question tile  */}
                             <Grid xs={12} sx={{ marginTop: '20px' }}>
                                 {/* if you comment this out then the server stops crashing   */}
                                 {questions}
                             </Grid>
-                            <button onClick={handleLoadMore}> Load More </button>
+                            <button onClick={handleLoadMore} className="home-page-loadmore-btn"> Load More <IoEyeOutline style={{fontSize:'24px'}}/> </button>
                         </Grid>
                     </Box>
 
