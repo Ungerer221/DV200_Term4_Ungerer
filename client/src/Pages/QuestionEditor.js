@@ -29,20 +29,24 @@ function QuestionEditor() {
     const [content, setContent] = useState('');
     const [titleAlert, setTitleAlert] = useState(false);
     const [contentAlert, setContentAlert] = useState(false);
-    const [userID, setUserID] = useState();
+    const [id, setId] = useState('');
 
     useEffect(() => {
-        let mail = sessionStorage.getItem('useremail');
-        Axios.get('http://localhost:5002/api/GetUserID/' + mail)
-            .then((res) => {
-                console.log(res.data[0]._id);
-                setUserID(res.data[0]._id);
-            })
+        let usermail = sessionStorage.getItem('useremail');
+
+        try {
+            Axios.get("http://localhost:5002/api/GetUserID/" + usermail)
+                .then((res) => {
+                    const response = res;
+                    setId(response.data[0]._id);
+                })
+
+        } catch (error) {
+            console.log(error);
+            console.log('User ID not found');
+        }
 
     }, []);
-
-
-    const [id, setId] = useState('');
 
     const getImage = (e) => {
         let imageFile = e.target.files[0];
@@ -71,20 +75,6 @@ function QuestionEditor() {
         } else if (title && content) {
             setTitleAlert(false);
             setContentAlert(false);
-
-            let usermail = sessionStorage.getItem('useremail');
-
-            try {
-                Axios.get("http://localhost:5002/api/GetUserID/" + usermail)
-                    .then((res) => {
-                        const response = res;
-                        setId(response.data[0]._id);
-                    })
-
-            } catch (error) {
-                console.log(error);
-                console.log('User ID not found');
-            }
 
             const payload = new FormData()
 
@@ -121,14 +111,6 @@ function QuestionEditor() {
     } else {
         return (
             <>
-                {/* <Box sx={{width: 200}} alignItems="center">
-                    <Stack direction="column" justifyContent="flex-start" alignItems="center" spacing={3} component="form" noValidate autoComplete="off" >
-                        
-                            <TextField fullWidth required id="title" label="Add a title" />
-                            <TextField fullWidth required id="title" label="Add a title" />
-                        
-                    </Stack>
-                </Box> */}
                 <Grid container spacing={4} sx={{
                     maxWidth: 500, marginTop: 10, marginLeft: "auto", marginRight: "auto", '--Grid-borderWidth': '2px',
                     borderTop: 'var(--Grid-borderWidth) solid',
