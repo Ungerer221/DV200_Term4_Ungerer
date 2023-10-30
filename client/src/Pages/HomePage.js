@@ -73,10 +73,8 @@ function HomePage() {
                                 <h1 style={{ fontWeight: '400', fontSize: '64px' }}>Welcome to Open Dev Q&A site.</h1>
                                 <p style={{}}>
                                     <b>Description: </b>
-                                    Yorem ipsum dolor sit amet, consectetur adipiscing elit.
-                                    Nunc vulputate libero et velit interdum, ac aliquet odio mattis.
+                                    OpenDev is an open source, developer community forum website where developers can ask questions and answer them.
                                 </p>
-                                <Button variant="contained">Take a Tour</Button>
                             </Grid>
                             {/* Image coloumn  */}
                             <Grid xs={6} sx={{ margin: 'auto', }}>
