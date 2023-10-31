@@ -83,21 +83,6 @@ function Profile() {
 
     const save = (e) => {
 
-        // Get all users to find who is currently logged in 
-        // let usermail = sessionStorage.getItem('useremail');
-
-        // try {
-        //     axios.get("http://localhost:5002/api/GetUserID/" + usermail)
-        //         .then((res) => {
-        //             const response = res;
-        //             setId(response.data[0]._id);
-        //         })
-
-        // } catch (error) {
-        //     console.log(error);
-        //     console.log('User ID not found');
-        // }
-
         const updateUser = new FormData()
 
         let details = {

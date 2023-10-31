@@ -96,7 +96,7 @@ const AskedQuestionsCard = (props) => {
 
                     {/* like and dislike buttons con  */}
                     <div className="askedQuestionCard-like-dislike-btn-con">
-                        <button onClick={addLike}><BiLike /> Like {like}</button>
+                        <button ><BiLike /> Like {like}</button>
                         <button className="askedQuestionCard-dislike-btn"><BiDislike /> Dislike {dislike}</button>
                         {/* <button><BiXCircle/> Delete</button> */}
                     </div>

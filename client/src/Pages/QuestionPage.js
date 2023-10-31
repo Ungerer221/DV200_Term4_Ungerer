@@ -7,6 +7,7 @@ import Chip from '@mui/material/Chip';
 import Button from '@mui/material/Button';
 import { BiXCircle } from 'react-icons/bi';
 import TextField from '@mui/material/TextField';
+import { useNavigate } from 'react-router-dom';
 
 import './QuestionPage.css';
 import AnswerCards from "../Components/AnswerCards";
@@ -19,13 +20,14 @@ function QuestionPage() {
     const [username, setUsername] = useState("");
     const [errorMessage, setErrorMessage] = useState();
     const [errorS, setErrorS] = useState(false);
-
+    const navigate = useNavigate();
 
     // for the user avatar image
     const [userImage, setUserImage] = useState();
 
     // Get the user id
     const [Id, setId] = useState('');
+    const [userAskedID, setUserAskedID] = useState('');
 
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
@@ -56,17 +58,24 @@ function QuestionPage() {
         setDislike(dislike + Amount);
     };
 
-    // Handles the like clicking
+    // TODO Handles the like clicking
     const handleLike = async () => {
 
-        // Get all users to find who is currently logged in 
+        // Find who is currently logged in 
         let usermail = sessionStorage.getItem('useremail');
+
+        // If the usermail is not set to session storage yet, exit the like function
+        if (usermail === null || usermail === undefined) {
+            return;
+        }
 
         try {
             Axios.get("http://localhost:5002/api/GetUserID/" + usermail)
                 .then((res) => {
                     const response = res;
                     setId(response.data[0]._id);
+                    console.log(response.data[0]._id);
+                    console.log(Id);
                 })
 
         } catch (error) {
@@ -173,11 +182,16 @@ function QuestionPage() {
 
     }
 
-    // Handles the dislike clicking
+    // TODO Handles the dislike clicking
     const handleDislike = async () => {
 
-        // Get all users to find who is currently logged in 
+        // Find who is currently logged in 
         let usermail = sessionStorage.getItem('useremail');
+
+        // If the usermail is not set to session storage yet, exit the like function
+        if (usermail === null || usermail === undefined) {
+            return;
+        }
 
         try {
             Axios.get("http://localhost:5002/api/GetUserID/" + usermail)
@@ -329,28 +343,12 @@ function QuestionPage() {
 
     useEffect(() => {
 
-        // Set the id the the user that is currently logged in
-        // let usermail = sessionStorage.getItem('useremail');
-        // Axios.get("http://localhost:5002/api/GetUserID/" + usermail)
-        //     .then((response) => {
-        //         if (response.data && response.data[0] && response.data[0]._id) {
-        //             const foundUserId = response.data[0]._id;
-        //             setId(foundUserId);
-        //             console.log(foundUserId);
-        //         } else {
-        //             console.log("User ID not found in the response.");
-        //         }
-        //     })
-        //     .catch((error) => {
-        //         console.error("Error fetching user ID:", error);
-        //     });
-
         // Fetch the question
         Axios.get(`http://localhost:5002/api/question_get_single/${questionID}`)
             .then((result) => {
                 setQuestion(result.data);
-                console.log(question);
-                console.log(result.data)
+                // console.log(result.data);
+                setUserAskedID(result.data.user);
 
                 // If there are no tags
                 if (result.data.tags === undefined) {
@@ -363,7 +361,7 @@ function QuestionPage() {
                         setUsername(userResult.data.username);
                         const serverURLUser = 'http://localhost:5002/userImages';
                         setUserImage(`${serverURLUser}/${userResult.data.image}`);
-                        console.log(userImage);
+                        console.log('User Image:' + userImage);
                         console.log(userResult.data.image);
                     })
                     .catch((err) => {
@@ -427,12 +425,8 @@ function QuestionPage() {
             });
     }, []);
 
-
     const serverURL = 'http://localhost:5002/images';
     const imageURL = `${serverURL}/${question.image}`;
-    // console.log(question);
-    // console.log("image " + question.image)
-    // console.log(imageURL);
 
     // answer question functionality !!!!
     const AnswerQ = (e) => {
@@ -457,8 +451,22 @@ function QuestionPage() {
         setAnswerText(value);
     }
 
-    // add question 
-    const addAnswer = (e) => {
+    // add answer 
+    const addAnswer = () => {
+
+        let usermail = sessionStorage.getItem('useremail');
+
+        try {
+            Axios.get("http://localhost:5002/api/GetUserID/" + usermail)
+                .then((res) => {
+                    const response = res;
+                    setId(response.data[0]._id);
+                })
+
+        } catch (error) {
+            console.log(error);
+            console.log('User ID not found');
+        }
 
         let urlGet = 'http://localhost:5002/api/question_get_single/' + questionID;
 
@@ -503,6 +511,14 @@ function QuestionPage() {
         });
     }
 
+    // Go to a user who asked the question's page
+    const usernameClick = () => {
+        const queryParams = new URLSearchParams();
+        queryParams.append('userid', userAskedID);
+        sessionStorage.setItem("UserIDQuestionPage", userAskedID);
+        navigate(`/profile?${queryParams.toString()}`);
+    }
+
     return (
         <>
             {errorS ? errorMessage :
@@ -517,7 +533,7 @@ function QuestionPage() {
                                 </Avatar>
                             </Grid>
                             <Grid item xs={12}>
-                                <p>{username}</p>
+                                <Button onClick={usernameClick}>{username}</Button>
                             </Grid>
                             <Grid item xs={12}>
                                 <p>{question.date}</p>
@@ -541,12 +557,12 @@ function QuestionPage() {
                         <Grid item xs={2}>
                             <Button variant="contained" sx={{ margin: "auto" }} id="btnDelete" onClick={handleDelete}><BiXCircle />Delete</Button>
                             <br></br>
-                            <p>Likes: {like}</p>
-                            <p>Dislikes: {dislike}</p>
-
-                            <Button onClick={handleLike} id="btnLike">Like</Button>
                             <br></br>
-                            <Button onClick={handleDislike} id="btnDislike">Dislike</Button>
+
+                            <Button onClick={handleLike} id="btnLike">Like &nbsp;&nbsp;&nbsp; {like}</Button>
+                            <br></br>
+                            <Button onClick={handleDislike} id="btnDislike">Dislike &nbsp;&nbsp;&nbsp; {dislike}</Button>
+
                         </Grid>
                     </Grid>
 
