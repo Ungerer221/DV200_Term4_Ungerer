@@ -350,7 +350,7 @@ function QuestionPage() {
                         setUsername(userResult.data.username);
                         const serverURLUser = 'http://localhost:5002/userImages';
                         setUserImage(`${serverURLUser}/${userResult.data.image}`);
-                        console.log('User Image:' + userImage);
+                        console.log('User Image: ' + userImage);
                         console.log(userResult.data.image);
                     })
                     .catch((err) => {
@@ -406,36 +406,63 @@ function QuestionPage() {
                     .catch((err) => {
                         console.error(`Error fetching user data: ${err.message}`);
                     });
+
+                const usermail = sessionStorage.getItem('useremail');
+                Axios.get("http://localhost:5002/api/GetUserID/" + usermail)
+                    .then((response) => {
+                        setId(response.data[0]._id);
+                        const spid = response.data[0]._id;
+
+                        // Now that we have the user's ID, check for admin status and show the delete button if applicable
+                        Axios.get('http://localhost:5002/api/question_get_single/' + questionID)
+                            .then((res) => {
+                                const FoundUser = res.data.user;
+                                console.log(FoundUser);
+                                if (sessionStorage.getItem("admin") === true || FoundUser === spid) {
+                                    setDispDel(true);
+                                }
+                            })
+                            .catch((err) => {
+                                console.error("Error checking for admin status:", err);
+                                setErrorS(true);
+                                setErrorMessage(<ErrorCard code={err.response.status} text={err.response.statusText} />);
+                            });
+                    })
+                    .catch((error) => {
+                        console.error("Error fetching user ID:", error);
+                        setErrorS(true);
+                        setErrorMessage(<ErrorCard code={error.response.status} text={error.response.statusText} />);
+                    }); 
             })
             .catch((err) => {
                 console.error("Error fetching question:", err);
                 setErrorS(true);
                 setErrorMessage(<ErrorCard code={err.response.status} text={err.response.statusText} />);
-            });
-
-        let usermail = sessionStorage.getItem('useremail');
-
-        // If the usermail is not set to session storage yet, exit the like function
-        try {
-            Axios.get("http://localhost:5002/api/GetUserID/" + usermail)
-                .then((response) => {
-                    setId(response.data[0]._id);
-                    console.log(response.data[0]._id);
-                    console.log(Id);
-                })
-        } catch (error) {
-            console.log(error);
-            console.log('User ID not found');
-        };
-
-        Axios.get('http://localhost:5002/api/question_get_single/' + questionID)
-            .then((res) => {
-                let FoundUser = res.data.user;
-                console.log(FoundUser);
-                if (sessionStorage.getItem("admin") === true || FoundUser === Id) {
-                    setDispDel(true);
-                }
             })
+
+        // let usermail = sessionStorage.getItem('useremail');
+
+        // // If the usermail is not set to session storage yet, exit the like function
+        // try {
+        //     Axios.get("http://localhost:5002/api/GetUserID/" + usermail)
+        //         .then((response) => {
+        //             setId(response.data[0]._id);
+        //             console.log(response.data[0]._id);
+        //             console.log(Id + ' id');
+        //         })
+        // } catch (error) {
+        //     console.log(error);
+        //     console.log('User ID not found');
+        // };
+
+        // Axios.get('http://localhost:5002/api/question_get_single/' + questionID)
+        //     .then((res) => {
+        //         let FoundUser = res.data.user;
+        //         console.log(FoundUser);
+        //         if (sessionStorage.getItem("admin") === true || FoundUser === Id) {
+        //             setDispDel(true);
+        //         }
+        //     })
 
     }, []);
 
