@@ -42,6 +42,8 @@ function QuestionPage() {
     const [updateAnswers, setUpdateAnswers] = useState();
 
     const [error, setError] = useState("");
+    const [dispDel, setDispDel] = useState(false);
+
 
     // likes & dislike counter function 
     // likes 
@@ -296,53 +298,40 @@ function QuestionPage() {
     }
 
     const handleDelete = async () => {
-        // Get all users to find who is currently logged in 
-        Axios.get('http://localhost:5002/api/getUsers')
-            .then((res) => {
+        let url = 'http://localhost:5002/api/question_get_single/' + questionID;
 
-                // The response is an array of all the users
-                let users = res.data;
+        Axios.get(url).then(res => {
+            let FoundUser = res.data.user;
+            console.log(FoundUser);
 
-                // get who is currently signed in
-                let email = sessionStorage.getItem('email');
+            if (sessionStorage.getItem("admin") === true || FoundUser === Id) {
 
-                // Gather the user ID of who is currently logged in based on which email matches the one in the DB
-                for (let k = 0; k < users.length; k++) {
-                    if (users[k].email === email) {
-                        // Correct user ID is logged
-                        // console.log(users[k]._id);
-                        sessionStorage.setItem('userID', users[k]._id);
-                    }
+                if (window.confirm('Are you sure you want to delete this question? This cannot be undone.') === true) {
+                    // Build the url and the data
+                    let url = "http://localhost:5002/api/question_delete/" + questionID;
+
+                    // Delete the entry to unlike the post
+                    Axios.delete(url)
+                        .then(res => {
+                            console.log(res);
+                            window.alert(res.data.message);
+                            window.location = '/Home';
+                        })
+                        .catch("Error deleting");
                 }
 
-                let url = 'http://localhost:5002/api/question_get_single/' + questionID;
+            } else {
+                window.alert("You do not have permissions to delete this question.")
+            }
+        })
+            .catch(err => {
+                console.error("Error getting question: ", err);
+                window.alert("Error getting question");
+            });
 
-                Axios.get(url).then(res => {
-                    let FoundUser = res.data.user;
-                    console.log(FoundUser);
-                    console.log(sessionStorage.getItem('userID'));
-
-                    if (sessionStorage.getItem("admin") === true || FoundUser === sessionStorage.getItem('userID')) {
-
-                        if (window.confirm('Are you sure you want to delete this question? This cannot be undone.') === true) {
-                            // Build the url and the data
-                            let url = "http://localhost:5002/api/question_delete/" + questionID;
-
-                            // Delete the entry to unlike the post
-                            Axios.delete(url).catch("Error deleting");
-
-                            window.location = '/Home';
-                        }
-
-                    } else {
-                        window.alert("You do not have permissions to delete this question.")
-                    }
-                })
-            })
     }
 
     useEffect(() => {
-
         // Fetch the question
         Axios.get(`http://localhost:5002/api/question_get_single/${questionID}`)
             .then((result) => {
@@ -423,6 +412,31 @@ function QuestionPage() {
                 setErrorS(true);
                 setErrorMessage(<ErrorCard code={err.response.status} text={err.response.statusText} />);
             });
+
+        let usermail = sessionStorage.getItem('useremail');
+
+        // If the usermail is not set to session storage yet, exit the like function
+        try {
+            Axios.get("http://localhost:5002/api/GetUserID/" + usermail)
+                .then((response) => {
+                    setId(response.data[0]._id);
+                    console.log(response.data[0]._id);
+                    console.log(Id);
+                })
+        } catch (error) {
+            console.log(error);
+            console.log('User ID not found');
+        };
+
+        Axios.get('http://localhost:5002/api/question_get_single/' + questionID)
+            .then((res) => {
+                let FoundUser = res.data.user;
+                console.log(FoundUser);
+                if (sessionStorage.getItem("admin") === true || FoundUser === Id) {
+                    setDispDel(true);
+                }
+            })
+
     }, []);
 
     const serverURL = 'http://localhost:5002/images';
@@ -456,12 +470,12 @@ function QuestionPage() {
         // let usermail = sessionStorage.getItem('useremail');
         // console.log(usermail + ' mail addanswe 458');
         try {
-            let usermail = sessionStorage.getItem('useremail');
-            console.log(usermail + ' mail addanswe 458');
+            // let usermail = sessionStorage.getItem('useremail');
+            // console.log(usermail);
 
-            const res = await Axios.get("http://localhost:5002/api/GetUserID/" + usermail);
-            const userID = res.data[0]._id;
-            console.log(res.data);
+            // const res = await Axios.get("http://localhost:5002/api/GetUserID/" + usermail);
+            // const userID = res.data[0]._id;
+            // console.log(res.data);
 
             let urlGet = 'http://localhost:5002/api/question_get_single/' + questionID;
 
@@ -469,7 +483,7 @@ function QuestionPage() {
             const Comments = response.data.comments;
 
             let push = {
-                user: userID,
+                user: Id,
                 title: AnswerTitle,
                 text: AnswerText
             }
@@ -542,7 +556,7 @@ function QuestionPage() {
                         </Grid>
                         {/* Render delete button */}
                         <Grid item xs={2}>
-                            <Button variant="contained" sx={{ margin: "auto" }} id="btnDelete" onClick={handleDelete}><BiXCircle />Delete</Button>
+                            {dispDel ? <Button variant="contained" sx={{ margin: "auto" }} id="btnDelete" onClick={handleDelete}><BiXCircle />Delete</Button> : null}
                             <br></br>
                             <br></br>
 

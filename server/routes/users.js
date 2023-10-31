@@ -19,7 +19,7 @@ router.get('/api/getUser/:id', async (req, res) => {
     res.json(findSpecUser)
 });
 
-//
+//image middleware
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, './userImages')

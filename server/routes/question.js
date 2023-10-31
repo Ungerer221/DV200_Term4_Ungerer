@@ -4,6 +4,7 @@ const express = require('express');
 // accesses the schema of the model for "car". Remove the ".js" if it still doesn't work, I added it after
 const QuestionSchema = require('../models/question.js');
 const LikeSchema = require('../models/likes.js');
+const fs = require('fs');
 
 // Initialize the router
 const router = express();
@@ -197,9 +198,26 @@ router.post('/api/addquestion', upload.single('image'), async (req, res) => {
 
 //Delete
 router.delete('/api/question_delete/:id', async (req, res) => {
-    await QuestionSchema.findByIdAndDelete(req.params.id)
-        .then(response => res.json(response))
-        .catch(error => res.status(500).json(error))
+    try {
+        const question = await QuestionSchema.findById(req.params.id);
+        if (!question) {
+            return res.status(404).json({ message: "Question not found" });
+        }
+
+        if (question.image) {
+            fs.unlink(`./images/${question.image}`, (err) => {
+                if (err) {
+                    console.error(err);
+                }
+            });
+        }
+
+        await question.deleteOne();
+        res.status(201).json({ message: "Question deleted successfully!" });
+    } catch (error) {
+        console.error("Error deleting question: ", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
 });
 
 module.exports = router;
