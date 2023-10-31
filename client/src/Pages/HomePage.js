@@ -33,6 +33,8 @@ function HomePage() {
     const [loadedEntries, setLoadedEntries] = useState(0);
     const [totalEntries, setTotalEntries] = useState();
     const [loadMoreS, setloadMoreS] = useState(true);
+    const [searchT, setSearchT] = useState(false);
+    const [searchR, setSearchR] = useState();
 
 
     useEffect(() => {
@@ -42,23 +44,48 @@ function HomePage() {
         // } else {
         //     setAxiosCall('http://localhost:5002/api/searchquestion/' + searcher);
         // }
-        Axios.get(axiosCall)
-            .then(res => {
-                const { entries, totalEntries } = res.data;
-                console.log(entries);
-                console.log(totalEntries);
-                setLoadedEntries(loadedEntries + entries.length);
-                setTotalEntries(totalEntries);
-                let renderQuestions = entries.map((item) =>
-                    <HomeQuestionCard key={item._id} id={item._id} user={item.user} title={item.title} text={item.text} date={item.date} comments={item.comments} image={item.image} />);
-                setQuestions(prevQuestions => [...prevQuestions, renderQuestions]);
-            })
-            .catch(err => {
-                console.log(err)
-                // console.log(err.message + ' error')
-                setErrorMes(<ErrorCard message={err.message} />)
-                setError(true);
-            })
+        if (axiosCall.startsWith('http://localhost:5002/api/question_get_all/')) {
+            Axios.get(axiosCall)
+                .then(res => {
+                    const { entries, totalEntries } = res.data;
+                    console.log(entries);
+                    console.log(totalEntries);
+                    setLoadedEntries(loadedEntries + entries.length);
+                    setTotalEntries(totalEntries);
+                    if ((loadedEntries + entries.length) < totalEntries) {setloadMoreS(true)};
+                    setSearchT(false);
+                    if (totalEntries > 0) {
+                        let renderQuestions = entries.map((item) =>
+                            <HomeQuestionCard key={item._id} id={item._id} user={item.user} title={item.title} text={item.text} date={item.date} comments={item.comments} image={item.image} />);
+                        setQuestions(prevQuestions => [...prevQuestions, renderQuestions]);
+                    };
+                })
+                .catch(err => {
+                    console.log(err)
+                    // console.log(err.message + ' error')
+                    console.log(err);
+                    // setErrorMes(<ErrorCard code={err.response.status} text={err.response.statusText} />);
+                    // setError(true);
+                })
+        } else {
+            Axios.get(axiosCall)
+                .then(res => {
+                    setLoadedEntries(0);
+                        let renderQuestions = res.data.map((item) =>
+                            <HomeQuestionCard key={item._id} id={item._id} user={item.user} title={item.title} text={item.text} date={item.date} comments={item.comments} image={item.image} />);
+                        setSearchR(renderQuestions);
+                        setQuestions('');
+                        setSearchT(true);
+                        setloadMoreS(false);
+                })
+                .catch(err => {
+                    console.log(err)
+                    // console.log(err.message + ' error')
+                    console.log(err);
+                    // setErrorMes(<ErrorCard code={err.response.status} text={err.response.statusText} />);
+                    // setError(true);
+                })
+        }
     }, [axiosCall, page]);
 
     const handleSearch = () => {
@@ -72,9 +99,12 @@ function HomePage() {
     const handleLoadMore = () => {
         const nextpage = page + 1;
         setPage(nextpage);
+        const newLoaded = loadedEntries + 5;
+        setLoadedEntries(newLoaded);
         console.log('clicked');
-        if (loadedEntries === totalEntries) {
+        if (newLoaded >= totalEntries) {
             setloadMoreS(false);
+            setAxiosCall(`http://localhost:5002/api/question_get_all/?page=${nextpage}`);
         } else {
             setAxiosCall(`http://localhost:5002/api/question_get_all/?page=${nextpage}`);
         }
@@ -126,16 +156,16 @@ function HomePage() {
                                 })} value={searcher} />}
 
                                 <Button onClick={handleSearch}>
-                                    <BiSearchAlt style={{fontSize:'24px'}}/>
+                                    <BiSearchAlt style={{ fontSize: '24px' }} />
                                     {/* Test Button Here */}
                                 </Button>
                             </Grid>
                             {/* question tile  */}
                             <Grid xs={12} sx={{ marginTop: '20px' }}>
                                 {/* if you comment this out then the server stops crashing   */}
-                                {questions}
+                                {searchT ? searchR : questions}
                             </Grid>
-                            <button onClick={handleLoadMore} className="home-page-loadmore-btn"> Load More <IoEyeOutline style={{fontSize:'24px'}}/> </button>
+                            {loadMoreS ? <button onClick={handleLoadMore} className="home-page-loadmore-btn"> Load More <IoEyeOutline style={{ fontSize: '24px' }} /> </button> : null}
                         </Grid>
                     </Box>
 

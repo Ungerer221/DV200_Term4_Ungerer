@@ -16,7 +16,7 @@ function ErrorCard(props) {
         <>
             <div>
                 <img src={errImg} alt="Error Image" style={{width: '100%'}}/>
-                <h1>{props.message}</h1>
+                <h1>Error {props.code}: {props.text}</h1>
                 <br></br>
                 <Button variant="contained" onClick={handleClick} style={{marginRight: '25px'}}>Reload Page</Button>
                 <Button variant="contained" onClick={handleHome}>Return Home</Button>

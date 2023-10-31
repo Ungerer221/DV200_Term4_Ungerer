@@ -82,7 +82,7 @@ router.get('/api/question_get_single/:id', async (req, res) => {
 //search questions
 router.get('/api/searchquestion/:search', async (req, res) => {
     try {
-        const searchTerm = req.params.search
+        const searchTerm = req.params.search;
         const questions = await QuestionSchema.find({
             $or: [
                 { title: new RegExp(searchTerm, 'i') },
@@ -91,8 +91,8 @@ router.get('/api/searchquestion/:search', async (req, res) => {
         });
         res.json(questions)
     } catch (error) {
-        console.log(error)
-        console.log("search error")
+        console.error("Error fetching questions:", error);
+        res.status(500).json({ error: "An error occurred while fetching questions" });
     }
 
 });

@@ -24,6 +24,7 @@ const Navbar = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(!!sessionStorage.getItem('useremail'));
     const [isSignUpPage, setIsSignUpPage] = useState(false);
     const location = useLocation();
+    const [id, setId] = useState();
 
     useEffect(() => {
         setIsSignUpPage(location.pathname === '/Signup');
@@ -54,7 +55,7 @@ const Navbar = () => {
     });
     const { vertical, horizontal, open } = state;
 
-    const [id, setId] = useState();
+    // const [id, setId] = useState();
     const navigate = useNavigate();
 
 

@@ -421,14 +421,14 @@ function QuestionPage() {
             .catch((err) => {
                 console.error("Error fetching question:", err);
                 setErrorS(true);
-                setErrorMessage(<ErrorCard message={err.message} />)
+                setErrorMessage(<ErrorCard code={err.response.status} text={err.response.statusText} />);
             });
     }, []);
 
     const serverURL = 'http://localhost:5002/images';
     const imageURL = `${serverURL}/${question.image}`;
 
-    // answer question functionality !!!!
+    // answer question
     const AnswerQ = (e) => {
         document.getElementById("answer-title-field").style.display = "block"
         document.getElementById("answer-main-field").style.display = "block"
@@ -451,42 +451,35 @@ function QuestionPage() {
         setAnswerText(value);
     }
 
-    // add answer 
-    const addAnswer = () => {
-
-        let usermail = sessionStorage.getItem('useremail');
-
+    // add answer functionality
+    const addAnswer = async () => {
+        // let usermail = sessionStorage.getItem('useremail');
+        // console.log(usermail + ' mail addanswe 458');
         try {
-            Axios.get("http://localhost:5002/api/GetUserID/" + usermail)
-                .then((res) => {
-                    const response = res;
-                    setId(response.data[0]._id);
-                })
+            let usermail = sessionStorage.getItem('useremail');
+            console.log(usermail + ' mail addanswe 458');
 
-        } catch (error) {
-            console.log(error);
-            console.log('User ID not found');
-        }
+            const res = await Axios.get("http://localhost:5002/api/GetUserID/" + usermail);
+            const userID = res.data[0]._id;
+            console.log(res.data);
 
-        let urlGet = 'http://localhost:5002/api/question_get_single/' + questionID;
+            let urlGet = 'http://localhost:5002/api/question_get_single/' + questionID;
 
-        Axios.get(urlGet).then(res => {
-            const Comments = res.data.comments;
-            console.log(Comments);
+            const response = await Axios.get(urlGet);
+            const Comments = response.data.comments;
 
             let push = {
-                user: Id,
+                user: userID,
                 title: AnswerTitle,
                 text: AnswerText
             }
 
             Comments.push(push);
-            console.log(Comments);
 
-            const userData = res.data.user;
-            const title = res.data.title;
-            const text = res.data.text;
-            const date = res.data.date;
+            const userData = response.data.user;
+            const title = response.data.title;
+            const text = response.data.text;
+            const date = response.data.date;
 
             let payload = {
                 user: userData,
@@ -496,19 +489,13 @@ function QuestionPage() {
                 comments: Comments
             }
 
-            console.log(payload);
-
             let url = 'http://localhost:5002/api/question/' + questionID;
-            Axios.put(url, payload)
-                .then(res => {
-                    console.log(res.data)
-                    window.location.reload(false);
-                })
-                .catch(err => {
-                    console.log(err)
-                    setError(err)
-                })
-        });
+            const result = await Axios.put(url, payload);
+            window.location.reload(false);
+        } catch (err) {
+            console.log(err);
+            setError(err);
+        }
     }
 
     // Go to a user who asked the question's page

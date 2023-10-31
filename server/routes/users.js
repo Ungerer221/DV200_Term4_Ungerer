@@ -4,6 +4,7 @@ const bcrypt = require("bcrypt");
 const Joi = require("joi");
 const path = require('path');
 const multer = require('multer');
+const fs = require('fs');
 
 // Get All
 // --Delete after testing is done
@@ -37,11 +38,20 @@ router.put('/api/updateuser/:id', upload.single('imageUp'), async (req, res) => 
         if (req.file) {
             let data = req.body;
 
+            const existing = await User.findById(req.params.id);
+            if (existing.image) {
+                fs.unlink(`./userImages/${existing.image}`, (err) => {
+                    if (err) {
+                        console.error(err);
+                    }
+                });
+            }
+
             const user = ({
                 username: data.username,
                 email: data.email,
                 image: req.file.filename
-            })
+            });
 
             await User.findByIdAndUpdate(req.params.id, user)
                 .then(response => res.json(response))
@@ -61,7 +71,8 @@ router.put('/api/updateuser/:id', upload.single('imageUp'), async (req, res) => 
                 .catch(error => res.status(500).json(error))
         }
     } catch (error) {
-
+        console.error(error);
+        res.status(500).json(error);
     }
 });
 
@@ -95,10 +106,16 @@ router.delete('/api/User/:id', async (req, res) => {
 });
 
 router.get('/api/GetUserID/:email', async (req, res) => {
+    try {
     const userID = await User.find()
         .where('email')
         .in(req.params.email);
-    res.json(userID);
+    res.json(userID);        
+    } catch (error) {
+        res.status(500).send({ message: "Internal Servor Error" });
+        console.log(error);
+    }
+
 })
 
 module.exports = router;

@@ -23,7 +23,7 @@ const AnswerCards = (props) => {
     let isAdmin = false;
 
     useEffect(() => {
-        console.log('answer user' + props.user)
+        console.log('answer user ' + props.user)
         Axios.get('http://localhost:5002/api/getUser/' + props.user)
             .then(res => {
                 setUsername(res.data.username);
@@ -41,7 +41,7 @@ const AnswerCards = (props) => {
         sessionStorage.setItem("UserIDQuestionPage", props.user);
         navigate(`/profile?${queryParams.toString()}`);
     }
-    
+
     return (
         <div>
             <Box sx={{ flexGrow: 1 }}>

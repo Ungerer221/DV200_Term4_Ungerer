@@ -7,18 +7,23 @@ import Button from '@mui/material/Button';
 
 import Axios from "axios";
 import { useLocation } from "react-router-dom";
+import ErrorCard from "../Components/ErrorCard";
 
 const ProfileCard = (props) => {
 
     const [updateProfile, setUpdateProfile] = useState();
     const [id, setId] = useState();
+    // const [errorCode, setErrorCode] = useState();
+    // const [errorText, setErrorText] = useState();
+    const [errorMessage, setErrorMessage] = useState('');
+    const [errorS, setErrorS] = useState(false);
 
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
     const userID = searchParams.get('userid');
 
     // useEffect(() => {
-        // Get user ID from session storage
+    // Get user ID from session storage
     //     let usermail = sessionStorage.getItem('useremail');
 
     //     try {
@@ -77,7 +82,6 @@ const ProfileCard = (props) => {
                             case "dislike":
                                 iDislikes++;
                                 break;
-
                             case "none":
                                 break;
                         }
@@ -88,56 +92,62 @@ const ProfileCard = (props) => {
                 addTotalDislike(iDislikes);
 
             })
-            .catch((err) => {
-                console.error(`Error fetching user data: ${err.message}`);
+            .catch((error) => {
+                console.error(`Error fetching user data: ${error.message}`);
+                console.log(error);
+                // setErrorMessage(<ErrorCard code={err.response.status} text={err.response.statusText} />);
+                // setErrorCode(err.response.status)
+                setErrorS(true);
             });
     }, []);
 
     return (
         <>
-            <div className="profilecard-container" style={{ display: 'block' }} id='default'>
-                <Grid container spacing={0}>
-                    <Grid item xs={2} md={2}>
-                        <img src={imageURL} className="profile_img"></img>
-                    </Grid>
-                    <Grid item xs={6} md={6}>
-                        <div className="profilecard-userInfo-con">
-                            <div>
-                                <h1 style={{ marginTop: 0 }} > {props.username} </h1>
-                                <h3>ID Number: {props.id} </h3>
-                                <p className="interests-text">Interests:</p>
-                                <div className="userInfo-tags">
-                                    <button>javascript</button>
-                                    <button>CSS</button>
-                                    <button>HTML</button>
-                                    <button className="userInfo-tags-add">+</button>
+            {!errorS ?
+                <div className="profilecard-container" style={{ display: 'block' }} id='default'>
+                    <Grid container spacing={0}>
+                        <Grid item xs={2} md={2}>
+                            <img src={imageURL} className="profile_img"></img>
+                        </Grid>
+                        <Grid item xs={6} md={6}>
+                            <div className="profilecard-userInfo-con">
+                                <div>
+                                    <h1 style={{ marginTop: 0 }} > {props.username} </h1>
+                                    <h3>ID Number: {props.id} </h3>
+                                    <p className="interests-text">Interests:</p>
+                                    <div className="userInfo-tags">
+                                        <button>javascript</button>
+                                        <button>CSS</button>
+                                        <button>HTML</button>
+                                        <button className="userInfo-tags-add">+</button>
+                                    </div>
+                                </div>
+                                <div className="profilecard-stats">
+                                    {/* asked */}
+                                    <div className="profilecard-stats-asked">
+                                        <p>Questions Asked: </p>
+                                        <p>00</p>
+                                    </div>
+                                    {/* answered  */}
+                                    <div className="profilecard-stats-answered">
+                                        <p>Questions Answered: </p>
+                                        <p>00</p>
+                                    </div>
+                                    {/* likes  */}
+                                    <div className="profilecard-stats-likes">
+                                        <p>Likes: {totalLike}</p>
+                                    </div>
                                 </div>
                             </div>
-                            <div className="profilecard-stats">
-                                {/* asked */}
-                                <div className="profilecard-stats-asked">
-                                    <p>Questions Asked: </p>
-                                    <p>00</p>
-                                </div>
-                                {/* answered  */}
-                                <div className="profilecard-stats-answered">
-                                    <p>Questions Answered: </p>
-                                    <p>00</p>
-                                </div>
-                                {/* likes  */}
-                                <div className="profilecard-stats-likes">
-                                    <p>Likes: {totalLike}</p>
-                                </div>
-                            </div>
-                        </div>
+                        </Grid>
+                        <Grid item xs={4} md={4}>
+                            {isCurrentUser && (
+                                <Button onClick={update} className="profilecard-Logout-btn" variant="outlined" sx={{ color: 'orange', border: "solid 1px orange" }}>Update</Button>
+                            )}
+                        </Grid>
                     </Grid>
-                    <Grid item xs={4} md={4}>
-                        {isCurrentUser && (
-                            <Button onClick={update} className="profilecard-Logout-btn" variant="outlined" sx={{ color: 'orange', border: "solid 1px orange" }}>Update</Button>
-                        )}
-                    </Grid>
-                </Grid>
-            </div>
+                </div>
+            : errorMessage}
         </>
     )
 }
