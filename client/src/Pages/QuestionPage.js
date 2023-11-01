@@ -43,7 +43,7 @@ function QuestionPage() {
 
     const [error, setError] = useState("");
     const [dispDel, setDispDel] = useState(false);
-
+    const [logged, setLogged] = useState(false);
 
     // likes & dislike counter function 
     // likes 
@@ -344,7 +344,7 @@ function QuestionPage() {
                     result.data.tags = ["No Tags"];
                 }
 
-                // Fetch the user
+                // Fetch the question asking user
                 Axios.get(`http://localhost:5002/api/getUser/${result.data.user}`)
                     .then((userResult) => {
                         setUsername(userResult.data.username);
@@ -407,38 +407,45 @@ function QuestionPage() {
                         console.error(`Error fetching user data: ${err.message}`);
                     });
 
-                const usermail = sessionStorage.getItem('useremail');
-                Axios.get("http://localhost:5002/api/GetUserID/" + usermail)
-                    .then((response) => {
-                        setId(response.data[0]._id);
-                        const spid = response.data[0]._id;
 
-                        // Now that we have the user's ID, check for admin status and show the delete button if applicable
-                        Axios.get('http://localhost:5002/api/question_get_single/' + questionID)
-                            .then((res) => {
-                                const FoundUser = res.data.user;
-                                console.log(FoundUser);
-                                if (sessionStorage.getItem("admin") === true || FoundUser === spid) {
-                                    setDispDel(true);
-                                }
-                            })
-                            .catch((err) => {
-                                console.error("Error checking for admin status:", err);
-                                setErrorS(true);
-                                setErrorMessage(<ErrorCard code={err.response.status} text={err.response.statusText} />);
-                            });
-                    })
-                    .catch((error) => {
-                        console.error("Error fetching user ID:", error);
-                        setErrorS(true);
-                        setErrorMessage(<ErrorCard code={error.response.status} text={error.response.statusText} />);
-                    }); 
+                const usermail = sessionStorage.getItem('useremail');
+                if (usermail) {
+                    Axios.get("http://localhost:5002/api/GetUserID/" + usermail)
+                        .then((response) => {
+                            setId(response.data[0]._id);
+                            setLogged(true);
+                            const spid = response.data[0]._id;
+
+                            // Now that we have the user's ID, check for admin status and show the delete button if applicable
+                            Axios.get('http://localhost:5002/api/question_get_single/' + questionID)
+                                .then((res) => {
+                                    const FoundUser = res.data.user;
+                                    console.log(FoundUser);
+                                    if (sessionStorage.getItem("admin") === true || FoundUser === spid) {
+                                        setDispDel(true);
+                                    }
+                                })
+                                .catch((err) => {
+                                    console.error("Error checking for admin status:", err);
+                                    setErrorS(true);
+                                    setErrorMessage(<ErrorCard code={err.response.status} text={err.response.statusText} />);
+                                });
+                        })
+                        .catch((error) => {
+                            console.error("Error fetching user ID:", error);
+                            setErrorS(true);
+                            setErrorMessage(<ErrorCard code={error.response.status} text={error.response.statusText} />);
+                        });
+                } else {
+                    setDispDel(false);
+                    setLogged(false);
+                }
             })
             .catch((err) => {
                 console.error("Error fetching question:", err);
                 setErrorS(true);
                 setErrorMessage(<ErrorCard code={err.response.status} text={err.response.statusText} />);
-            })
+            });
 
         // let usermail = sessionStorage.getItem('useremail');
 
@@ -495,47 +502,54 @@ function QuestionPage() {
     // add answer functionality
     const addAnswer = async () => {
         // let usermail = sessionStorage.getItem('useremail');
-        // console.log(usermail + ' mail addanswe 458');
+        if (logged) {
         try {
-            // let usermail = sessionStorage.getItem('useremail');
-            // console.log(usermail);
+            if (Id === null) {
+                window.location = '/signin'
+            } else {
+                // let usermail = sessionStorage.getItem('useremail');
+                // console.log(usermail);
 
-            // const res = await Axios.get("http://localhost:5002/api/GetUserID/" + usermail);
-            // const userID = res.data[0]._id;
-            // console.log(res.data);
+                // const res = await Axios.get("http://localhost:5002/api/GetUserID/" + usermail);
+                // const userID = res.data[0]._id;
+                // console.log(res.data);
 
-            let urlGet = 'http://localhost:5002/api/question_get_single/' + questionID;
+                let urlGet = 'http://localhost:5002/api/question_get_single/' + questionID;
 
-            const response = await Axios.get(urlGet);
-            const Comments = response.data.comments;
+                const response = await Axios.get(urlGet);
+                const Comments = response.data.comments;
 
-            let push = {
-                user: Id,
-                title: AnswerTitle,
-                text: AnswerText
+                let push = {
+                    user: Id,
+                    title: AnswerTitle,
+                    text: AnswerText
+                }
+
+                Comments.push(push);
+
+                const userData = response.data.user;
+                const title = response.data.title;
+                const text = response.data.text;
+                const date = response.data.date;
+
+                let payload = {
+                    user: userData,
+                    title: title,
+                    text: text,
+                    date: date,
+                    comments: Comments
+                }
+
+                let url = 'http://localhost:5002/api/question/' + questionID;
+                const result = await Axios.put(url, payload);
+                window.location.reload(false);
             }
-
-            Comments.push(push);
-
-            const userData = response.data.user;
-            const title = response.data.title;
-            const text = response.data.text;
-            const date = response.data.date;
-
-            let payload = {
-                user: userData,
-                title: title,
-                text: text,
-                date: date,
-                comments: Comments
-            }
-
-            let url = 'http://localhost:5002/api/question/' + questionID;
-            const result = await Axios.put(url, payload);
-            window.location.reload(false);
         } catch (err) {
             console.log(err);
             setError(err);
+        }} else {
+            window.alert("Please log in to answer");
+            window.location = "/signin";
         }
     }
 

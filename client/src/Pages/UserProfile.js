@@ -67,9 +67,14 @@ function Profile() {
                 setPaq(renderQuestions)
             })
             .catch(error => {
-                console.log(error);
-                setErrorMes(<ErrorCard code={error.response.status} text={error.response.statusText} />);
-                setError(true);
+                if (error && error.response) {
+                    console.log(error);
+                    setErrorMes(<ErrorCard code={error.response.status} text={error.response.statusText} />);
+                    setError(true);
+                } else {
+                    setErrorMes(<ErrorCard code={502} text="An unexpected error occured" />);
+                    setError(true);
+                }
             })
 
         const fetchData = async () => {
@@ -80,10 +85,15 @@ function Profile() {
                 let info = userResponse.data;
                 setProfile(<ProfileCard username={info.username} id={info._id} image={info.image} />);
             } catch (error) {
-                console.log(error);
-                console.log('User not found');
-                setErrorMes(<ErrorCard code={error.response.status} text={error.response.statusText} />);
-                setError(true);
+                if (error && error.response) {
+                    console.log(error);
+                    console.log('User not found');
+                    setErrorMes(<ErrorCard code={error.response.status} text={error.response.statusText} />);
+                    setError(true);
+                } else {
+                    setErrorMes(<ErrorCard code={502} text="An unexpected error occcured" />);
+                    setError(true);
+                }
             }
         };
 
@@ -115,7 +125,7 @@ function Profile() {
 
     return (
         <>
-            { error ? errorMes :
+            {error ? errorMes :
                 <div className="Profile-main-container">
                     {profile}
                     {/* input card for updating user info  */}
@@ -125,12 +135,12 @@ function Profile() {
                             <Grid xs={2}>
                                 {/* image upload goes here */}
                                 {/* <img /> */}
-                                <img id='previewEdit' style={{height: 100, width: 100}} />
+                                <img id='previewEdit' style={{ height: 100, width: 100 }} />
                                 <Button component="label" variant="outlined" sx={{ color: '#FF3F00', borderColor: '#FF3F00' }} >
                                     Upload Image
                                     <VisuallyHiddenInput type="file" onChange={getImage} />
                                 </Button>
-                                
+
                             </Grid>
                             {/* col 2  */}
                             <Grid xs={6}>
