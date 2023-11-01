@@ -135,7 +135,7 @@ const ProfileCard = (props) => {
                                     </div>
                                     {/* likes  */}
                                     <div className="profilecard-stats-likes">
-                                        <p>Likes: {totalLike}</p>
+                                        <p>Liked: {totalLike}</p>
                                     </div>
                                 </div>
                             </div>

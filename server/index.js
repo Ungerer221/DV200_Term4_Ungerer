@@ -47,7 +47,7 @@ mongoose.connect(process.env.DB_CONNECTION, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     dbName: 'DV200T4', //Collection Name
-}).then(() => console.log("Connected to Database"))
+}).then(() => console.log("Connected to OpenDev Database"))
     .catch((err) => {
         console.log("No Connection. Reason: " + err);
     });

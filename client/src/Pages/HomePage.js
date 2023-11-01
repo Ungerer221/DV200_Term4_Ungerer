@@ -52,7 +52,7 @@ function HomePage() {
                     console.log(totalEntries);
                     setLoadedEntries(loadedEntries + entries.length);
                     setTotalEntries(totalEntries);
-                    if ((loadedEntries + entries.length) < totalEntries) {setloadMoreS(true)};
+                    if ((loadedEntries + entries.length) < totalEntries) { setloadMoreS(true) };
                     setSearchT(false);
                     if (totalEntries > 0) {
                         let renderQuestions = entries.map((item) =>
@@ -61,22 +61,28 @@ function HomePage() {
                     };
                 })
                 .catch(err => {
-                    console.log(err)
-                    // console.log(err.message + ' error')
-                    console.log(err);
-                    // setErrorMes(<ErrorCard code={err.response.status} text={err.response.statusText} />);
-                    // setError(true);
+                    if (err && err.response) {
+                        console.log(err)
+                        // console.log(err.message + ' error')
+                        setErrorMes(<ErrorCard code={err.response.status} text={err.response.statusText} />);
+                        setError(true);
+                    } else {
+                        // console.log(err)
+                        // console.log(err.message + ' error')
+                        setErrorMes(<ErrorCard code={502} text="An unexpected error has occured" />);
+                        setError(true);
+                    }
                 })
         } else {
             Axios.get(axiosCall)
                 .then(res => {
                     setLoadedEntries(0);
-                        let renderQuestions = res.data.map((item) =>
-                            <HomeQuestionCard key={item._id} id={item._id} user={item.user} title={item.title} text={item.text} date={item.date} comments={item.comments} image={item.image} />);
-                        setSearchR(renderQuestions);
-                        setQuestions('');
-                        setSearchT(true);
-                        setloadMoreS(false);
+                    let renderQuestions = res.data.map((item) =>
+                        <HomeQuestionCard key={item._id} id={item._id} user={item.user} title={item.title} text={item.text} date={item.date} comments={item.comments} image={item.image} />);
+                    setSearchR(renderQuestions);
+                    setQuestions('');
+                    setSearchT(true);
+                    setloadMoreS(false);
                 })
                 .catch(err => {
                     console.log(err)
@@ -163,7 +169,9 @@ function HomePage() {
                             {/* question tile  */}
                             <Grid xs={12} sx={{ marginTop: '20px' }}>
                                 {/* if you comment this out then the server stops crashing   */}
-                                {searchT ? searchR : questions}
+                                {/* {searchT ? searchR : questions} */}
+                                {/* { if (error) {errorMes} else if (searchT) {searchR} else {questions} } */}
+                                {error ? errorMes : searchT ? searchR : questions}
                             </Grid>
                             {loadMoreS ? <button onClick={handleLoadMore} className="home-page-loadmore-btn"> Load More <IoEyeOutline style={{ fontSize: '24px' }} /> </button> : null}
                         </Grid>
