@@ -60,7 +60,6 @@ function QuestionPage() {
         setDislike(dislike + Amount);
     };
 
-    // TODO Handles the like clicking
     const handleLike = async () => {
 
         // Find who is currently logged in 
@@ -184,7 +183,6 @@ function QuestionPage() {
 
     }
 
-    // TODO Handles the dislike clicking
     const handleDislike = async () => {
 
         // Find who is currently logged in 
