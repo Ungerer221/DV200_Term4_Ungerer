@@ -18,8 +18,10 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "node index",
-    "dev": "nodemon index"
+    "start": "node server/index.js",
+    "client-install": "cd client && npm install",
+    "client-build": "cd client && npm run build",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "author": "",
   "license": "ISC",
